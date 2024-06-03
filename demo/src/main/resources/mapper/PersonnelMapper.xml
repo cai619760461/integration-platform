@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.incaier.integration.platform.mapper.PersonnelMapper">
+    <select id="selectAll" resultType="com.incaier.integration.platform.entity.Personnel">
+        select * from personnel
+        <where>
+            <if test="id != null">
+                PK = #{id}
+            </if>
+        </where>
+    </select>
+
+    <!-- 自定义 count SQL，同名方法 + _COUNT -->
+    <select id="selectAll_COUNT" resultType="java.lang.Integer">
+        select count(*)
+        from personnel
+    </select>
+
+    <!-- 批量插入或者更新 -->
+    <insert id="saveOrUpdateBatch" keyProperty="pk" useGeneratedKeys="true">
+        INSERT INTO `hip-master`.personnel (PK, HEALTH_CARE_PROVIDER_ID, DOMAIN_ID, GLOBAL_ID, NAME, PASS_WORD, SM4_PASS_WORD,
+        IDENTITY_NO, ID_CATEGORY, ID_CATEGORY_DES, PHONE, GENDER_ID, GENDER_DEPICT, JOB_CATEGORY_ID, JOB_CATEGORY_NAME,
+        DEPT_ID, DEPT_NAME, WORD_ADDRESS, DATE_OF_BIRTH, BIRTH_PLACE, EDUCATION, POLITICAL_AFFILIATION, PERSONNEL_TYPE,
+        EMAIL, EFFECTIVE_TIME_LOW, EFFECTIVE_TIME_HIGH, AUTHOR_ID, AUTHOR_NAME, REPRESENTED_PERSONNEL_NAME,
+        REPRESENTED_DEPT_ID, STATUS_CODE, REPRESENTED_DEPT_NAME, CREATE_TIME, PUSH_STATUS, encrypt_mode)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.pk},
+            #{entity.healthCareProviderId},
+            #{entity.domainId},
+            #{entity.globalId},
+            #{entity.name},
+            #{entity.passWord},
+            #{entity.sm4PassWord},
+            #{entity.identityNo},
+            #{entity.idCategory},
+            #{entity.idCategoryDes},
+            #{entity.phone},
+            #{entity.genderId},
+            #{entity.genderDepict},
+            #{entity.jobCategoryId},
+            #{entity.jobCategoryName},
+            #{entity.deptId},
+            #{entity.deptName},
+            #{entity.wordAddress},
+            #{entity.dateOfBirth},
+            #{entity.birthPlace},
+            #{entity.education},
+            #{entity.politicalAffiliation},
+            #{entity.personnelType},
+            #{entity.email},
+            #{entity.effectiveTimeLow},
+            #{entity.effectiveTimeHigh},
+            #{entity.authorId},
+            #{entity.authorName},
+            #{entity.representedPersonnelName},
+            #{entity.representedDeptId},
+            #{entity.representedDeptName},
+            #{entity.statusCode},
+            #{entity.createTime},
+            #{entity.pushStatus},
+            #{entity.encryptMode})
+        </foreach>
+        on duplicate key update
+        SM4_PASS_WORD = values(SM4_PASS_WORD),
+        encrypt_mode = values(encrypt_mode)
+    </insert>
+
+    <select id="getPersonnelByPage" resultType="com.incaier.integration.platform.entity.Personnel">
+        SELECT *
+        FROM `hip-master`.personnel
+        order by pk
+        LIMIT #{batchSize} offset #{offset}
+    </select>
+</mapper>

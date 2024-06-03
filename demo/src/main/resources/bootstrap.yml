@@ -1,0 +1,8 @@
+spring:
+  profiles:
+    active: @profiles.active@
+  application:
+    name: demo
+
+sm4:
+  enable: true

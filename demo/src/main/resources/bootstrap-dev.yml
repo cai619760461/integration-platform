@@ -1,0 +1,28 @@
+# 应用服务 WEB 访问端口
+server:
+  port: 80
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        namespace: 52afb744-49bd-4749-bf05-311a41cb4b92
+      config:
+        server-addr: 127.0.0.1:8848
+        namespace: 52afb744-49bd-4749-bf05-311a41cb4b92
+        file-extension: yaml
+        group: DEFAULT_GROUP
+        extension-configs:
+          - dataId: common.yaml
+            group: DEFAULT_GROUP
+            refresh: true
+          - dataId: common.yaml
+            group: common
+            refresh: true
+          - dataId: hikari-mysql.yaml
+          - dataId: spring-redis.yaml
+            group: DEFAULT_GROUP
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
