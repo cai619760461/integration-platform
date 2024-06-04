@@ -1,0 +1,20 @@
+#--------------------server--------------------
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://47.104.188.246:3306/byhealth_db?serverTimezone=Asia/Shanghai&character_set_server=utf8mb4&zeroDateTimeBehavior=CONVERT_TO_NULL&character_set_connection=utf8mb4&character_set_results=utf8mb4&rewriteBatchedStatements=true&allowMultiQueries=true
+    # 加密
+    username: root
+    password: GElMmX7rVCTcegOH
+    # hikari 连接池配置
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 15
+      auto-commit: true
+      idle-timeout: 30000
+      pool-name: DatebookHikariCP
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+      connection-init-sql: SET NAMES utf8mb4 COLLATE UTF8MB4_UNICODE_CI

@@ -1,0 +1,19 @@
+#--------------------server--------------------
+server:
+  port: 9020
+  servlet.context-path: /medical
+
+#--------------------server--------------------
+spring:
+  profiles:
+    active: @profiles.active@
+  application:
+    name: medical-system
+
+logging:
+  console:
+    encode: UTF-8
+  print:
+    level: @logging_print_level@
+  file:
+    path: ./logs/${spring.application.name}
