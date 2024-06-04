@@ -1,6 +1,5 @@
 package com.incaier.integration.platform;
 
-import org.jasypt.encryption.StringEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -21,7 +20,7 @@ public class DemoApplication implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         Environment environment = appCtx.getBean(Environment.class);
         // 首先获取配置文件里的配置项
         String mysqlOriginPswd = environment.getProperty("spring.datasource.password");

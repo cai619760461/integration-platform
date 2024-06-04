@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.incaier</groupId>
-        <artifactId>integration-platform</artifactId>
+        <artifactId>integration-baiyin</artifactId>
         <version>1.0.0</version>
     </parent>
     <artifactId>medical-common</artifactId>
@@ -99,13 +99,13 @@
             <artifactId>jackson-annotations</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15to18</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.5.13</version>
-        </dependency>
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk15to18</artifactId>
         </dependency>
     </dependencies>
 

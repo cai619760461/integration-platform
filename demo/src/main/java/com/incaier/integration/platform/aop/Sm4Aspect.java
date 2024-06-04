@@ -1,6 +1,6 @@
 package com.incaier.integration.platform.aop;
 
-import com.alibaba.nacos.shaded.com.google.gson.Gson;
+import com.google.gson.Gson;
 import com.incaier.integration.platform.annotation.EncryptField;
 import com.incaier.integration.platform.util.Md5Utils;
 import com.incaier.integration.platform.util.SM4Util;
@@ -38,11 +38,11 @@ public class Sm4Aspect {
     public Sm4Aspect() {
     }
 
-    @Pointcut("@annotation(com.example.demo.annotation.EncryptMethod)")
+    @Pointcut("@annotation(com.incaier.integration.platform.annotation.EncryptMethod)")
     public void encryptAopCut() {
     }
 
-    @Pointcut("@annotation(com.example.demo.annotation.DecryptMethod)")
+    @Pointcut("@annotation(com.incaier.integration.platform.annotation.DecryptMethod)")
     public void decryptAopCut() {
     }
 

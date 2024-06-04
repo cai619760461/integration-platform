@@ -1,6 +1,5 @@
 package com.incaier.integration.platform.util;
 
-import cn.hutool.http.server.HttpServerResponse;
 import lombok.Data;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -10,7 +9,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.soap.MimeHeaders;
 import java.util.Map;
 import java.util.Objects;
 

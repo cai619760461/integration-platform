@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.incaier.integration.platform.demos.web;
+package com.incaier.integration.platform.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;

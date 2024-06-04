@@ -1,11 +1,10 @@
 package com.incaier.integration.platform.config;
 
 import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.incaier.integration.platform.util.IdLockUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Component;
-
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
@@ -97,7 +96,7 @@ public class WebSocketServer {
             log.info("服务端给客户端[{}]发送消息", sessionId);
             try {
                 Session session = CLIENTS.get(sessionId);
-                if (ObjectUtils.isNotNull(session)) {
+                if (ObjectUtils.isNotEmpty(session)) {
                     session.getBasicRemote().sendText(message);
                 }
             } catch (Exception e) {

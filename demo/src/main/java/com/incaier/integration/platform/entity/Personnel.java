@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.incaier.integration.platform.config.CustomTypeHandler;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -86,7 +85,7 @@ public class Personnel implements Serializable {
     /**
      * 身份证号
      */
-    @TableField(value = "IDENTITY_NO",typeHandler = CustomTypeHandler.class)
+    @TableField(value = "IDENTITY_NO")
     private String identityNo;
 
     /**

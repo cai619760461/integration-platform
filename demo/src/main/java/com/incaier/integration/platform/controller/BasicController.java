@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package com.incaier.integration.platform.demos.web;
+package com.incaier.integration.platform.controller;
 
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.crypto.SmUtil;
 import cn.hutool.crypto.symmetric.SymmetricCrypto;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.spring.util.ObjectUtils;
-import com.incaier.integration.platform.entity.Personnel;
-import com.incaier.integration.platform.service.PersonnelService;
 import com.github.pagehelper.PageInfo;
+import com.incaier.integration.platform.entity.Personnel;
+import com.incaier.integration.platform.entity.User;
+import com.incaier.integration.platform.service.PersonnelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;

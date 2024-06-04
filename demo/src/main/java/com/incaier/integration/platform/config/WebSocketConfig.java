@@ -10,7 +10,7 @@ import javax.websocket.server.ServerEndpointConfig;
 import java.util.List;
 import java.util.Map;
 
-import static com.alibaba.nacos.shaded.io.grpc.netty.shaded.io.netty.handler.codec.http.HttpHeaderNames.WEBSOCKET_PROTOCOL;
+import static io.netty.handler.codec.http.HttpHeaderNames.WEBSOCKET_PROTOCOL;
 
 @Configuration
 public class WebSocketConfig extends ServerEndpointConfig.Configurator {

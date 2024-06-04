@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.incaier.integration.platform.demos.web;
+package com.incaier.integration.platform.entity;
 
 /**
  * @author <a href="mailto:chenxilzx1@gmail.com">theonefx</a>

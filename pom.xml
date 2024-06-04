@@ -11,7 +11,7 @@
     </parent>
 
     <groupId>com.incaier</groupId>
-    <artifactId>integration-platform</artifactId>
+    <artifactId>integration-baiyin</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
     <name>${project.artifactId}</name>

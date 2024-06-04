@@ -1,4 +1,4 @@
-package com.incaier.integration.platform;
+package com.incaier.integration.platform.integration.platform;
 
 import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;

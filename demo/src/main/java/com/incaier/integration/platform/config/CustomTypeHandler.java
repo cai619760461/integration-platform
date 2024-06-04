@@ -18,8 +18,6 @@ import java.sql.SQLException;
 @Component
 public class CustomTypeHandler<T> extends BaseTypeHandler<T> {
 
-
-
     @Override
     public void setNonNullParameter(PreparedStatement ps, int i, Object parameter, JdbcType jdbcType) throws SQLException {
         ps.setString(i, AesUtil.encrypt((String)parameter));

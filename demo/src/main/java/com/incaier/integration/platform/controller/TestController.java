@@ -1,4 +1,4 @@
-package com.incaier.integration.platform.demos.web;
+package com.incaier.integration.platform.controller;
 
 import com.incaier.integration.platform.annotation.DecryptMethod;
 import com.incaier.integration.platform.annotation.EncryptMethod;
@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 
 /**

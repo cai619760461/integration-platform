@@ -6,3 +6,15 @@ spring:
 
 sm4:
   enable: true
+
+logging:
+  console:
+    encode: UTF-8
+  print:
+    level: @logging_print_level@
+  file:
+    path: logs/${spring.application.name}
+  level:
+    com:
+      alibaba:
+        nacos: warn

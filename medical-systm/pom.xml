@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.incaier</groupId>
-        <artifactId>integration-platform</artifactId>
+        <artifactId>integration-baiyin</artifactId>
         <version>1.0.0</version>
     </parent>
 
