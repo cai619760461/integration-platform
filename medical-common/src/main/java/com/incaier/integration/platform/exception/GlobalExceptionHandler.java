@@ -22,7 +22,7 @@ import java.util.HashSet;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Result handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    public Result<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         BindingResult bindingResult = e.getBindingResult();
         HashSet<String> errorList = new HashSet<>();
         for (ObjectError error : bindingResult.getAllErrors()) {
@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(WebExchangeBindException.class)
-    public Result handleWebExchangeBindException(WebExchangeBindException e) {
+    public Result<String> handleWebExchangeBindException(WebExchangeBindException e) {
         BindingResult bindingResult = e.getBindingResult();
         HashSet<String> errorList = new HashSet<>();
         for (ObjectError error : bindingResult.getAllErrors()) {
@@ -74,7 +74,7 @@ public class GlobalExceptionHandler {
 
     // 全局异常拦截
     @ExceptionHandler
-    public Result handlerException(Exception e) {
+    public Result<String> handlerException(Exception e) {
         e.printStackTrace();
         return Result.error(e.getMessage());
     }

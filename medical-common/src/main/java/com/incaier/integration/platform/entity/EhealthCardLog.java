@@ -3,7 +3,10 @@ package com.incaier.integration.platform.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -14,6 +17,9 @@ import java.time.LocalDateTime;
  * @date 2024-06-04
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @TableName(value = "ehealth_card_log")
 public class EhealthCardLog implements Serializable {
 
@@ -22,7 +28,7 @@ public class EhealthCardLog implements Serializable {
     /**
     * 主键
     */
-    @TableId(type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**

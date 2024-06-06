@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.incaier.integration.platform.mapper.EhealthCardMapper">
+    <select id="statisticsCount" resultType="com.incaier.integration.platform.response.health.EhealthCardStatisticsVo">
+        select
+            COUNT(*) AS total,
+            SUM(CASE WHEN DATE_FORMAT(create_time, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m') THEN 1 ELSE 0 END) AS month,
+            SUM(CASE WHEN DATE(create_time) = CURDATE() THEN 1 ELSE 0 END) AS today
+        from
+            ehealth_card
+    </select>
+
+    <select id="trendsInSize" resultType="com.incaier.integration.platform.response.statistics.Metrics">
+        SELECT
+            DATE_FORMAT(create_time, '%Y-%m') AS name,
+            COUNT(*) AS count
+        FROM
+            ehealth_card
+        WHERE
+            create_time >= DATE_SUB(CURDATE(), INTERVAL #{size} MONTH)
+        GROUP BY
+            DATE_FORMAT(create_time, '%Y-%m')
+        ORDER BY
+            name DESC;
+    </select>
+
+    <select id="ageGroup" resultType="com.incaier.integration.platform.response.statistics.Metrics">
+        SELECT
+            CASE
+                WHEN TIMESTAMPDIFF(YEAR, birthday, CURDATE()) <![CDATA[<=]]> 17 THEN '0-17岁'
+                WHEN TIMESTAMPDIFF(YEAR, birthday, CURDATE()) BETWEEN 18 AND 39 THEN '18-39岁'
+                WHEN TIMESTAMPDIFF(YEAR, birthday, CURDATE()) BETWEEN 40 AND 59 THEN '40~59岁'
+                WHEN TIMESTAMPDIFF(YEAR, birthday, CURDATE()) <![CDATA[>=]]> 60 THEN '60岁以上'
+            ELSE 'Unknown'
+            END AS name,
+            COUNT(*) AS count
+        FROM
+            ehealth_card
+        GROUP BY
+            name
+    </select>
+
+    <select id="angeniesTopSix" resultType="java.util.Map">
+        SELECT
+            hospital_name as name,
+            COUNT(*) AS count
+        FROM
+            ehealth_card
+        GROUP BY
+            hospital_id
+        ORDER BY
+            count desc
+            limit #{size}
+    </select>
+
+    <select id="regionGroup" resultType="java.util.Map">
+        SELECT
+            apply_address AS name,
+            COUNT(*) AS count
+        FROM
+            ehealth_card
+        GROUP BY
+            apply_address
+        ORDER BY
+            count desc
+    </select>
+</mapper>

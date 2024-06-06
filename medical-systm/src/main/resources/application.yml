@@ -17,3 +17,7 @@ logging:
     level: @logging_print_level@
   file:
     path: ./logs/${spring.application.name}
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

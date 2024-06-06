@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.incaier.integration.platform.mapper.EhealthCardLogMapper">
+    <sql id="Common_Condition">
+        inner join ehealth_card_log ecl on ec.card_no = ecl.card_no
+        inner join hospital h on ec.hospital_id = h.hospital_id
+        where ecl.operate_type = #{operateType}
+        <if test="lastId != null and lastId != ''">
+            and ecl.id > #{lastId}
+        </if>
+        <if test="hosptialId != null and hosptialId != ''">
+            AND ec.hospital_id = #{hosptialId}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            AND (ecl.name LIKE concat('%',#{keyword},'%')
+            or ecl.nation LIKE concat('%',#{keyword},'%')
+            or ecl.resident_address LIKE concat('%',#{keyword},'%')
+            or ecl.card_no = #{keyword}
+            or ecl.id_no = #{keyword})
+        </if>
+        <if test="startTime != null and startTime != ''">
+            and ecl.create_time <![CDATA[>=]]> #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and ecl.create_time <![CDATA[<=]]> #{endTime}
+        </if>
+        ORDER BY
+            ecl.id DESC
+    </sql>
+
+    <select id="getCardRecord" resultType="com.incaier.integration.platform.response.health.EhealthCardRecordVo">
+        select
+            ecl.id,
+            ecl.name,
+            ecl.id_no,
+            ecl.sex,
+            ecl.phone,
+            ecl.nation,
+            ecl.card_no,
+            ecl.resident_address,
+            ecl.apply_address,
+            <if test="operateType != null and operateType == 1">
+                ecl.create_time
+            </if>
+            <if test="operateType != null and operateType == 2">
+                ecl.update_time
+            </if>
+        from
+            ehealth_card ec
+        <include refid="Common_Condition" />
+    </select>
+
+    <select id="getCardRecord_COUNT" resultType="java.lang.Integer">
+        select
+            count(*)
+        from
+            ehealth_card ec
+        <include refid="Common_Condition" />
+    </select>
+
+    <select id="getCardRecordCount" resultType="java.lang.Integer">
+        select
+            count(*)
+        from
+            ehealth_card ec
+        <include refid="Common_Condition" />
+    </select>
+</mapper>

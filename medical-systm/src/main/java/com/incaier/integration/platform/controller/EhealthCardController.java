@@ -1,23 +1,29 @@
 package com.incaier.integration.platform.controller;
 
 import com.github.pagehelper.PageInfo;
-import com.incaier.integration.platform.entity.EhealthCard;
+import com.incaier.integration.platform.request.EhealthCardDto;
 import com.incaier.integration.platform.response.Result;
+import com.incaier.integration.platform.response.health.EhealthCardRecordVo;
+import com.incaier.integration.platform.response.health.EhealthCardStatisticsVo;
 import com.incaier.integration.platform.service.EhealthCardLogService;
 import com.incaier.integration.platform.service.EhealthCardService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Map;
 
 /**
+ * 首页数据统计展示
+ *
  * @author weijie.cai
  * @description 用户电子健康卡基本信息表控制器
  * @date 2024-06-04
  */
 @RestController
-@RequestMapping("/ehealthCard")
+@RequestMapping("/eHealthCard")
 public class EhealthCardController {
 
     @Autowired
@@ -28,26 +34,44 @@ public class EhealthCardController {
 
     /**
      * 首页统计
+     *
+     * @return {@link Result}<{@link String}>
      */
-    @PostMapping("/statistics")
-    public Result<String> statistics(@RequestBody EhealthCard ehealthCard) {
-        return Result.success(ehealthCardService.statistics(ehealthCard));
+    @GetMapping("/statistics")
+    public Result<EhealthCardStatisticsVo> statistics() {
+        return Result.success(ehealthCardService.statistics());
     }
 
     /**
      * 申请记录
+     *
+     * @param ehealthCardDto request
+     * @return {@link Result}<{@link PageInfo}<{@link EhealthCardRecordVo}>>
      */
-    @PostMapping("/application/record")
-    public Result<PageInfo<String>> applicationRecord(@RequestBody EhealthCard ehealthCard) {
-        return Result.success(ehealthCardService.getApplicationRecord());
+    @PostMapping("/record")
+    public Result<PageInfo<EhealthCardRecordVo>> cardRecord(@Validated @RequestBody EhealthCardDto ehealthCardDto) {
+        return Result.success(ehealthCardLogService.getCardRecord(ehealthCardDto));
     }
 
     /**
-     * 更新记录
+     * 更新详情
+     *
+     * @param id log 流水id
+     * @return {@link Result}<{@link Map}<{@link String}, {@link EhealthCardRecordVo}>>
      */
-    @PostMapping("/update/record")
-    public Result<PageInfo<String>> updateRecord(@RequestBody EhealthCard ehealthCard) {
-        return Result.success(ehealthCardService.getUpdateRecord());
+    @GetMapping("/updateInfo")
+    public Result<Map<String, EhealthCardRecordVo>> updateInfo(@RequestParam("id") Integer id) {
+        return Result.success(ehealthCardLogService.getUpdateInfo(id));
     }
 
+    /**
+     * 申领记录数据导出
+     *
+     * @param ehealthCardDto 电子贺卡dto
+     * @return {@link Result}<>
+     */
+    @PostMapping("/export")
+    public void export(@Validated @RequestBody EhealthCardDto ehealthCardDto, HttpServletResponse response) throws IOException {
+        ehealthCardLogService.export(ehealthCardDto, response);
+    }
 }

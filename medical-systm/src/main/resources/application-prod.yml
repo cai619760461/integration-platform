@@ -3,8 +3,7 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://47.104.188.246:3306/byhealth_db?serverTimezone=GMT%2B8&useSSL=false&character_set_server=utf8mb4&zeroDateTimeBehavior=CONVERT_TO_NULL&character_set_connection=utf8mb4&character_set_results=utf8mb4&rewriteBatchedStatements=true&allowMultiQueries=true
-    # 加密
+    url: jdbc:mysql://47.104.188.246:3306/byhealth_db?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&useSSL=false&character_set_server=utf8mb4&zeroDateTimeBehavior=CONVERT_TO_NULL&character_set_connection=utf8mb4&character_set_results=utf8mb4&rewriteBatchedStatements=true&allowMultiQueries=true
     username: root
     password: GElMmX7rVCTcegOH
     # hikari 连接池配置

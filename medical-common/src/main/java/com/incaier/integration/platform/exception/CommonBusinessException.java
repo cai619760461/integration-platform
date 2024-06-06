@@ -1,5 +1,7 @@
 package com.incaier.integration.platform.exception;
 
+import lombok.Getter;
+
 /**
  * 自定义异常
  *
@@ -11,6 +13,7 @@ public class CommonBusinessException extends RuntimeException {
     /**
      * 返回 code
      */
+    @Getter
     private Integer code;
 
     /**
@@ -25,9 +28,5 @@ public class CommonBusinessException extends RuntimeException {
     public CommonBusinessException(Integer code, String message) {
         super(message);
         this.code = code;
-    }
-
-    public Integer getCode() {
-        return code;
     }
 }
