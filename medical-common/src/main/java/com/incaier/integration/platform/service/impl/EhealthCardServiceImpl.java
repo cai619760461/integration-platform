@@ -3,7 +3,6 @@ package com.incaier.integration.platform.service.impl;
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.incaier.integration.platform.entity.EhealthCard;
-import com.incaier.integration.platform.mapper.EhealthCardLogMapper;
 import com.incaier.integration.platform.mapper.EhealthCardMapper;
 import com.incaier.integration.platform.response.health.EhealthCardStatisticsVo;
 import com.incaier.integration.platform.response.statistics.Metrics;
@@ -31,9 +30,6 @@ public class EhealthCardServiceImpl extends ServiceImpl<EhealthCardMapper, Eheal
     @Resource
     private EhealthCardMapper ehealthCardMapper;
 
-    @Resource
-    private EhealthCardLogMapper ehealthCardLogMapper;
-
     @Autowired
     @Qualifier("asyncTaskExecutor")
     private ThreadPoolTaskExecutor asyncTaskExecutor;
@@ -46,15 +42,6 @@ public class EhealthCardServiceImpl extends ServiceImpl<EhealthCardMapper, Eheal
     public EhealthCardStatisticsVo statistics() {
         // 总计申领人次，本月申领人次，本日申领人次
         EhealthCardStatisticsVo statisticsVo = ehealthCardMapper.statisticsCount();
-        // 申领趋势
-//        statisticsVo.setTrends(monthPadded(ehealthCardMapper.trendsInSize(MONTH_SIZE), MONTH_SIZE));
-//        // 申领年龄段统计
-//        statisticsVo.setAgeGroup(agePadded(ehealthCardMapper.ageGroup()));
-//        // 申领机构排行(TOP6)
-//        statisticsVo.setAgencyGroup(ehealthCardMapper.angeniesTopSix(6));
-//        // 申领地区统计
-//        statisticsVo.setRegionGroup(ehealthCardMapper.regionGroup());
-
         // 申领趋势
         CompletableFuture<Void> trend = CompletableFuture.runAsync(() -> statisticsVo.setTrends(monthPadded(ehealthCardMapper.trendsInSize(MONTH_SIZE), MONTH_SIZE)), asyncTaskExecutor);
         // 申领年龄段统计

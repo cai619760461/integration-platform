@@ -116,13 +116,13 @@ public class EhealthCardLogServiceImpl extends ServiceImpl<EhealthCardLogMapper,
             WriteSheet writeSheet = EasyExcel.writerSheet(sheetNo, sheetName).build();
             // 记录上一次任务最大 id
             Long lastId = null;
-            //写入每一页分页查询的数据
+            // 写入每一页分页查询的数据
             for (int i = 1; i <= pageCount; i++) {
                 // 首页直接进行分页查询，，反之基于上一次分页查询的分页定位实际偏移量，筛选前n条数据
                 PageHelper.startPage(i == 1 ? i : 0, EXCEL_INSERT_NUM, false);
                 dto.setLastId(lastId);
                 List<EhealthCardRecordVo> records = ehealthCardLogMapper.getCardRecord(dto);
-                //更新下一次分页查询用的id
+                // 更新下一次分页查询用的id
                 if (CollectionUtils.isNotEmpty(records)) lastId = records.get(records.size() - 1).getId();
                 // 写入表格
                 excelWriter.write(records, writeSheet);
@@ -138,7 +138,7 @@ public class EhealthCardLogServiceImpl extends ServiceImpl<EhealthCardLogMapper,
             excelWriter.finish();
             outputStream.flush();
             outputStream.close();
-            logger.info("*********** 申领记录列表导出结束 **************");
+            logger.info("************* 申领记录列表导出结束 **************");
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
