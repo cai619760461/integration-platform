@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.github.pagehelper.PageInfo;
 import com.incaier.integration.platform.entity.EhealthCardLog;
 import com.incaier.integration.platform.request.EhealthCardDto;
+import com.incaier.integration.platform.response.health.EhealthCardRecordInfoVo;
 import com.incaier.integration.platform.response.health.EhealthCardRecordVo;
 import org.springframework.stereotype.Service;
 
@@ -33,9 +34,9 @@ public interface EhealthCardLogService extends IService<EhealthCardLog> {
      * 获取记录信息
      *
      * @param id 身份证件
-     * @return {@link Map}<{@link String}, {@link EhealthCardRecordVo}>
+     * @return {@link Map}<{@link String}, {@link EhealthCardRecordInfoVo}>
      */
-    Map<String, EhealthCardRecordVo> getUpdateInfo(Integer id);
+    Map<String, EhealthCardRecordInfoVo> getUpdateInfo(Integer id);
 
     /**
      * 申领记录数据导出

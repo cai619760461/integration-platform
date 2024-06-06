@@ -3,6 +3,7 @@ package com.incaier.integration.platform.controller;
 import com.github.pagehelper.PageInfo;
 import com.incaier.integration.platform.request.EhealthCardDto;
 import com.incaier.integration.platform.response.Result;
+import com.incaier.integration.platform.response.health.EhealthCardRecordInfoVo;
 import com.incaier.integration.platform.response.health.EhealthCardRecordVo;
 import com.incaier.integration.platform.response.health.EhealthCardStatisticsVo;
 import com.incaier.integration.platform.service.EhealthCardLogService;
@@ -60,7 +61,7 @@ public class EhealthCardController {
      * @return {@link Result}<{@link Map}<{@link String}, {@link EhealthCardRecordVo}>>
      */
     @GetMapping("/updateInfo")
-    public Result<Map<String, EhealthCardRecordVo>> updateInfo(@RequestParam("id") Integer id) {
+    public Result<Map<String, EhealthCardRecordInfoVo>> updateInfo(@RequestParam("id") Integer id) {
         return Result.success(ehealthCardLogService.getUpdateInfo(id));
     }
 
@@ -68,7 +69,8 @@ public class EhealthCardController {
      * 申领记录数据导出
      *
      * @param ehealthCardDto 电子贺卡dto
-     * @return {@link Result}<>
+     * @param response       响应体
+     * @throws IOException IOException
      */
     @PostMapping("/export")
     public void export(@Validated @RequestBody EhealthCardDto ehealthCardDto, HttpServletResponse response) throws IOException {

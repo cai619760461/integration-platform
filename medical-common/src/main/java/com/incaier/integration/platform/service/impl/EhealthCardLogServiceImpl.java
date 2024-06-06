@@ -14,8 +14,10 @@ import com.incaier.integration.platform.entity.EhealthCardLog;
 import com.incaier.integration.platform.exception.CommonBusinessException;
 import com.incaier.integration.platform.mapper.EhealthCardLogMapper;
 import com.incaier.integration.platform.request.EhealthCardDto;
+import com.incaier.integration.platform.response.health.EhealthCardRecordInfoVo;
 import com.incaier.integration.platform.response.health.EhealthCardRecordVo;
 import com.incaier.integration.platform.service.EhealthCardLogService;
+import com.incaier.integration.platform.util.IdCardUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
@@ -61,8 +63,8 @@ public class EhealthCardLogServiceImpl extends ServiceImpl<EhealthCardLogMapper,
     }
 
     @Override
-    public Map<String, EhealthCardRecordVo> getUpdateInfo(Integer id) {
-        HashMap<String, EhealthCardRecordVo> response = new HashMap<>();
+    public Map<String, EhealthCardRecordInfoVo> getUpdateInfo(Integer id) {
+        HashMap<String, EhealthCardRecordInfoVo> response = new HashMap<>();
         EhealthCardLog after = ehealthCardLogMapper.selectById(id);
         if (ObjectUtils.isEmpty(after)) {
             throw new CommonBusinessException(ErrorCodeConstant.COMMON_ERROR, "数据异常");
@@ -86,14 +88,16 @@ public class EhealthCardLogServiceImpl extends ServiceImpl<EhealthCardLogMapper,
      * @param ehealthCardLog ehealth 申领流水
      * @return {@link EhealthCardRecordVo}
      */
-    private EhealthCardRecordVo transferBean(EhealthCardLog ehealthCardLog) {
-        EhealthCardRecordVo ehealthCardRecordVo = new EhealthCardRecordVo();
-        BeanUtils.copyProperties(ehealthCardLog, ehealthCardRecordVo);
-        return ehealthCardRecordVo;
+    private EhealthCardRecordInfoVo transferBean(EhealthCardLog ehealthCardLog) {
+        EhealthCardRecordInfoVo ehealthCardRecordInfoVo = new EhealthCardRecordInfoVo();
+        BeanUtils.copyProperties(ehealthCardLog, ehealthCardRecordInfoVo);
+        // 填写生日
+        ehealthCardRecordInfoVo.setBirthday(IdCardUtil.getBirthDate(ehealthCardLog.getIdNo()));
+        return ehealthCardRecordInfoVo;
     }
 
     @Override
-    public void export(EhealthCardDto dto, HttpServletResponse response) throws IOException {
+    public void export(EhealthCardDto dto, HttpServletResponse response) {
         logger.info("************* 申领记录列表导出开始，操作行为：{} **************", dto.getOperateType());
         //文件名
         String fileName = "Export_" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());

@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class EhealthCardDto extends PageDto {
 
     /**
-     * 查询类型 0 申领 1 更新
+     * 查询类型 1 申领 2 更新 3 注销
      */
     @NotBlank(message = "类型不可为空")
     private String operateType;
