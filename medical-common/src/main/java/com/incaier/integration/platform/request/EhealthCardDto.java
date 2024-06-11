@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
 
 /**
  * 健康卡片 dto
@@ -60,12 +59,12 @@ public class EhealthCardDto extends PageDto {
     /**
      * 起始时间
      */
-    private LocalDateTime startTime;
+    private String startTime;
 
     /**
      * 起始时间
      */
-    private LocalDateTime endTime;
+    private String endTime;
 
     /**
      * 全量导出

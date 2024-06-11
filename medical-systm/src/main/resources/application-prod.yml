@@ -3,9 +3,9 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://47.104.188.246:3306/byhealth_db?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&useSSL=false&character_set_server=utf8mb4&zeroDateTimeBehavior=CONVERT_TO_NULL&character_set_connection=utf8mb4&character_set_results=utf8mb4&rewriteBatchedStatements=true&allowMultiQueries=true
-    username: root
-    password: GElMmX7rVCTcegOH
+    url: jdbc:mysql://10.10.28.162:3306/byhealth_db?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false&character_set_server=utf8mb4&zeroDateTimeBehavior=CONVERT_TO_NULL&character_set_connection=utf8mb4&character_set_results=utf8mb4&rewriteBatchedStatements=true&allowMultiQueries=true&autoReconnect=true
+    username: byhealth
+    password: byhealth
     # hikari 连接池配置
     hikari:
       minimum-idle: 5

@@ -1,7 +1,8 @@
 #--------------------server--------------------
 server:
   port: 9020
-  servlet.context-path: /medical
+  servlet:
+    context-path: /medical
 
 #--------------------server--------------------
 spring:
@@ -16,7 +17,7 @@ logging:
   print:
     level: @logging_print_level@
   file:
-    path: ./logs/${spring.application.name}
+    path: logs
 
 mybatis-plus:
   configuration:

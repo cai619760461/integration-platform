@@ -1,4 +1,4 @@
-package com.incaier;
+package com.incaier.integration.platform;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
