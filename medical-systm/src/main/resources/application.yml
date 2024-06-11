@@ -12,6 +12,7 @@ spring:
     name: medical-system
 
 logging:
+  config: classpath:logback-custom.xml
   console:
     encode: UTF-8
   print:
