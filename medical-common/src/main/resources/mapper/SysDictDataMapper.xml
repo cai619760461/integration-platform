@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.incaier.integration.platform.mapper.SysDictDataMapper">
+    <select id="getDataList" resultType="com.incaier.integration.platform.response.dict.SysDictDataVo">
+        select
+            *
+        from
+            sys_dict_data
+        <where>
+            dict_type = #{dictType}
+            <if test="dictLabel != null and dictLabel != ''">
+                and dict_label = #{dictLabel}
+            </if>
+            <if test="dictValue != null and dictValue != ''">
+                and dict_value = #{dictValue}
+            </if>
+        </where>
+        order by
+            dict_sort asc, id asc
+    </select>
+
+    <!-- 插入或者更新 -->
+    <insert id="saveOrUpdate" keyProperty="id" useGeneratedKeys="true">
+        insert into sys_dict_data (id, dict_sort, dict_label, dict_value, dict_type, css_class, list_class,
+        <if test="isDefault != null and isDefault != ''">
+            is_default,
+        </if>
+        status, create_by, update_by, remark)
+        values (#{id}, #{dictSort}, #{dictLabel}, #{dictValue}, #{dictType}, #{cssClass}, #{listClass},
+        <if test="isDefault != null and isDefault != ''">
+            #{dictValue},
+        </if>
+        #{status}, #{createBy}, #{updateBy}, #{remark})
+        on duplicate key update
+        dict_sort = values(dict_sort),
+        dict_label = values(dict_label),
+        dict_value = values(dict_value),
+        dict_type = values(dict_type),
+        css_class = values(css_class),
+        list_class = values(list_class),
+        <if test="isDefault != null and isDefault != ''">
+            is_default = values(is_default),
+        </if>
+        status = values(status),
+        create_by = values(create_by),
+        update_by = values(update_by),
+        remark = values(remark)
+    </insert>
+</mapper>

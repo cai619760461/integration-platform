@@ -23,6 +23,12 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
+/**
+ * restTemplate 配置
+ *
+ * @author caiweijie
+ * @date 2024/06/12
+ */
 @Configuration
 public class RestTemplateConfig {
 
@@ -42,8 +48,10 @@ public class RestTemplateConfig {
     @Bean("httpFactory")
     public SimpleClientHttpRequestFactory simpleClientHttpRequestFactory() {
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
-        factory.setReadTimeout(10000);//单位为ms
-        factory.setConnectTimeout(6000);//单位为ms
+        // 单位为ms
+        factory.setReadTimeout(10000);
+        // 单位为ms
+        factory.setConnectTimeout(6000);
         return factory;
     }
 

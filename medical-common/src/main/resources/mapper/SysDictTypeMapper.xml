@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.incaier.integration.platform.mapper.SysDictTypeMapper">
+
+    <select id="getTypeList" resultType="com.incaier.integration.platform.response.dict.SysDictTypeVo">
+        select
+        *
+        from
+        sys_dict_type
+        <where>
+            <if test="dictName != null and dictName != ''">
+                dict_name = #{dictName}
+            </if>
+            <if test="dictType != null and dictType != ''">
+                and dict_type = #{dictType}
+            </if>
+        </where>
+    </select>
+
+    <!-- 插入或者更新 -->
+    <insert id="saveOrUpdate" keyProperty="id" useGeneratedKeys="true">
+        insert into sys_dict_type (id, dict_name, dict_type, status, create_by, update_by, remark)
+        values  (#{id}, #{dictName}, #{dictType}, #{status}, #{createBy}, #{updateBy}, #{remark})
+        on duplicate key update
+        dict_name = values(dict_name),
+        dict_type = values(dict_type),
+        status = values(status),
+        create_by = values(create_by),
+        update_by = values(update_by),
+        remark = values(remark)
+    </insert>
+</mapper>

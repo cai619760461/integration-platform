@@ -1,4 +1,4 @@
-#--------------------server--------------------
+#--------------------database--------------------
 spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
