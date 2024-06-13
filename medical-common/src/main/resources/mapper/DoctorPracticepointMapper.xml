@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.incaier.integration.platform.mapper.DoctorPracticepointMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.incaier.integration.platform.entity.doctor.DoctorPracticepoint">
+        <id column="id" property="id" />
+        <result column="doctor_id" property="doctorId" />
+        <result column="code" property="code" />
+        <result column="practice_level" property="practiceLevel" />
+        <result column="practice_title" property="practiceTitle" />
+        <result column="practice_title_code" property="practiceTitleCode" />
+        <result column="practice_item" property="practiceItem" />
+        <result column="practice_type" property="practiceType" />
+        <result column="check_org" property="checkOrg" />
+        <result column="check_date" property="checkDate" />
+        <result column="practice_address" property="practiceAddress" />
+        <result column="practice_org" property="practiceOrg" />
+        <result column="practice_org_address" property="practiceOrgAddress" />
+        <result column="practice_dept" property="practiceDept" />
+        <result column="document1_avatar" property="document1Avatar" />
+        <result column="document1_avatar_type" property="document1AvatarType" />
+        <result column="document2_avatar" property="document2Avatar" />
+        <result column="document2_avatar_type" property="document2AvatarType" />
+        <result column="document3_avatar" property="document3Avatar" />
+        <result column="document3_avatar_type" property="document3AvatarType" />
+        <result column="enabled" property="enabled" />
+        <result column="title_information" property="titleInformation" />
+        <result column="is_general_practitioner" property="isGeneralPractitioner" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="is_delete" property="isDelete" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, doctor_id, code, practice_level, practice_title, practice_title_code, practice_item, practice_type, check_org, check_date, practice_address, practice_org, practice_org_address, practice_dept, document1_avatar, document1_avatar_type, document2_avatar, document2_avatar_type, document3_avatar, document3_avatar_type, enabled, title_information, is_general_practitioner, create_by, create_time, update_by, update_time, is_delete
+    </sql>
+
+</mapper>

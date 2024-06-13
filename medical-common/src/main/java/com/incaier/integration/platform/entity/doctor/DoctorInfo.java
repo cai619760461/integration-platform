@@ -4,10 +4,12 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * <p>
@@ -17,10 +19,8 @@ import java.time.LocalDateTime;
  * @author weijie.cai
  * @since 2024-06-13
  */
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@Getter
+@Setter
 @TableName("doctor_info")
 public class DoctorInfo implements Serializable {
 
@@ -42,13 +42,19 @@ public class DoctorInfo implements Serializable {
      * 性别 0 女 1 男 9 未知
      */
     @TableField("sex")
-    private Byte sex;
+    private Integer sex;
 
     /**
      * 身份证
      */
     @TableField("identity_no")
     private String identityNo;
+
+    /**
+     * 出生日期
+     */
+    @TableField("birthday")
+    private Date birthday;
 
     /**
      * 民族

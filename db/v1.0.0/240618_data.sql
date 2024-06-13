@@ -40,8 +40,8 @@ DROP TABLE IF EXISTS `org`;
 CREATE TABLE `org` (
     `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
     `code` varchar(128) NOT NULL COMMENT '机构id',
-    `position` int(11) NOT NULL COMMENT '机构序号',
-    `type_code` varchar(128) NOT NULL COMMENT '机构类型编码',
+    `position` int(11) DEFAULT NULL COMMENT '机构序号',
+    `type_code` varchar(128) DEFAULT NULL COMMENT '机构类型编码',
     `type_name` varchar(128) NOT NULL COMMENT '机构类型名称',
     `name` varchar(128) DEFAULT NULL COMMENT '机构名称',
     `contact_name` varchar(128) DEFAULT NULL COMMENT '机构联系人',
@@ -108,6 +108,7 @@ CREATE TABLE `doctor_info` (
     `name` varchar(32) NOT NULL COMMENT '姓名',
     `sex` tinyint(4) NOT NULL COMMENT '性别 0 女 1 男 9 未知',
     `identity_no` VARCHAR(32) NOT NULL COMMENT '身份证',
+    `birthday` date NOT NULL COMMENT '出生日期',
     `ethnicity` varchar(10) DEFAULT NULL COMMENT '民族',
     `phone_number` varchar(32) DEFAULT NULL COMMENT '联系电话',
     `email` varchar(128) DEFAULT NULL COMMENT '邮箱',

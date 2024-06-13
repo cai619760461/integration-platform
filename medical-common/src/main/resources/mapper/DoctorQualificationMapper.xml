@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.incaier.integration.platform.mapper.DoctorQualificationMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.incaier.integration.platform.entity.doctor.DoctorQualification">
+        <id column="id" property="id" />
+        <result column="doctor_id" property="doctorId" />
+        <result column="code" property="code" />
+        <result column="type" property="type" />
+        <result column="qualification_year" property="qualificationYear" />
+        <result column="send_documents_org" property="sendDocumentsOrg" />
+        <result column="document1_avatar" property="document1Avatar" />
+        <result column="document1_avatar_type" property="document1AvatarType" />
+        <result column="document2_avatar" property="document2Avatar" />
+        <result column="document2_avatar_type" property="document2AvatarType" />
+        <result column="document3_avatar" property="document3Avatar" />
+        <result column="document3_avatar_type" property="document3AvatarType" />
+        <result column="issue_date" property="issueDate" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="is_delete" property="isDelete" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, doctor_id, code, type, qualification_year, send_documents_org, document1_avatar, document1_avatar_type, document2_avatar, document2_avatar_type, document3_avatar, document3_avatar_type, issue_date, create_by, create_time, update_by, update_time, is_delete
+    </sql>
+
+</mapper>
