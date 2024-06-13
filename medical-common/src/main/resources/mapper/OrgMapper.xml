@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.incaier.integration.platform.mapper.OrgMapper">
+    <select id="getOrgList" resultType="com.incaier.integration.platform.response.org.OrgVo">
+        select
+            id,
+            code,
+            position,
+            type_code,
+            type_name,
+            name,
+            contact_name,
+            contact_title,
+            contact_phone,
+            district,
+            county,
+            address,
+            remark,
+            enabled,
+            create_time,
+            update_time
+        from
+            org
+        where
+            is_delete = 0
+            <if test="keyword != null and keyword != ''">
+                and name LIKE concat('%',#{keyword},'%')
+            </if>
+            <if test="typeName != null and typeName != ''">
+                and type_name = #{typeName}
+            </if>
+            <if test="district != null and district != ''">
+                and district = #{district}
+            </if>
+        order by id asc
+    </select>
+
+    <!-- 插入或者更新 -->
+    <insert id="saveOrUpdate" keyProperty="id" useGeneratedKeys="true">
+        insert into org (id, code, position, type_code, type_name, name, contact_name, contact_title,
+            contact_phone, district, county, address, picturl, content_type, remark, enabled, create_by, update_by
+        ) values (#{id}, #{code}, #{position}, #{typeCode}, #{typeName}, #{name}, #{contactName}, #{contactTitle},
+            #{contactPhone}, #{district}, #{county}, #{address}, #{picturl}, #{contentType}, #{remark}, #{enabled}, #{createBy}, #{updateBy})
+        on duplicate key update
+        code = values(code),
+        position = values(position),
+        type_code = values(type_code),
+        type_name = values(type_name),
+        name = values(name),
+        contact_name = values(contact_name),
+        contact_title = values(contact_title),
+        contact_phone = values(contact_phone),
+        district = values(district),
+        county = values(county),
+        address = values(address),
+        picturl = values(picturl),
+        content_type = values(content_type),
+        remark = values(remark),
+        enabled = values(enabled),
+        update_by = values(update_by)
+    </insert>
+
+    <select id="getOrgRecordCount" resultType="java.lang.Integer">
+        select
+            count(*)
+        from
+            org
+        where
+            is_delete = 0
+            <if test="keyword != null and keyword != ''">
+                and name LIKE concat('%',#{keyword},'%')
+            </if>
+            <if test="typeName != null and typeName != ''">
+                and type_name = #{typeName}
+            </if>
+            <if test="district != null and district != ''">
+                and district = #{district}
+            </if>
+        order by
+            id asc
+    </select>
+</mapper>

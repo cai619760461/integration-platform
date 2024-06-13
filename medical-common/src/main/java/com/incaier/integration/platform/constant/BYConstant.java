@@ -21,4 +21,7 @@ public interface BYConstant {
      * excel 单表前缀
      */
     String EXCEL_SHEET_PRFIX = "sheet-";
+
+    Integer INT_FALSE = 0;
+    Integer INT_TRUE = 1;
 }

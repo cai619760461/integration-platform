@@ -52,4 +52,24 @@ public class ExcelConverter {
             return new WriteCellData<>(GENDER_MAP.getOrDefault(context.getValue(), "未知"));
         }
     }
+
+    /**
+     * 启用转换器
+     *
+     * @author caiweijie
+     * @date 2024/06/13
+     */
+    public static class EnableConverter implements Converter<Integer> {
+        private static final Map<Integer, String> ENABLE_MAP = new HashMap<>();
+
+        static {
+            ENABLE_MAP.put(0, "是");
+            ENABLE_MAP.put(1, "否");
+        }
+
+        @Override
+        public WriteCellData<?> convertToExcelData(WriteConverterContext<Integer> context) {
+            return new WriteCellData<>(ENABLE_MAP.getOrDefault(context.getValue(), "是"));
+        }
+    }
 }

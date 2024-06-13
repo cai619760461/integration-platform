@@ -1,5 +1,8 @@
 package com.incaier.integration.platform.request;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 
 /**
@@ -16,10 +19,17 @@ public class PageDto implements Serializable {
 
     private Integer pageSize;
 
+    @Setter
+    @Getter
+    private Long lastId;
+
     public PageDto() {
     }
 
     public PageDto(Integer pageNum, Integer pageSize) {
+    }
+
+    public PageDto(Integer pageNum, Integer pageSize, Long lastId) {
     }
 
     public Integer getPageNum() {
@@ -35,4 +45,5 @@ public class PageDto implements Serializable {
         }
         return this.pageSize;
     }
+
 }

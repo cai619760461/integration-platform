@@ -42,7 +42,6 @@
             is_default = values(is_default),
         </if>
         status = values(status),
-        create_by = values(create_by),
         update_by = values(update_by),
         remark = values(remark)
     </insert>
