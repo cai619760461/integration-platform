@@ -43,6 +43,12 @@ spring:
           url: jdbc:mysql://47.105.75.68:3307/hip-portal-cloud?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&character_set_server=utf8mb4&zeroDateTimeBehavior=CONVERT_TO_NULL&character_set_connection=utf8mb4&character_set_results=utf8mb4&rewriteBatchedStatements=true&allowMultiQueries=true
           username: root
           password: NhtW4sa6r@qPWOwJd4.
+        hipmaster:
+          type: com.alibaba.druid.pool.DruidDataSource
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://47.105.75.68:3307/hip-master?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&character_set_server=utf8mb4&zeroDateTimeBehavior=CONVERT_TO_NULL&character_set_connection=utf8mb4&character_set_results=utf8mb4&rewriteBatchedStatements=true&allowMultiQueries=true
+          username: root
+          password: NhtW4sa6r@qPWOwJd4.
   redis:
     database: 8
     host: 47.105.75.68
@@ -70,3 +76,6 @@ sa-token:
   is-read-cookie: false
   # 是否从head中读取token
   is-read-head: true
+
+personnel:
+  domainId: 1.2.156.112747.001.001.1.2

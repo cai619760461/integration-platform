@@ -2,7 +2,7 @@ package com.incaier.integration.platform.response.health;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.incaier.integration.platform.config.SensitiveDataJsonSerializer;
+import com.incaier.integration.platform.handler.DataJsonSerializer;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -57,7 +57,7 @@ public class EhealthCardRecordInfoVo implements Serializable {
     /**
      * 卡主性别
      */
-    @JsonSerialize(using = SensitiveDataJsonSerializer.GenderSerializer.class)
+    @JsonSerialize(using = DataJsonSerializer.GenderSerializer.class)
     private String sex;
 
     /**

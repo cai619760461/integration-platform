@@ -1,8 +1,11 @@
 package com.incaier.integration.platform.mapper;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.incaier.integration.platform.entity.doctor.DoctorPracticepoint;
+import com.incaier.integration.platform.response.doctor.DoctorPracticepointVo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -13,6 +16,14 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2024-06-13
  */
 @Mapper
+@DS("testMedicalManage")
 public interface DoctorPracticepointMapper extends BaseMapper<DoctorPracticepoint> {
 
+    /**
+     * 获取医生执业信息
+     *
+     * @param doctorId 医生id
+     * @return {@link DoctorPracticepointVo}
+     */
+    DoctorPracticepointVo getDoctorPracticepointById(@Param("doctorId") Integer doctorId);
 }

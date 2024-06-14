@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.incaier.integration.platform.mapper.SysRoleUserMapper">
+
+    <insert id="saveBatch">
+        INSERT INTO SYS_ROLE_USER (ROLE_ID, USER_ID) VALUES
+        <foreach collection="roles" item="entity" separator=",">
+            (#{entity.roleId}, #{entity.userId})
+        </foreach>
+    </insert>
+</mapper>

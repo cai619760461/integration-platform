@@ -1,4 +1,4 @@
-package com.incaier.integration.platform.config;
+package com.incaier.integration.platform.handler;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
@@ -6,11 +6,12 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 通用序列化脱敏处理类
+ *
+ * @author caiweijie
+ * @date 2024/06/14
  */
 public class SensitiveDataJsonSerializer {
 
@@ -56,28 +57,6 @@ public class SensitiveDataJsonSerializer {
             } else {
                 gen.writeString(value);
             }
-        }
-    }
-
-    /**
-     * 性别序列化
-     *
-     * @author caiweijie
-     * @date 2024/06/05
-     */
-    public static class GenderSerializer extends JsonSerializer<String> {
-
-        private static final Map<String, String> GENDER_MAP = new HashMap<>();
-
-        static {
-            GENDER_MAP.put("1", "男");
-            GENDER_MAP.put("2", "女");
-            GENDER_MAP.put("9", "未知");
-        }
-
-        @Override
-        public void serialize(String value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
-            gen.writeString(GENDER_MAP.getOrDefault(value, "未知"));
         }
     }
 }

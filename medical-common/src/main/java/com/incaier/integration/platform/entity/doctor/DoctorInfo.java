@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -19,8 +21,10 @@ import java.util.Date;
  * @author weijie.cai
  * @since 2024-06-13
  */
-@Getter
-@Setter
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @TableName("doctor_info")
 public class DoctorInfo implements Serializable {
 
@@ -39,7 +43,7 @@ public class DoctorInfo implements Serializable {
     private String name;
 
     /**
-     * 性别 0 女 1 男 9 未知
+     * 性别 1 男 2 女 9 未知
      */
     @TableField("sex")
     private Integer sex;
@@ -81,22 +85,10 @@ public class DoctorInfo implements Serializable {
     private String userName;
 
     /**
-     * 角色编码
-     */
-    @TableField("role_id")
-    private Integer roleId;
-
-    /**
-     * 角色名称
-     */
-    @TableField("role_name")
-    private String roleName;
-
-    /**
      * 机构id，org-code
      */
-    @TableField("district_code")
-    private String districtCode;
+    @TableField("org_code")
+    private String orgCode;
 
     /**
      * 创建人

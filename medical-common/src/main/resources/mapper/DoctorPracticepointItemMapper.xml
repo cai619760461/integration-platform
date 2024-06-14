@@ -21,4 +21,26 @@
         id, practicepoint_id, name, effective_start_date, effective_end_date, remark_org, create_by, create_time, update_by, update_time, is_delete
     </sql>
 
+    <select id="getDoctorPracticepointItems" resultType="com.incaier.integration.platform.response.doctor.DoctorPracticepointItemVo">
+        select
+            id,
+            practicepoint_id,
+            name,
+            effective_start_date,
+            effective_end_date,
+            remark_org
+        from
+            doctor_practicepoint_item
+        where
+            is_delete = 0
+          and practicepoint_id = #{practicepointId}
+    </select>
+
+    <insert id="saveBatch">
+        INSERT INTO doctor_practicepoint_item (practicepoint_id, name, effective_start_date, effective_end_date, remark_org, create_by, update_by) VALUES
+        <foreach collection="items" item="item" separator=",">
+            (#{item.practicepointId}, #{item.name}, #{item.effectiveStartDate}, #{item.effectiveEndDate}, #{item.remarkOrg}, #{item.createBy}, #{item.updateBy})
+        </foreach>
+    </insert>
+
 </mapper>

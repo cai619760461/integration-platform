@@ -1,8 +1,11 @@
 package com.incaier.integration.platform.mapper;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.incaier.integration.platform.entity.doctor.DoctorQualification;
+import com.incaier.integration.platform.response.doctor.DoctorQualificationVo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -13,6 +16,14 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2024-06-13
  */
 @Mapper
+@DS("testMedicalManage")
 public interface DoctorQualificationMapper extends BaseMapper<DoctorQualification> {
 
+    /**
+     * 取得医生资格
+     *
+     * @param doctorId 医生id
+     * @return {@link DoctorQualificationVo}
+     */
+    DoctorQualificationVo getDoctorQualificationById(@Param("doctorId") Integer doctorId);
 }

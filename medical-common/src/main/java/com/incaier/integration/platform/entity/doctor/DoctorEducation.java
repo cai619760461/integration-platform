@@ -28,10 +28,16 @@ public class DoctorEducation implements Serializable {
     private static final long serialVersionUID = 2545302623803689274L;
 
     /**
-     * 医生id
+     * id
      */
     @TableField("id")
     private Integer id;
+
+    /**
+     * 医生id
+     */
+    @TableField("doctor_id")
+    private Integer doctorId;
 
     /**
      * 医生毕业院校
@@ -92,6 +98,12 @@ public class DoctorEducation implements Serializable {
      */
     @TableField("service_education")
     private String serviceEducation;
+
+    /**
+     * 在职学历
+     */
+    @TableField("incumbency_degree")
+    private String incumbencyDegree;
 
     /**
      * 学分

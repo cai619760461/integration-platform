@@ -12,18 +12,58 @@
         <result column="phone_number" property="phoneNumber" />
         <result column="email" property="email" />
         <result column="user_name" property="userName" />
-        <result column="role_id" property="roleId" />
-        <result column="role_name" property="roleName" />
-        <result column="district_code" property="districtCode" />
+        <result column="org_code" property="orgCode" />
         <result column="create_by" property="createBy" />
         <result column="create_time" property="createTime" />
         <result column="update_by" property="updateBy" />
         <result column="update_time" property="updateTime" />
         <result column="is_delete" property="isDelete" />
     </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, sex, identity_no, ethnicity, phone_number, email, user_name, role_id, role_name, district_code, create_by, create_time, update_by, update_time, is_delete
+        id, name, sex, identity_no, ethnicity, phone_number, email, user_name, org_code, create_by, create_time, update_by, update_time, is_delete
     </sql>
+
+    <select id="getDoctorList" resultType="com.incaier.integration.platform.response.doctor.DoctorVo">
+        select
+            di.id,
+            di.phone_number,
+            di.name,
+            di.sex,
+            di.birthday,
+            di.user_name,
+            dp.code,
+            dp.practice_org,
+            dp.practice_level,
+            dp.practice_type,
+            dp.practice_item
+        from
+            doctor_info di
+        left join doctor_practicepoint dp on di.id = dp.doctor_id
+        where
+            di.is_delete = 0
+        and dp.is_delete = 0
+        <if test="keyword != null and keyword != ''">
+            and name LIKE concat('%',#{keyword},'%')
+        </if>
+        where di.is_delete = 0
+        and dp.is_delete = 0
+        <if test="orgCode != null and orgCode != ''">
+            and di.org_code = #{orgCode}
+        </if>
+        <if test="practiceLevel != null and practiceLevel != ''">
+            and dp.practice_level = #{practiceLevel}
+        </if>
+        <if test="practiceType != null and practiceType != ''">
+            and dp.practice_type = #{practiceType}
+        </if>
+        <if test="practiceItem != null and practiceItem != ''">
+            and dp.practice_item = #{practiceItem}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            and (di.name LIKE concat('%',#{keyword},'%') or di.phone_number = #{keyword})
+        </if>
+    </select>
 
 </mapper>

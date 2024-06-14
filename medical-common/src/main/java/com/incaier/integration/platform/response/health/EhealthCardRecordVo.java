@@ -4,8 +4,9 @@ import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.incaier.integration.platform.config.ExcelConverter;
-import com.incaier.integration.platform.config.SensitiveDataJsonSerializer;
+import com.incaier.integration.platform.handler.DataJsonSerializer;
+import com.incaier.integration.platform.handler.ExcelConverter;
+import com.incaier.integration.platform.handler.SensitiveDataJsonSerializer;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -75,7 +76,7 @@ public class EhealthCardRecordVo implements Serializable {
      * 卡主性别
      */
     @ExcelProperty(value = "性别", converter = ExcelConverter.GenderConverter.class)
-    @JsonSerialize(using = SensitiveDataJsonSerializer.GenderSerializer.class)
+    @JsonSerialize(using = DataJsonSerializer.GenderSerializer.class)
     private String sex;
 
     /**

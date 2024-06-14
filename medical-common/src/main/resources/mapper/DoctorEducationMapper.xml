@@ -4,31 +4,55 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.incaier.integration.platform.entity.doctor.DoctorEducation">
-        <id column="id" property="id" />
-        <result column="doctor_id" property="doctorId" />
-        <result column="school" property="school" />
-        <result column="subject" property="subject" />
-        <result column="learn_time" property="learnTime" />
-        <result column="learn_level_code" property="learnLevelCode" />
-        <result column="learn_level_name" property="learnLevelName" />
-        <result column="degree" property="degree" />
-        <result column="graduation_time" property="graduationTime" />
-        <result column="service_education" property="serviceEducation" />
-        <result column="credits" property="credits" />
-        <result column="learn_item" property="learnItem" />
-        <result column="work_item" property="workItem" />
-        <result column="continuous_educational" property="continuousEducational" />
-        <result column="winning_record" property="winningRecord" />
-        <result column="create_by" property="createBy" />
-        <result column="create_time" property="createTime" />
-        <result column="update_by" property="updateBy" />
-        <result column="update_time" property="updateTime" />
-        <result column="is_delete" property="isDelete" />
+        <id column="id" property="id"/>
+        <result column="doctor_id" property="doctorId"/>
+        <result column="school" property="school"/>
+        <result column="subject" property="subject"/>
+        <result column="learn_time" property="learnTime"/>
+        <result column="learn_level_code" property="learnLevelCode"/>
+        <result column="learn_level_name" property="learnLevelName"/>
+        <result column="degree" property="degree"/>
+        <result column="graduation_time" property="graduationTime"/>
+        <result column="service_education" property="serviceEducation"/>
+        <result column="incumbency_degree" property="incumbencyDegree"/>
+        <result column="credits" property="credits"/>
+        <result column="learn_item" property="learnItem"/>
+        <result column="work_item" property="workItem"/>
+        <result column="continuous_educational" property="continuousEducational"/>
+        <result column="winning_record" property="winningRecord"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_delete" property="isDelete"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, doctor_id, school, subject, learn_time, learn_level_code, learn_level_name, degree, graduation_time, service_education, credits, learn_item, work_item, continuous_educational, winning_record, create_by, create_time, update_by, update_time, is_delete
     </sql>
+
+    <select id="getDoctorEducationById" resultType="com.incaier.integration.platform.response.doctor.DoctorEducationVo">
+        select
+            id,
+            doctor_id,
+            school,
+            subject,
+            learn_time,
+            degree,
+            graduation_time,
+            service_education,
+            incumbency_degree,
+            credits,
+            learn_item,
+            work_item,
+            continuous_educational,
+            winning_record
+        from
+            doctor_education
+        where is_delete = 0
+          and doctor_id = #{doctorId}
+        limit 1
+    </select>
 
 </mapper>

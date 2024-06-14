@@ -106,7 +106,7 @@ DROP TABLE IF EXISTS `doctor_info`;
 CREATE TABLE `doctor_info` (
     `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '医生id',
     `name` varchar(32) NOT NULL COMMENT '姓名',
-    `sex` tinyint(4) NOT NULL COMMENT '性别 0 女 1 男 9 未知',
+    `sex` tinyint(4) NOT NULL COMMENT '性别 1 男 2 女 9 未知',
     `identity_no` VARCHAR(32) NOT NULL COMMENT '身份证',
     `birthday` date NOT NULL COMMENT '出生日期',
     `ethnicity` varchar(10) DEFAULT NULL COMMENT '民族',

@@ -38,4 +38,29 @@
         id, doctor_id, code, practice_level, practice_title, practice_title_code, practice_item, practice_type, check_org, check_date, practice_address, practice_org, practice_org_address, practice_dept, document1_avatar, document1_avatar_type, document2_avatar, document2_avatar_type, document3_avatar, document3_avatar_type, enabled, title_information, is_general_practitioner, create_by, create_time, update_by, update_time, is_delete
     </sql>
 
+    <select id="getDoctorPracticepointById" resultType="com.incaier.integration.platform.response.doctor.DoctorPracticepointVo">
+        select
+            id,
+            code,
+            practice_level,
+            practice_dept,
+            practice_type,
+            practice_item,
+            practice_org,
+            practice_org_address,
+            enabled,
+            title_information,
+            check_org,
+            check_date,
+            practice_address,
+            practice_title,
+            is_general_practitioner
+        from
+            doctor_practicepoint
+        where
+            is_delete = 0
+        and doctor_id = #{doctorId}
+        limit 1
+    </select>
+
 </mapper>
