@@ -1,5 +1,7 @@
 package com.incaier.integration.platform.request.doctor;
 
+import com.incaier.integration.platform.entity.valid.AddGroup;
+import com.incaier.integration.platform.entity.valid.UpdateGroup;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,7 +29,7 @@ public class DoctorDetailDto implements Serializable {
      * 医生基本信息
      */
     @Valid
-    @NotNull(message = "用户基本信息不可为空")
+    @NotNull(message = "用户基本信息不可为空", groups = {AddGroup.class, UpdateGroup.class})
     private DoctorInfoDto doctorInfo;
 
     /**
@@ -44,6 +46,11 @@ public class DoctorDetailDto implements Serializable {
      * 医生执业信息
      */
     private DoctorPracticepointDto doctorPracticepoint;
+
+    /**
+     * 删除备案id
+     */
+    private List<Integer> deleteIds;
 
     /**
      * 医生执业信息

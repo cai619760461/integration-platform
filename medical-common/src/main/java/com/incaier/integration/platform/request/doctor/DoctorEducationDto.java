@@ -1,7 +1,9 @@
 package com.incaier.integration.platform.request.doctor;
 
+import com.incaier.integration.platform.request.BaseDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
@@ -16,7 +18,8 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DoctorEducationDto implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class DoctorEducationDto extends BaseDto implements Serializable {
 
     private static final long serialVersionUID = 4946320090915440265L;
 
@@ -24,11 +27,6 @@ public class DoctorEducationDto implements Serializable {
      * 经历 id
      */
     private Integer id;
-
-    /**
-     * 医生id
-     */
-    private Integer doctorId;
 
     /**
      * 医生毕业院校
@@ -44,6 +42,16 @@ public class DoctorEducationDto implements Serializable {
      * 医生学制
      */
     private Integer learnTime;
+
+    /**
+     * 医生学历编码
+     */
+    private String learnLevelCode;
+
+    /**
+     * 医生学历名称
+     */
+    private String learnLevelName;
 
     /**
      * 医生学位

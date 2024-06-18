@@ -2,9 +2,16 @@ package com.incaier.integration.platform.handler;
 
 import com.alibaba.excel.converters.Converter;
 import com.alibaba.excel.converters.WriteConverterContext;
+import com.alibaba.excel.enums.CellDataTypeEnum;
+import com.alibaba.excel.metadata.GlobalConfiguration;
+import com.alibaba.excel.metadata.data.ReadCellData;
 import com.alibaba.excel.metadata.data.WriteCellData;
+import com.alibaba.excel.metadata.property.ExcelContentProperty;
 import org.apache.commons.lang3.StringUtils;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -70,6 +77,41 @@ public class ExcelConverter {
         @Override
         public WriteCellData<?> convertToExcelData(WriteConverterContext<Integer> context) {
             return new WriteCellData<>(ENABLE_MAP.getOrDefault(context.getValue(), "是"));
+        }
+    }
+
+    /**
+     * 本地日期字符串转换器
+     *
+     * @author caiweijie
+     * @date 2024/06/17
+     */
+    public static class LocalDateStringConverter implements Converter<LocalDate> {
+        @Override
+        public Class<LocalDateTime> supportJavaTypeKey() {
+            return LocalDateTime.class;
+        }
+
+        @Override
+        public CellDataTypeEnum supportExcelTypeKey() {
+            return CellDataTypeEnum.STRING;
+        }
+
+        @Override
+        public WriteCellData<?> convertToExcelData(LocalDate localDate, ExcelContentProperty excelContentProperty, GlobalConfiguration globalConfiguration) throws Exception {
+            WriteCellData<String> cellData = new WriteCellData<>();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String cellValue;
+            cellValue=formatter.format(localDate);
+            cellData.setType(CellDataTypeEnum.STRING);
+            cellData.setStringValue(cellValue);
+            cellData.setData(cellValue);
+            return cellData;
+        }
+
+        @Override
+        public LocalDate convertToJavaData(ReadCellData<?> cellData, ExcelContentProperty contentProperty, GlobalConfiguration globalConfiguration) throws Exception {
+            return LocalDate.parse(cellData.getStringValue(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         }
     }
 }

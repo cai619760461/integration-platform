@@ -3,6 +3,7 @@ package com.incaier.integration.platform.mapper;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.incaier.integration.platform.entity.doctor.DoctorPracticepointItem;
+import com.incaier.integration.platform.request.doctor.DoctorPracticepointItemDto;
 import com.incaier.integration.platform.response.doctor.DoctorPracticepointItemVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -35,4 +36,12 @@ public interface DoctorPracticepointItemMapper extends BaseMapper<DoctorPractice
      * @param items 实体数据
      */
     void saveBatch(@Param("items") List<DoctorPracticepointItem> items);
+
+    /**
+     * 保存或更新
+     *
+     * @param doctorPracticepointItem 医生多机构备案信息
+     * @return {@link Boolean}
+     */
+    Boolean saveOrUpdate(DoctorPracticepointItemDto doctorPracticepointItem);
 }

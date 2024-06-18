@@ -4,10 +4,11 @@
 
     <select id="getRolesByPersonnelId" resultType="com.incaier.integration.platform.response.RoleVO">
         select sr.ID     as roleId,
-               sr.`NAME` as roleName,
+               sr.NAME as roleName,
                sr.INFO   as info
-        from SYS_ROLE_USER sru
-        inner join SYS_ROLE sr on sru.ROLE_ID = sr.ID
-        where a.USER_ID = #{pk}
+        from `hip-portal-cloud`.SYS_ROLE_USER sru inner join `hip-portal-cloud`.SYS_ROLE sr on
+            sru.ROLE_ID = sr.ID
+        where
+            sru.USER_ID = #{pk}
     </select>
 </mapper>

@@ -41,14 +41,12 @@
         from
             doctor_info di
         left join doctor_practicepoint dp on di.id = dp.doctor_id
+        and dp.is_delete = 0
         where
             di.is_delete = 0
-        and dp.is_delete = 0
         <if test="keyword != null and keyword != ''">
             and name LIKE concat('%',#{keyword},'%')
         </if>
-        where di.is_delete = 0
-        and dp.is_delete = 0
         <if test="orgCode != null and orgCode != ''">
             and di.org_code = #{orgCode}
         </if>
@@ -65,5 +63,21 @@
             and (di.name LIKE concat('%',#{keyword},'%') or di.phone_number = #{keyword})
         </if>
     </select>
+
+    <!-- 插入或者更新 -->
+    <insert id="saveOrUpdate" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO doctor_info (id, name, sex, identity_no, birthday, ethnicity, phone_number, email, user_name, org_code, create_by, update_by)
+        VALUES (#{id}, #{name}, #{sex}, #{identityNo}, #{birthday}, #{ethnicity}, #{phoneNumber}, #{email}, #{userName}, #{orgCode}, #{createBy}, #{updateBy})
+        ON DUPLICATE KEY UPDATE
+        name = VALUES(name),
+        sex = VALUES(sex),
+        identity_no = VALUES(identity_no),
+        birthday = VALUES(birthday),
+        ethnicity = VALUES(ethnicity),
+        phone_number = VALUES(phone_number),
+        email = VALUES(email),
+        org_code = VALUES(org_code),
+        update_by = VALUES(update_by)
+    </insert>
 
 </mapper>

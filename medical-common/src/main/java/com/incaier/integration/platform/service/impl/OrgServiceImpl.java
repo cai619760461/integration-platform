@@ -49,7 +49,7 @@ public class OrgServiceImpl extends ServiceImpl<OrgMapper, Org> implements OrgSe
     }
 
     @Override
-    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = RuntimeException.class)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     public Boolean saveOrUpdateOrg(OrgDto orgDto) {
         Org org = new Org();
         BeanUtils.copyProperties(orgDto, org);

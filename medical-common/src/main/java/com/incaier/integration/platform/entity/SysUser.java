@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -96,7 +97,7 @@ public class SysUser implements Serializable {
      */
     @TableField(value = "DATE_OF_BIRTH")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date  dateOfBirth;
+    private LocalDate dateOfBirth;
 
     /**
      * 科室代码

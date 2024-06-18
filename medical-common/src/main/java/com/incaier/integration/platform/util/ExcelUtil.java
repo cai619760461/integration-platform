@@ -4,17 +4,26 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.support.ExcelTypeEnum;
 import com.alibaba.excel.write.metadata.WriteSheet;
+import com.alibaba.excel.write.metadata.style.WriteCellStyle;
+import com.alibaba.excel.write.metadata.style.WriteFont;
+import com.alibaba.excel.write.style.HorizontalCellStyleStrategy;
 import com.alibaba.fastjson2.JSON;
 import com.github.pagehelper.PageHelper;
 import com.incaier.integration.platform.request.PageDto;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -44,10 +53,10 @@ public class ExcelUtil {
      * @param getDataFunction  获取数据函数
      * @param dataClass        数据类
      */
-    public static <T,D extends PageDto> void export(D dto, HttpServletResponse response,
-                                                    Function<D, Integer> getCountFunction,
-                                                    Function<D, List<T>> getDataFunction,
-                                                    Class<T> dataClass) {
+    public static <T, D extends PageDto> void export(D dto, HttpServletResponse response,
+                                                     Function<D, Integer> getCountFunction,
+                                                     Function<D, List<T>> getDataFunction,
+                                                     Class<T> dataClass) {
         logger.info("************* 列表导出 EXCEL 开始，操作行为：{} **************", JSON.toJSONString(dto));
         // 文件名
         String fileName = "Export_" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
@@ -111,4 +120,50 @@ public class ExcelUtil {
         }
     }
 
+    /**
+     * 模板下载
+     *
+     * @param response 回答
+     * @param t        t
+     * @param list     列表
+     * @throws Exception 异常
+     */
+    public static <T, F> void download(HttpServletResponse response, Class<T> t, List<F> list) throws Exception {
+        String fileName = URLEncoder.encode("医生信息导入模板.xlsx", "utf-8");
+        // 设置文本内省
+        response.setContentType("application/vnd.ms-excel");
+        // 设置字符编码
+        response.setCharacterEncoding("utf-8");
+        // 设置响应头
+        response.setHeader("Content-disposition", "attachment;filename=" + new String(fileName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1));
+        // 内容样式策略
+        WriteCellStyle contentWriteCellStyle = new WriteCellStyle();
+        // 垂直居中,水平居中
+        contentWriteCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        contentWriteCellStyle.setHorizontalAlignment(HorizontalAlignment.CENTER);
+        contentWriteCellStyle.setBorderLeft(BorderStyle.THIN);
+        contentWriteCellStyle.setBorderTop(BorderStyle.THIN);
+        contentWriteCellStyle.setBorderRight(BorderStyle.THIN);
+        contentWriteCellStyle.setBorderBottom(BorderStyle.THIN);
+        // 设置 自动换行
+        contentWriteCellStyle.setWrapped(true);
+        // 字体策略
+        WriteFont contentWriteFont = new WriteFont();
+        // 字体大小
+        contentWriteFont.setFontHeightInPoints((short) 12);
+        contentWriteCellStyle.setWriteFont(contentWriteFont);
+        // 头策略使用默认 设置字体大小
+        WriteCellStyle headWriteCellStyle = new WriteCellStyle();
+        WriteFont headWriteFont = new WriteFont();
+        headWriteFont.setFontHeightInPoints((short) 12);
+        headWriteCellStyle.setWriteFont(headWriteFont);
+        // io流写入数据
+        ServletOutputStream outputStream = response.getOutputStream();
+        EasyExcel.write(outputStream, t)
+                .registerWriteHandler(new HorizontalCellStyleStrategy(headWriteCellStyle, contentWriteCellStyle))
+                .sheet("模板")
+                .doWrite(list);
+        outputStream.flush();
+        outputStream.close();
+    }
 }

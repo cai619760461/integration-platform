@@ -49,7 +49,7 @@ public class SysDictDataServiceImpl extends ServiceImpl<SysDictDataMapper, SysDi
     }
 
     @Override
-    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = RuntimeException.class)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     public Boolean dataSaveOrUpdate(SysDictDataDto sysDictDataDto) {
         SysDictData sysDictData = new SysDictData();
         BeanUtils.copyProperties(sysDictDataDto, sysDictData);

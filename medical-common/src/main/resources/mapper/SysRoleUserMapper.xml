@@ -8,4 +8,17 @@
             (#{entity.roleId}, #{entity.userId})
         </foreach>
     </insert>
+
+    <select id="getRolesByIds" resultType="com.incaier.integration.platform.response.RoleVO">
+        select ID as roleId, NAME as roleName, INFO as info
+        from SYS_ROLE
+        <where>
+            <if test="roleIds != null and roleIds.length > 0 ">
+                ID in
+                <foreach collection="roleIds" item="roleId" open="(" close=")" separator=",">
+                    #{roleId}
+                </foreach>
+            </if>
+        </where>
+    </select>
 </mapper>

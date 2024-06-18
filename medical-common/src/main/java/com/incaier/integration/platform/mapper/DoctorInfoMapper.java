@@ -3,6 +3,7 @@ package com.incaier.integration.platform.mapper;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.incaier.integration.platform.entity.doctor.DoctorInfo;
+import com.incaier.integration.platform.request.doctor.DoctorInfoDto;
 import com.incaier.integration.platform.request.doctor.DoctorQueryDto;
 import com.incaier.integration.platform.response.doctor.DoctorVo;
 import org.apache.ibatis.annotations.Mapper;
@@ -28,4 +29,12 @@ public interface DoctorInfoMapper extends BaseMapper<DoctorInfo> {
      * @return {@link List}<{@link DoctorInfo}>
      */
     List<DoctorVo> getDoctorList(DoctorQueryDto dto);
+
+    /**
+     * 保存或更新(工号 user_name 不修改)
+     *
+     * @param dto request
+     * @return {@link Boolean}
+     */
+    Boolean saveOrUpdate(DoctorInfoDto dto);
 }

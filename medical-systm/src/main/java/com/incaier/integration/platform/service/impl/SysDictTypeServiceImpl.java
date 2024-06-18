@@ -57,7 +57,7 @@ public class SysDictTypeServiceImpl extends ServiceImpl<SysDictTypeMapper, SysDi
     }
 
     @Override
-    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = RuntimeException.class)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     public Boolean typeSaveOrUpdate(SysDictTypeDto sysDictTypeDto) {
         SysDictType sysDictType = new SysDictType();
         BeanUtils.copyProperties(sysDictTypeDto, sysDictType);
@@ -69,7 +69,7 @@ public class SysDictTypeServiceImpl extends ServiceImpl<SysDictTypeMapper, SysDi
     }
 
     @Override
-    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = RuntimeException.class)
+    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     public Boolean typeDelete(Integer id) {
         SysDictType sysDictType = sysDictTypeMapper.selectById(id);
         if (ObjectUtils.isEmpty(sysDictType)) {

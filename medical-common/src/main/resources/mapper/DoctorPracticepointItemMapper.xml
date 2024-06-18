@@ -43,4 +43,16 @@
         </foreach>
     </insert>
 
+    <insert id="saveOrUpdate" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO doctor_practicepoint_item (id, practicepoint_id, name, effective_start_date, effective_end_date, remark_org, create_by, update_by
+        ) VALUES (#{id}, #{practicepointId}, #{name}, #{effectiveStartDate}, #{effectiveEndDate}, #{remarkOrg}, #{createBy}, #{updateBy})
+        ON DUPLICATE KEY UPDATE
+        practicepoint_id = VALUES(practicepoint_id),
+        name = VALUES(name),
+        effective_start_date = VALUES(effective_start_date),
+        effective_end_date = VALUES(effective_end_date),
+        remark_org = VALUES(remark_org),
+        update_by = VALUES(update_by)
+    </insert>
+
 </mapper>

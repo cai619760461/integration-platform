@@ -52,7 +52,31 @@
             doctor_education
         where is_delete = 0
           and doctor_id = #{doctorId}
+        order by id desc
         limit 1
     </select>
+
+    <insert id="saveOrUpdate" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO doctor_education (id, doctor_id, school, subject, learn_time, learn_level_code, learn_level_name, degree, graduation_time, service_education, incumbency_degree, credits, learn_item, work_item, continuous_educational, winning_record, create_by, update_by)
+        VALUES (#{id}, #{doctorId}, #{school}, #{subject}, #{learnTime}, #{learnLevelCode}, #{learnLevelName}, #{degree}, #{graduationTime}, #{serviceEducation}, #{incumbencyDegree}, #{credits}, #{learnItem}, #{workItem}, #{continuousEducational}, #{winningRecord}, #{createBy}, #{updateBy})
+        ON DUPLICATE KEY UPDATE
+        doctor_id = VALUES(doctor_id),
+        school = VALUES(school),
+        subject = VALUES(subject),
+        learn_time = VALUES(learn_time),
+        learn_level_code = VALUES(learn_level_code),
+        learn_level_name = VALUES(learn_level_name),
+        degree = VALUES(degree),
+        graduation_time = VALUES(graduation_time),
+        service_education = VALUES(service_education),
+        incumbency_degree = VALUES(incumbency_degree),
+        credits = VALUES(credits),
+        learn_item = VALUES(learn_item),
+        work_item = VALUES(work_item),
+        continuous_educational = VALUES(continuous_educational),
+        winning_record = VALUES(winning_record),
+        update_by = VALUES(update_by)
+    </insert>
+
 
 </mapper>

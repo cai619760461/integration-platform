@@ -1,8 +1,6 @@
 package com.incaier.integration.platform.response.doctor;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.incaier.integration.platform.handler.DataJsonSerializer;
 import com.incaier.integration.platform.response.RoleVO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -45,7 +43,7 @@ public class DoctorVo implements Serializable {
     /**
      * 性别 1 男 2 女 9 未知
      */
-    @JsonSerialize(using = DataJsonSerializer.GenderSerializer.class)
+//    @JsonSerialize(using = DataJsonSerializer.GenderSerializer.class)
     private Integer sex;
 
     /**

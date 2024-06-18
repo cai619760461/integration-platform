@@ -168,6 +168,13 @@
             <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
             <version>3.5.2</version>
         </dependency>
+
+        <!-- minio -->
+        <dependency>
+            <groupId>io.minio</groupId>
+            <artifactId>minio</artifactId>
+            <version>${minio.version}</version>
+        </dependency>
     </dependencies>
 
     <!-- 公共模块打包忽略 main -->

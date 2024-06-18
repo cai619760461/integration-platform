@@ -1,15 +1,19 @@
 package com.incaier.integration.platform.request.doctor;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.incaier.integration.platform.entity.valid.AddGroup;
+import com.incaier.integration.platform.entity.valid.UpdateGroup;
+import com.incaier.integration.platform.request.BaseDto;
 import com.incaier.integration.platform.response.RoleVO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -22,39 +26,41 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DoctorInfoDto implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class DoctorInfoDto extends BaseDto implements Serializable {
 
-    private static final long serialVersionUID = 3131826190138851625L;
+    private static final long serialVersionUID = 5641037121217443815L;
 
     /**
      * 医生id
      */
+    @NotNull(message = "医生id不可为空", groups = {UpdateGroup.class})
     private Integer id;
 
     /**
      * 姓名
      */
-    @NotEmpty(message = "姓名不可为空")
+    @NotEmpty(message = "姓名不可为空", groups = {AddGroup.class, UpdateGroup.class})
     private String name;
 
     /**
      * 性别 1 男 2 女 9 未知
      */
-    @NotNull(message = "性别不可为空")
+    @NotNull(message = "性别不可为空", groups = {AddGroup.class, UpdateGroup.class})
     private Integer sex;
 
     /**
      * 身份证
      */
-    @NotEmpty(message = "身份证不可为空")
+    @NotEmpty(message = "身份证不可为空", groups = {AddGroup.class, UpdateGroup.class})
     private String identityNo;
 
     /**
      * 出生日期
      */
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
-    @NotNull(message = "出生日期不可为空")
-    private Date birthday;
+    @NotNull(message = "出生日期不可为空", groups = {AddGroup.class, UpdateGroup.class})
+    private LocalDate birthday;
 
     /**
      * 民族
@@ -64,7 +70,7 @@ public class DoctorInfoDto implements Serializable {
     /**
      * 联系电话
      */
-    @NotEmpty(message = "联系电话不可为空")
+    @NotEmpty(message = "联系电话不可为空", groups = {AddGroup.class, UpdateGroup.class})
     private String phoneNumber;
 
     /**
@@ -75,18 +81,22 @@ public class DoctorInfoDto implements Serializable {
     /**
      * 用户名（工号）
      */
-    @NotEmpty(message = "用户名（工号）不可为空")
+    @NotEmpty(message = "用户名（工号）不可为空", groups = {AddGroup.class, UpdateGroup.class})
     private String userName;
 
     /**
      * 角色
      */
-    @NotNull(message = "角色不可为空")
     List<RoleVO> roles;
 
     /**
      * 机构id，org-code
      */
-    @NotNull(message = "机构编码不可为空")
+    @NotNull(message = "机构编码不可为空", groups = {AddGroup.class, UpdateGroup.class})
     private String orgCode;
+
+    /**
+     * 域id
+     */
+    private String domainId;
 }

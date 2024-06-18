@@ -28,7 +28,9 @@ public class DataJsonSerializer {
 
         static {
             GENDER_MAP.put("1", "男");
+            GENDER_MAP.put("01", "男性");
             GENDER_MAP.put("2", "女");
+            GENDER_MAP.put("02", "女性");
             GENDER_MAP.put("9", "未知");
         }
 

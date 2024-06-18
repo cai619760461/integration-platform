@@ -1,10 +1,8 @@
 package com.incaier.integration.platform.request.doctor;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.incaier.integration.platform.request.BaseDto;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -21,9 +19,10 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DoctorPracticepointItemDto implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class DoctorPracticepointItemDto extends BaseDto implements Serializable {
 
-    private static final long serialVersionUID = -6289657344843031416L;
+    private static final long serialVersionUID = -2657240843484450999L;
 
     /**
      * 医生执业信息id

@@ -3,6 +3,7 @@ package com.incaier.integration.platform.mapper;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.incaier.integration.platform.entity.SysRoleUser;
+import com.incaier.integration.platform.response.RoleVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -24,4 +25,12 @@ public interface SysRoleUserMapper extends BaseMapper<SysRoleUser> {
      * @param roles 角色
      */
     void saveBatch(@Param("roles") List<SysRoleUser> roles);
+
+    /**
+     * 按ID获取角色
+     *
+     * @param roleIds 角色ids
+     * @return {@link List}<{@link RoleVO}>
+     */
+    List<RoleVO> getRolesByIds(@Param("roleIds") String[] roleIds);
 }

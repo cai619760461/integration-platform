@@ -60,7 +60,42 @@
         where
             is_delete = 0
         and doctor_id = #{doctorId}
+        order by id desc
         limit 1
     </select>
 
+    <insert id="saveOrUpdate" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO doctor_practicepoint (id, doctor_id, code, practice_level, practice_title, practice_item, practice_type,
+        check_org, check_date, practice_address, practice_org, practice_org_address, practice_dept,
+        <if test="enabled != null and enable != ''">
+            enabled,
+        </if>
+        title_information, is_general_practitioner, create_by, update_by)
+        VALUES (#{id}, #{doctorId}, #{code}, #{practiceLevel}, #{practiceTitle}, #{practiceItem}, #{practiceType},
+        #{checkOrg}, #{checkDate}, #{practiceAddress}, #{practiceOrg}, #{practiceOrgAddress}, #{practiceDept},
+        <if test="enabled != null and enable != ''">
+            #{enabled},
+        </if>
+        #{titleInformation}, #{isGeneralPractitioner}, #{createBy}, #{updateBy}
+        ) ON DUPLICATE KEY UPDATE
+        doctor_id = VALUES(doctor_id),
+        code = VALUES(code),
+        practice_level = VALUES(practice_level),
+        practice_title = VALUES(practice_title),
+        practice_title_code = VALUES(practice_title_code),
+        practice_item = VALUES(practice_item),
+        practice_type = VALUES(practice_type),
+        check_org = VALUES(check_org),
+        check_date = VALUES(check_date),
+        practice_address = VALUES(practice_address),
+        practice_org = VALUES(practice_org),
+        practice_org_address = VALUES(practice_org_address),
+        practice_dept = VALUES(practice_dept),
+        <if test="enabled != null and enable != ''">
+            enabled = VALUES(enabled),
+        </if>
+        title_information = VALUES(title_information),
+        is_general_practitioner = VALUES(is_general_practitioner),
+        update_by = VALUES(update_by)
+    </insert>
 </mapper>

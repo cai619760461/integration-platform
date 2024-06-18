@@ -79,3 +79,11 @@ sa-token:
 
 personnel:
   domainId: 1.2.156.112747.001.001.1.2
+
+minio:
+  enable: true  # 必须配置 true
+  secure: false # 是否使用 https
+  endpoint: http://47.105.75.68:9000 #47.104.148.165:9010 # minio 地址
+  accessKey: minioadmin  # Minio 账户名
+  secretKey: minioadmin111 # minio 密码
+  bucketName: medical # 文件存储块

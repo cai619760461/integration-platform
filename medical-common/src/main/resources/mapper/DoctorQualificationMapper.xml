@@ -41,7 +41,22 @@
         where
             is_delete = 0
           and doctor_id = #{doctorId}
+        order by id desc
         limit 1
     </select>
+
+    <insert id="saveOrUpdate" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO doctor_qualification (id, doctor_id, code, type, qualification_year, send_documents_org, issue_date, create_by, update_by)
+        VALUES (#{id}, #{doctorId}, #{code}, #{type}, #{qualificationYear}, #{sendDocumentsOrg}, #{issueDate}, #{createBy}, #{updateBy})
+        ON DUPLICATE KEY UPDATE
+        doctor_id = VALUES(doctor_id),
+        code = VALUES(code),
+        type = VALUES(type),
+        qualification_year = VALUES(qualification_year),
+        send_documents_org = VALUES(send_documents_org),
+        issue_date = VALUES(issue_date),
+        update_by = VALUES(update_by)
+    </insert>
+
 
 </mapper>

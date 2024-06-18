@@ -3,6 +3,7 @@ package com.incaier.integration.platform.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.dynamic.datasource.annotation.DSTransactional;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.Page;
@@ -18,27 +19,36 @@ import com.incaier.integration.platform.entity.doctor.*;
 import com.incaier.integration.platform.exception.CommonBusinessException;
 import com.incaier.integration.platform.handler.DataJsonSerializer;
 import com.incaier.integration.platform.mapper.*;
+import com.incaier.integration.platform.request.BaseDto;
 import com.incaier.integration.platform.request.doctor.DoctorDetailDto;
 import com.incaier.integration.platform.request.doctor.DoctorInfoDto;
 import com.incaier.integration.platform.request.doctor.DoctorQueryDto;
+import com.incaier.integration.platform.request.excel.ExcelDoctorEntity;
+import com.incaier.integration.platform.response.RoleVO;
 import com.incaier.integration.platform.response.doctor.DoctorDetailVo;
 import com.incaier.integration.platform.response.doctor.DoctorInfoVo;
 import com.incaier.integration.platform.response.doctor.DoctorPracticepointVo;
 import com.incaier.integration.platform.response.doctor.DoctorVo;
-import com.incaier.integration.platform.service.DoctorinfoService;
+import com.incaier.integration.platform.service.DoctorInfoService;
+import com.incaier.integration.platform.service.PersonnelService;
+import com.incaier.integration.platform.service.SysRoleUserService;
 import com.incaier.integration.platform.util.AesUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -51,7 +61,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @DS("testMedicalManage")
-public class DoctorInfoServiceImpl extends ServiceImpl<DoctorInfoMapper, DoctorInfo> implements DoctorinfoService {
+public class DoctorInfoServiceImpl extends ServiceImpl<DoctorInfoMapper, DoctorInfo> implements DoctorInfoService {
 
     private final Logger logger = LoggerFactory.getLogger(DoctorInfoServiceImpl.class);
 
@@ -70,8 +80,14 @@ public class DoctorInfoServiceImpl extends ServiceImpl<DoctorInfoMapper, DoctorI
     @Autowired
     private DoctorEducationMapper doctorEducationMapper;
 
+    @Resource(name = "personnelService")
+    private PersonnelService personnelService;
+
     @Autowired
     private PersonnelMapper personnelMapper;
+
+    @Autowired
+    private SysRoleUserService sysRoleUserService;
 
     @Autowired
     private SysRoleUserMapper sysRoleUserMapper;
@@ -119,81 +135,119 @@ public class DoctorInfoServiceImpl extends ServiceImpl<DoctorInfoMapper, DoctorI
     }
 
     @Override
-    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = RuntimeException.class)
+    @DSTransactional
     public Boolean addDoctor(DoctorDetailDto dto) {
         // 添加医生
         Integer doctorId = buildDoctorBasicInfo(dto.getDoctorInfo());
         // 教育经历
-        if (ObjectUtils.isNotEmpty(dto.getDoctorEducation())) {
-            DoctorEducation doctorEducation = new DoctorEducation();
-            BeanUtil.copyProperties(dto.getDoctorEducation(), doctorEducation);
-            doctorEducation.setDoctorId(doctorId);
-            doctorEducation.setCreateBy(UserHolder.getUserName());
-            doctorEducation.setUpdateBy(UserHolder.getUserName());
-            doctorEducationMapper.insert(doctorEducation);
-        }
+        saveOrUpdateDoctorRelation(doctorId, dto.getDoctorEducation(), x -> doctorEducationMapper.saveOrUpdate(x));
         // 资格信息
-        if (ObjectUtils.isNotEmpty(dto.getDoctorQualification())) {
-            DoctorQualification doctorQualification = new DoctorQualification();
-            BeanUtil.copyProperties(dto.getDoctorQualification(), doctorQualification);
-            doctorQualification.setDoctorId(doctorId);
-            doctorQualification.setCreateBy(UserHolder.getUserName());
-            doctorQualification.setUpdateBy(UserHolder.getUserName());
-            doctorQualificationMapper.insert(doctorQualification);
-        }
+        saveOrUpdateDoctorRelation(doctorId, dto.getDoctorQualification(), x -> doctorQualificationMapper.saveOrUpdate(x));
         // 执业信息
-        if (ObjectUtils.isNotEmpty(dto.getDoctorPracticepoint())) {
-            DoctorPracticepoint doctorPracticepoint = new DoctorPracticepoint();
-            BeanUtil.copyProperties(dto.getDoctorPracticepoint(), doctorPracticepoint);
-            doctorPracticepoint.setDoctorId(doctorId);
-            doctorPracticepoint.setCreateBy(UserHolder.getUserName());
-            doctorPracticepoint.setUpdateBy(UserHolder.getUserName());
-            doctorPracticepointMapper.insert(doctorPracticepoint);
+        saveOrUpdateDoctorRelation(doctorId, dto.getDoctorPracticepoint(), x -> {
+            doctorPracticepointMapper.saveOrUpdate(x);
+            Integer practicepointId = dto.getDoctorPracticepoint().getId();
             // 多机构备案
             if (CollectionUtils.isNotEmpty(dto.getDoctorPracticepointItems())) {
-                List<DoctorPracticepointItem> items = dto.getDoctorPracticepointItems().stream().map(item -> {
-                    DoctorPracticepointItem doctorPracticepointItem = new DoctorPracticepointItem();
-                    BeanUtil.copyProperties(item, doctorPracticepointItem);
-                    doctorPracticepointItem.setPracticepointId(doctorPracticepoint.getId());
-                    doctorPracticepointItem.setCreateBy(UserHolder.getUserName());
-                    doctorPracticepointItem.setUpdateBy(UserHolder.getUserName());
-                    return doctorPracticepointItem;
-                }).collect(Collectors.toList());
-                doctorPracticepointItemMapper.saveBatch(items);
+                dto.getDoctorPracticepointItems().forEach(item -> {
+                    item.setPracticepointId(practicepointId);
+                    saveOrUpdateDoctorRelation(0, item, itemDto -> doctorPracticepointItemMapper.saveOrUpdate(itemDto));
+                });
             }
-        }
+        });
         return true;
     }
 
     @Override
-    @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = RuntimeException.class)
-    public DoctorDetailVo deleteDoctor(Integer doctorId) {
+    @DSTransactional
+    public Boolean updateDetail(DoctorDetailDto dto) {
+        // 更新用户、角色、基本信息
+        // TODO personnel & doctor_info 暂不进行双向修改，制作新增
+        DoctorInfoDto doctorInfo = dto.getDoctorInfo();
+        logger.info("更新医生信息，医生id：{}", doctorInfo.getId());
+        Personnel personnel = personnelMapper.selectOne(Wrappers.<Personnel>lambdaQuery()
+                .eq(Personnel::getHealthCareProviderId, doctorInfo.getUserName())
+                .eq(Personnel::getDeleteFlag, "doctorInfo.getUserName()")
+                .last(BYConstant.SQL_LIMIT_1));
+        if (ObjectUtils.isEmpty(personnel)) {
+            throw new CommonBusinessException(ErrorCodeConstant.COMMON_ERROR, "用户数据异常");
+        }
+        // 更新角色
+        saveRoles(dto.getDoctorInfo().getRoles(), personnel.getPk().intValue());
+        // 更新医生数据
+        saveOrUpdateDoctorRelation(doctorInfo.getId(), dto.getDoctorInfo(), x -> doctorInfoMapper.saveOrUpdate(x));
+        // 教育经历
+        saveOrUpdateDoctorRelation(doctorInfo.getId(), dto.getDoctorEducation(), x -> doctorEducationMapper.saveOrUpdate(x));
+        // 资格信息
+        saveOrUpdateDoctorRelation(doctorInfo.getId(), dto.getDoctorQualification(), x -> doctorQualificationMapper.saveOrUpdate(x));
+        // 执业信息
+        saveOrUpdateDoctorRelation(doctorInfo.getId(), dto.getDoctorPracticepoint(), x -> {
+            doctorPracticepointMapper.saveOrUpdate(x);
+            Integer practicepointId = dto.getDoctorPracticepoint().getId();
+            // 多机构备案
+            if (CollectionUtils.isNotEmpty(dto.getDoctorPracticepointItems())) {
+                dto.getDoctorPracticepointItems().forEach(item -> {
+                    item.setPracticepointId(practicepointId);
+                    saveOrUpdateDoctorRelation(doctorInfo.getId(), item, itemDto -> doctorPracticepointItemMapper.saveOrUpdate(itemDto));
+                });
+            }
+        });
+        // 删除多机构备案
+        doctorPracticepointItemMapper.update(null, Wrappers.<DoctorPracticepointItem>lambdaUpdate()
+                .in(CollectionUtils.isNotEmpty(dto.getDeleteIds()), DoctorPracticepointItem::getId, dto.getDeleteIds())
+                .set(DoctorPracticepointItem::getIsDelete, BYConstant.INT_TRUE));
+        return true;
+    }
+
+    /**
+     * 保存或更新医生相关信息
+     *
+     * @param doctorId 医生 id
+     * @param dto      request
+     * @param consumer consumer
+     */
+    public <D extends BaseDto> void saveOrUpdateDoctorRelation(Integer doctorId, D dto, Consumer<D> consumer) {
+        if (ObjectUtils.isEmpty(doctorId) || ObjectUtils.isEmpty(dto)) {
+            return;
+        }
+        dto.setDoctorId(doctorId);
+        dto.setCreateBy(UserHolder.getUserName());
+        dto.setUpdateBy(UserHolder.getUserName());
+        consumer.accept(dto);
+    }
+
+    @Override
+    @DSTransactional
+    public Boolean deleteDoctor(Integer doctorId) {
         // 删除执业信息
-        DoctorPracticepoint doctorPracticepoint = doctorPracticepointMapper.selectOne(Wrappers.<DoctorPracticepoint>lambdaQuery()
-                .eq(DoctorPracticepoint::getDoctorId, doctorId)
-                .eq(DoctorPracticepoint::getIsDelete, BYConstant.INT_FALSE).last(BYConstant.SQL_LIMIT_1));
+        DoctorPracticepoint doctorPracticepoint = doctorPracticepointMapper.selectOne(Wrappers.<DoctorPracticepoint>lambdaQuery().eq(DoctorPracticepoint::getDoctorId, doctorId).eq(DoctorPracticepoint::getIsDelete, BYConstant.INT_FALSE).last(BYConstant.SQL_LIMIT_1));
         if (ObjectUtils.isNotEmpty(doctorPracticepoint)) {
             // 多机构备案
-            doctorPracticepointItemMapper.update(null, Wrappers.<DoctorPracticepointItem>lambdaUpdate()
-                    .eq(DoctorPracticepointItem::getPracticepointId, doctorPracticepoint.getId())
-                    .eq(DoctorPracticepointItem::getIsDelete, BYConstant.INT_FALSE)
-                    .set(DoctorPracticepointItem::getIsDelete, BYConstant.INT_TRUE));
+            doctorPracticepointItemMapper.update(null, Wrappers.<DoctorPracticepointItem>lambdaUpdate().eq(DoctorPracticepointItem::getPracticepointId, doctorPracticepoint.getId()).eq(DoctorPracticepointItem::getIsDelete, BYConstant.INT_FALSE).set(DoctorPracticepointItem::getIsDelete, BYConstant.INT_TRUE));
             doctorPracticepointMapper.deleteById(doctorPracticepoint.getId());
         }
         // 删除资格信息
-        doctorQualificationMapper.update(null, Wrappers.<DoctorQualification>lambdaUpdate()
-                .eq(DoctorQualification::getDoctorId, doctorId)
-                .eq(DoctorQualification::getIsDelete, BYConstant.INT_FALSE)
-                .set(DoctorQualification::getIsDelete, BYConstant.INT_TRUE));
+        doctorQualificationMapper.update(null, Wrappers.<DoctorQualification>lambdaUpdate().eq(DoctorQualification::getDoctorId, doctorId).eq(DoctorQualification::getIsDelete, BYConstant.INT_FALSE).set(DoctorQualification::getIsDelete, BYConstant.INT_TRUE));
         // 删除教育经历
-        doctorEducationMapper.update(null, Wrappers.<DoctorEducation>lambdaUpdate()
-                .eq(DoctorEducation::getDoctorId, doctorId)
-                .eq(DoctorEducation::getIsDelete, BYConstant.INT_FALSE)
-                .set(DoctorEducation::getIsDelete, BYConstant.INT_TRUE));
-        // 删除 personnel 用户数据
-
-
-        return null;
+        doctorEducationMapper.update(null, Wrappers.<DoctorEducation>lambdaUpdate().eq(DoctorEducation::getDoctorId, doctorId).eq(DoctorEducation::getIsDelete, BYConstant.INT_FALSE).set(DoctorEducation::getIsDelete, BYConstant.INT_TRUE));
+        // 删除 doctor & personnel 用户数据
+        DoctorInfo doctorInfo = doctorInfoMapper.selectById(doctorId);
+        if (ObjectUtils.isEmpty(doctorInfo)) {
+            logger.error("doctorInfo is null, doctorId:{}", doctorId);
+            return true;
+        }
+        Personnel personnel = personnelMapper.selectOne(Wrappers.<Personnel>lambdaQuery().eq(Personnel::getHealthCareProviderId, doctorInfo.getUserName()));
+        // 删除已有角色数据
+        if (ObjectUtils.isNotEmpty(personnel)) {
+            sysRoleUserMapper.delete(Wrappers.<SysRoleUser>lambdaQuery().eq(SysRoleUser::getUserId, personnel.getPk()));
+            // 删除用户数据
+            personnel.setDeleteFlag("1");
+            personnelMapper.updateById(personnel);
+        }
+        // 删除医生数据
+        doctorInfo.setIsDelete(BYConstant.INT_TRUE);
+        doctorInfoMapper.updateById(doctorInfo);
+        return true;
     }
 
     /**
@@ -202,49 +256,78 @@ public class DoctorInfoServiceImpl extends ServiceImpl<DoctorInfoMapper, DoctorI
      * @param doctorInfoDto request
      * @return {@link Integer}
      */
-    private Integer buildDoctorBasicInfo(DoctorInfoDto doctorInfoDto) {
-        Personnel personnel = personnelMapper.selectOne(Wrappers.<Personnel>lambdaQuery().eq(Personnel::getHealthCareProviderId, doctorInfoDto.getUserName()).last(BYConstant.SQL_LIMIT_1));
+    @Override
+    @DSTransactional
+    public Integer buildDoctorBasicInfo(DoctorInfoDto doctorInfoDto) {
+        Personnel personnel = personnelMapper.selectOne(Wrappers.<Personnel>lambdaQuery()
+                .eq(Personnel::getHealthCareProviderId, doctorInfoDto.getUserName())
+                .and(wrap -> wrap.eq(Personnel::getDeleteFlag, "0").or().isNull(Personnel::getDeleteFlag))
+                .last(BYConstant.SQL_LIMIT_1));
         if (ObjectUtils.isNotEmpty(personnel)) {
-            throw new CommonBusinessException("用户名已存在");
+            throw new CommonBusinessException(ErrorCodeConstant.COMMON_INVALID_PARAMETER, "用户名已存在");
         }
         DoctorInfo doctor = doctorInfoMapper.selectOne(Wrappers.<DoctorInfo>lambdaQuery()
                 .eq(DoctorInfo::getUserName, doctorInfoDto.getUserName())
                 .eq(DoctorInfo::getIsDelete, BYConstant.INT_TRUE)
                 .last(BYConstant.SQL_LIMIT_1));
         if (ObjectUtils.isNotEmpty(doctor)) {
-            throw new CommonBusinessException("用户名已存在");
+            throw new CommonBusinessException(ErrorCodeConstant.COMMON_INVALID_PARAMETER, "用户名已存在");
         }
-        Org org = orgMapper.selectOne(Wrappers.<Org>lambdaQuery().eq(Org::getCode, doctorInfoDto.getOrgCode()));
+        Org org = orgMapper.selectOne(Wrappers.<Org>lambdaQuery()
+                .eq(Org::getCode, doctorInfoDto.getOrgCode())
+                .eq(Org::getIsDelete, BYConstant.INT_FALSE)
+                .last(BYConstant.SQL_LIMIT_1));
         if (ObjectUtils.isEmpty(org)) {
             throw new CommonBusinessException(ErrorCodeConstant.COMMON_INVALID_PARAMETER, "机构数据异常");
         }
-        DoctorInfo doctorInfo = new DoctorInfo();
-        BeanUtil.copyProperties(doctorInfoDto, doctorInfo);
-        doctorInfo.setCreateBy(UserHolder.getUserName());
-        doctorInfo.setUpdateBy(UserHolder.getUserName());
-        doctorInfoMapper.insert(doctorInfo);
-        logger.info("新建医生，id：{}，工号：{}", doctorInfo.getId(), doctorInfo.getUserName());
+        saveOrUpdateDoctorRelation(0, doctorInfoDto, x -> doctorInfoMapper.saveOrUpdate(x));
+        logger.info("新建医生，id：{}，工号：{}", doctorInfoDto.getId(), doctorInfoDto.getUserName());
         // 新建 personnel & role
+        saveRoles(doctorInfoDto.getRoles(), savePersonnel(doctorInfoDto));
+        return doctorInfoDto.getId();
+    }
+
+    /**
+     * 保存人员信息
+     *
+     * @param doctorInfoDto 医生信息dto
+     * @return {@link Integer} 人员 pk
+     */
+    public Integer savePersonnel(DoctorInfoDto doctorInfoDto) {
         Personnel newPersonnel = Personnel.builder()
-                .domainId(domainId)
-                .healthCareProviderId(doctorInfo.getUserName())
-                .passWord(AesUtil.encrypt(doctorInfo.getUserName()))
-                .phone(doctorInfo.getPhoneNumber())
-                .identityNo(doctorInfo.getIdentityNo())
-                .name(doctorInfo.getName())
+                .domainId(StringUtils.isEmpty(doctorInfoDto.getDomainId()) ? domainId : doctorInfoDto.getDomainId())
+                .healthCareProviderId(doctorInfoDto.getUserName())
+                .passWord(AesUtil.encrypt(doctorInfoDto.getUserName()))
+                .phone(doctorInfoDto.getPhoneNumber())
+                .identityNo(doctorInfoDto.getIdentityNo())
+                .name(doctorInfoDto.getName())
                 .genderId(doctorInfoDto.getSex().toString())
                 .genderDepict(DataJsonSerializer.GenderSerializer.GENDER_MAP.getOrDefault(doctorInfoDto.getSex().toString(), "未知"))
-                .dateOfBirth(doctorInfo.getBirthday().toString())
-                .email(doctorInfo.getEmail())
+                .dateOfBirth(doctorInfoDto.getBirthday().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .email(doctorInfoDto.getEmail())
                 .createTime(LocalDateTime.now())
                 .build();
         personnelMapper.insert(newPersonnel);
         logger.info("新建personnel，id：{}", newPersonnel.getPk());
-        List<SysRoleUser> roles = doctorInfoDto.getRoles().stream().map(roleVO -> SysRoleUser.builder()
+        return newPersonnel.getPk().intValue();
+    }
+
+    /**
+     * 保存角色
+     *
+     * @param roleVos 角色列表
+     * @param pk      personnel pk
+     */
+    public void saveRoles(List<RoleVO> roleVos, Integer pk) {
+        // 删除已有角色数据
+        sysRoleUserMapper.delete(Wrappers.<SysRoleUser>lambdaQuery().eq(SysRoleUser::getUserId, pk));
+        List<SysRoleUser> roles = roleVos.stream().map(roleVO -> SysRoleUser.builder()
                 .roleId(Integer.valueOf(roleVO.getRoleId()))
-                .userId(newPersonnel.getPk().intValue()).build()).collect(Collectors.toList());
+                .userId(pk)
+                .build())
+                .collect(Collectors.toList());
+        // 保存角色关系
         sysRoleUserMapper.saveBatch(roles);
-        return doctorInfo.getId();
     }
 
     /**
@@ -255,7 +338,7 @@ public class DoctorInfoServiceImpl extends ServiceImpl<DoctorInfoMapper, DoctorI
      */
     private void getDoctorInfo(Integer doctorId, DoctorDetailVo doctorDetailVo) {
         DoctorInfo doctorInfo = doctorInfoMapper.selectById(doctorId);
-        if (ObjectUtils.isNotEmpty(doctorInfo)) {
+        if (ObjectUtils.isEmpty(doctorInfo)) {
             throw new CommonBusinessException(ErrorCodeConstant.COMMON_INVALID_PARAMETER, "医生数据异常");
         }
         DoctorInfoVo doctorInfoVo = new DoctorInfoVo();
@@ -266,5 +349,22 @@ public class DoctorInfoServiceImpl extends ServiceImpl<DoctorInfoMapper, DoctorI
             doctorInfoVo.setRoles(personnelMapper.getRolesByPersonnelId(personnel.getPk()));
         }
         doctorDetailVo.setDoctorInfo(doctorInfoVo);
+    }
+
+    @Override
+    public List<ExcelDoctorEntity> getUserTemplate() {
+        ExcelDoctorEntity entity = ExcelDoctorEntity.builder()
+                .domainId(domainId)
+                .userName("system")
+                .phoneNumber("13555555555")
+                .identityNo("340881195603255914")
+                .birthday(LocalDate.parse("1956-03-25", DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .name("胡星")
+                .sex(0)
+                .roleIds("1,2,10")
+                .orgCode("620000000758")
+                .email("wiggjxlt@qq.com")
+                .build();
+        return Collections.singletonList(entity);
     }
 }
