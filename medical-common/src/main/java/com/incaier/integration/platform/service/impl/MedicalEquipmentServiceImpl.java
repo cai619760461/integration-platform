@@ -1,5 +1,6 @@
 package com.incaier.integration.platform.service.impl;
 
+import cn.hutool.core.convert.Convert;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -17,12 +18,16 @@ import com.incaier.integration.platform.mapper.MedicalEquipmentFileMapper;
 import com.incaier.integration.platform.mapper.MedicalEquipmentMapper;
 import com.incaier.integration.platform.request.MedicalEquipmentDto;
 import com.incaier.integration.platform.request.MedicalEquipmentQueryDto;
+import com.incaier.integration.platform.response.MedicalEquipmentDetailVo;
+import com.incaier.integration.platform.response.MedicalEquipmentFileVo;
 import com.incaier.integration.platform.response.MedicalEquipmentVo;
-import com.incaier.integration.platform.service.MedicalequipmentService;
-import com.incaier.integration.platform.service.MedicalequipmentfileService;
+import com.incaier.integration.platform.service.MedicalEquipmentService;
+import com.incaier.integration.platform.service.MedicalEquipmentFileService;
 import com.incaier.integration.platform.util.MinioUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,10 +48,12 @@ import java.util.stream.Collectors;
  */
 @Service
 @DS("testMedicalManage")
-public class MedicalEquipmentServiceImpl extends ServiceImpl<MedicalEquipmentMapper, MedicalEquipment> implements MedicalequipmentService {
+public class MedicalEquipmentServiceImpl extends ServiceImpl<MedicalEquipmentMapper, MedicalEquipment> implements MedicalEquipmentService {
+
+    private final Logger logger = LoggerFactory.getLogger(MedicalEquipmentServiceImpl.class);
 
     @Autowired
-    private MedicalequipmentfileService medicalequipmentfileService;
+    private MedicalEquipmentFileService medicalequipmentfileService;
 
     @Autowired
     private MedicalEquipmentMapper medicalEquipmentMapper;
@@ -74,11 +81,14 @@ public class MedicalEquipmentServiceImpl extends ServiceImpl<MedicalEquipmentMap
     @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     public Boolean saveOrUpdateEquipment(MedicalEquipmentDto medicalEquipmentDto) {
         // 基本信息修改
-
+        MedicalEquipment medicalEquipment = new MedicalEquipment();
+        BeanUtils.copyProperties(medicalEquipmentDto, medicalEquipment);
+        medicalEquipment.setCreateBy(UserHolder.getUserName());
+        medicalEquipment.setUpdateBy(UserHolder.getUserName());
+        medicalEquipmentMapper.saveOrUpdate(medicalEquipment);
         if (ObjectUtils.isEmpty(medicalEquipmentDto.getId())) {
-            throw new CommonBusinessException(ErrorCodeConstant.COMMON_ERROR, "数据异常");
+            throw new CommonBusinessException(ErrorCodeConstant.COMMON_ERROR, "saveOrUpdate failed");
         }
-        // 修改附件
         // 新增附件
         if (CollectionUtils.isNotEmpty(medicalEquipmentDto.getAddAnnex())) {
             List<MedicalEquipmentFile> files = medicalEquipmentDto.getAddAnnex().stream().map(x -> {
@@ -99,6 +109,23 @@ public class MedicalEquipmentServiceImpl extends ServiceImpl<MedicalEquipmentMap
                     .set(MedicalEquipmentFile::getIsDelete, BYConstant.INT_TRUE));
             minioUtils.removeFiles(minioPropertiesConfig.getBucketName(), files.stream().map(MedicalEquipmentFile::getFilePath).collect(Collectors.toList()));
         }
-        return null;
+        return true;
+    }
+
+    @Override
+    public MedicalEquipmentDetailVo getDetail(Integer id) {
+        MedicalEquipment medicalEquipment = medicalEquipmentMapper.selectById(id);
+        if (ObjectUtils.isEmpty(medicalEquipment)) {
+            throw new CommonBusinessException(ErrorCodeConstant.COMMON_ERROR, "数据异常");
+        }
+        MedicalEquipmentDetailVo response = new MedicalEquipmentDetailVo();
+        BeanUtils.copyProperties(medicalEquipment, response);
+        List<MedicalEquipmentFile> annex = medicalEquipmentFileMapper.selectList(Wrappers.<MedicalEquipmentFile>lambdaQuery()
+                .eq(MedicalEquipmentFile::getEquipmentId, id)
+                .eq(MedicalEquipmentFile::getIsDelete, BYConstant.INT_FALSE));
+        if (CollectionUtils.isNotEmpty(annex)) {
+            response.setAnnex(Convert.toList(MedicalEquipmentFileVo.class, annex));
+        }
+        return response;
     }
 }

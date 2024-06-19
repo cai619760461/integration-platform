@@ -11,6 +11,6 @@ import com.incaier.integration.platform.entity.doctor.DoctorQualification;
  * @author weijie.cai
  * @since 2024-06-13
  */
-public interface DoctorqualificationService extends IService<DoctorQualification> {
+public interface DoctorQualificationService extends IService<DoctorQualification> {
 
 }

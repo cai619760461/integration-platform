@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.incaier.integration.platform.entity.valid.AddGroup;
 import com.incaier.integration.platform.entity.valid.UpdateGroup;
 import com.incaier.integration.platform.handler.excel.ExcelUserListener;
+import com.incaier.integration.platform.mapper.DoctorInfoMapper;
 import com.incaier.integration.platform.request.doctor.DoctorDetailDto;
 import com.incaier.integration.platform.request.doctor.DoctorQueryDto;
 import com.incaier.integration.platform.request.excel.ExcelDoctorEntity;
@@ -34,6 +35,9 @@ public class DoctorController {
 
     @Autowired
     private DoctorInfoService doctorInfoService;
+
+    @Autowired
+    private DoctorInfoMapper doctorInfoMapper;
 
     /**
      * 获取医生列表
@@ -111,5 +115,19 @@ public class DoctorController {
     public Result<Boolean> importExcel(@RequestParam(value = "file") MultipartFile file) throws IOException {
         EasyExcel.read(file.getInputStream(), ExcelDoctorEntity.class, new ExcelUserListener()).sheet().doRead();
         return Result.success(true);
+    }
+
+    /**
+     * 医生数据导出
+     *
+     * @param response 响应体
+     * @param queryDto 查询dto
+     */
+    @PostMapping("/export")
+    public void export(@RequestBody DoctorQueryDto queryDto, HttpServletResponse response) {
+        ExcelUtil.export(queryDto, response,
+                d -> doctorInfoMapper.getCount(d),
+                d -> doctorInfoMapper.getDoctorList(d),
+                DoctorVo.class);
     }
 }

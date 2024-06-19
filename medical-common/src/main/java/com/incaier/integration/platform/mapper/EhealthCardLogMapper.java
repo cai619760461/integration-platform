@@ -21,7 +21,7 @@ public interface EhealthCardLogMapper extends BaseMapper<EhealthCardLog> {
     /**
      * 获取申领记录
      *
-     * @param dto 到
+     * @param dto request
      * @return {@link List}<{@link EhealthCardRecordVo}>
      */
     List<EhealthCardRecordVo> getCardRecord(EhealthCardDto dto);
@@ -29,7 +29,7 @@ public interface EhealthCardLogMapper extends BaseMapper<EhealthCardLog> {
     /**
      * 获取申领记录总数
      *
-     * @param dto 到
+     * @param dto request
      * @return long
      */
     int getCardRecordCount(EhealthCardDto dto);

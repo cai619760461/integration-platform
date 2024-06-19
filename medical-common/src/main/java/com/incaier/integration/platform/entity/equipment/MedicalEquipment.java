@@ -122,12 +122,6 @@ public class MedicalEquipment implements Serializable {
     private String assetResponsiblePerson;
 
     /**
-     * 相关文档文件名
-     */
-    @TableField("related_document")
-    private String relatedDocument;
-
-    /**
      * 折旧信息
      */
     @TableField("scrap_info")

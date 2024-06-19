@@ -22,10 +22,26 @@ import java.util.List;
 public interface MedicalEquipmentMapper extends BaseMapper<MedicalEquipment> {
 
     /**
+     * 获取列表计数
+     *
+     * @param dto reuqest
+     * @return {@link List}<{@link MedicalEquipmentVo}>
+     */
+    Integer getCount(MedicalEquipmentQueryDto dto);
+
+    /**
      * 获取列表
      *
-     * @param dto 到
+     * @param dto reuqest
      * @return {@link List}<{@link MedicalEquipmentVo}>
      */
     List<MedicalEquipmentVo> getList(MedicalEquipmentQueryDto dto);
+
+    /**
+     * 保存或更新
+     *
+     * @param medicalEquipment 医疗设备
+     * @return {@link Boolean}
+     */
+    Boolean saveOrUpdate(MedicalEquipment medicalEquipment);
 }

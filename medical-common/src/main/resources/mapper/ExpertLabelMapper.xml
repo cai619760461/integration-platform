@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.incaier.integration.platform.mapper.ExpertLabelMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.incaier.integration.platform.entity.doctor.ExpertLabel">
+        <id column="id" property="id" />
+        <result column="doctor_id" property="doctorId" />
+        <result column="dict_id" property="dictId" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="is_delete" property="isDelete" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, doctor_id, dict_id, create_by, create_time, update_by, update_time, is_delete
+    </sql>
+
+    <select id="getDoctorsLabels" resultType="com.incaier.integration.platform.response.doctor.LabelVo">
+        select
+            el.id,
+            el.dict_id,
+            sdd.dict_label,
+            sdd.dict_type
+        from
+            expert_label el inner join sys_dict_data sdd on
+            el.dict_id = sdd.id
+        where el.doctor_id = #{doctorId}
+          and el.is_delete = 0
+          and sdd.status = 0
+    </select>
+
+    <!-- 插入或者更新 -->
+    <insert id="saveOrUpdate" keyProperty="id" useGeneratedKeys="true">
+        insert into expert_label (id, doctor_id, dict_id, create_by, update_by)
+        values (#{label.id}, #{label.doctorId}, #{label.dictId}, #{label.createBy}, #{label.updateBy})
+        on duplicate key update
+        dict_id = values(dict_id),
+        update_by = values(update_by)
+    </insert>
+</mapper>

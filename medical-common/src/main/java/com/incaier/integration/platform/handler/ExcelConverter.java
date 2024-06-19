@@ -7,13 +7,17 @@ import com.alibaba.excel.metadata.GlobalConfiguration;
 import com.alibaba.excel.metadata.data.ReadCellData;
 import com.alibaba.excel.metadata.data.WriteCellData;
 import com.alibaba.excel.metadata.property.ExcelContentProperty;
+import com.incaier.integration.platform.response.doctor.LabelVo;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Excel 字段转换器
@@ -112,6 +116,17 @@ public class ExcelConverter {
         @Override
         public LocalDate convertToJavaData(ReadCellData<?> cellData, ExcelContentProperty contentProperty, GlobalConfiguration globalConfiguration) throws Exception {
             return LocalDate.parse(cellData.getStringValue(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        }
+    }
+
+    public static class LabelConverter implements Converter<List<LabelVo>> {
+        @Override
+        public WriteCellData<String> convertToExcelData(WriteConverterContext<List<LabelVo>> context) {
+            List<LabelVo> labels = context.getValue();
+            if (CollectionUtils.isNotEmpty(labels)) {
+                return new WriteCellData<>(labels.stream().map(LabelVo::getDictLabel).collect(Collectors.joining(",")));
+            }
+            return new WriteCellData<>("");
         }
     }
 }

@@ -11,6 +11,6 @@ import com.incaier.integration.platform.entity.doctor.DoctorPracticepoint;
  * @author weijie.cai
  * @since 2024-06-13
  */
-public interface DoctorpracticepointService extends IService<DoctorPracticepoint> {
+public interface DoctorPracticepointService extends IService<DoctorPracticepoint> {
 
 }

@@ -91,6 +91,18 @@ public class DoctorInfo implements Serializable {
     private String orgCode;
 
     /**
+     * 分数
+     */
+    @TableField("score")
+    private Integer score;
+
+    /**
+     * 是否专家 0 不是 1 是
+     */
+    @TableField("is_expert")
+    private Integer isExpert;
+
+    /**
      * 创建人
      */
     @TableField("create_by")

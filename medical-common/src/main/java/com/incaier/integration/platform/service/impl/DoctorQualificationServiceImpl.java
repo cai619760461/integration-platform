@@ -4,7 +4,7 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.incaier.integration.platform.entity.doctor.DoctorQualification;
 import com.incaier.integration.platform.mapper.DoctorQualificationMapper;
-import com.incaier.integration.platform.service.DoctorqualificationService;
+import com.incaier.integration.platform.service.DoctorQualificationService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,6 +17,6 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @DS("testMedicalManage")
-public class DoctorQualificationServiceImpl extends ServiceImpl<DoctorQualificationMapper, DoctorQualification> implements DoctorqualificationService {
+public class DoctorQualificationServiceImpl extends ServiceImpl<DoctorQualificationMapper, DoctorQualification> implements DoctorQualificationService {
 
 }

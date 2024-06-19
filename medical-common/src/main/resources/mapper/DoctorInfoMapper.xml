@@ -13,6 +13,7 @@
         <result column="email" property="email" />
         <result column="user_name" property="userName" />
         <result column="org_code" property="orgCode" />
+        <result column="is_expert" property="is_expert" />
         <result column="create_by" property="createBy" />
         <result column="create_time" property="createTime" />
         <result column="update_by" property="updateBy" />
@@ -22,22 +23,12 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, sex, identity_no, ethnicity, phone_number, email, user_name, org_code, create_by, create_time, update_by, update_time, is_delete
+        id, name, sex, identity_no, ethnicity, phone_number, email, user_name, org_code, is_expert, create_by, create_time, update_by, update_time, is_delete
     </sql>
 
-    <select id="getDoctorList" resultType="com.incaier.integration.platform.response.doctor.DoctorVo">
+    <select id="getCount" resultType="java.lang.Integer">
         select
-            di.id,
-            di.phone_number,
-            di.name,
-            di.sex,
-            di.birthday,
-            di.user_name,
-            dp.code,
-            dp.practice_org,
-            dp.practice_level,
-            dp.practice_type,
-            dp.practice_item
+            count(*)
         from
             doctor_info di
         left join doctor_practicepoint dp on di.id = dp.doctor_id
@@ -64,10 +55,114 @@
         </if>
     </select>
 
+    <select id="getDoctorList" resultType="com.incaier.integration.platform.response.doctor.DoctorVo">
+        select
+            di.id,
+            di.phone_number,
+            di.name,
+            di.sex,
+            di.birthday,
+            di.user_name,
+            dp.code,
+            dp.practice_org,
+            dp.practice_level,
+            dp.practice_type,
+            dp.practice_item
+        from
+            doctor_info di
+        left join doctor_practicepoint dp on di.id = dp.doctor_id
+        and dp.is_delete = 0
+        where
+            di.is_delete = 0
+        <if test="orgCode != null and orgCode != ''">
+            and di.org_code = #{orgCode}
+        </if>
+        <if test="practiceLevel != null and practiceLevel != ''">
+            and dp.practice_level = #{practiceLevel}
+        </if>
+        <if test="practiceType != null and practiceType != ''">
+            and dp.practice_type = #{practiceType}
+        </if>
+        <if test="practiceItem != null and practiceItem != ''">
+            and dp.practice_item = #{practiceItem}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            and (di.name LIKE concat('%',#{keyword},'%') or di.phone_number = #{keyword})
+        </if>
+    </select>
+
+    <select id="getDoctorList_COUNT" resultType="java.lang.Integer">
+        select
+            count(*)
+        from
+            doctor_info di
+        left join doctor_practicepoint dp on di.id = dp.doctor_id
+        and dp.is_delete = 0
+        where
+            di.is_delete = 0
+            <if test="keyword != null and keyword != ''">
+                and name LIKE concat('%',#{keyword},'%')
+            </if>
+            <if test="orgCode != null and orgCode != ''">
+                and di.org_code = #{orgCode}
+            </if>
+            <if test="practiceLevel != null and practiceLevel != ''">
+                and dp.practice_level = #{practiceLevel}
+            </if>
+            <if test="practiceType != null and practiceType != ''">
+                and dp.practice_type = #{practiceType}
+            </if>
+            <if test="practiceItem != null and practiceItem != ''">
+                and dp.practice_item = #{practiceItem}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                and (di.name LIKE concat('%',#{keyword},'%') or di.phone_number = #{keyword})
+            </if>
+    </select>
+    <select id="getDoctorExpertList" resultType="com.incaier.integration.platform.response.doctor.DoctorExpertLabelVo">
+        select
+            di.id as id,
+            di.name as name,
+            di.phone_number as phoneNumber,
+            di.identity_no as identityNo,
+            di.org_code as orgCode,
+            o.name as orgName
+        from doctor_info di
+        inner join org o on di.org_code = o.code
+        left join expert_label el on di.id = el.doctor_id and el.is_delete = 0
+        where di.is_delete = 0
+        and di.is_expert = 1
+        <if test="dictIds != null and dictIds.size() > 0 ">
+            and el.dict_id in
+            <foreach collection="dictIds" item="dictId" open="(" close=")" separator=",">
+                #{dictId}
+            </foreach>
+        </if>
+        group by di.id
+    </select>
+
+    <select id="getExpertCount" resultType="java.lang.Integer">
+        select
+            count(*)
+        from doctor_info di
+        inner join org o on di.org_code = o.code
+        left join expert_label el on
+        di.id = el.doctor_id and el.is_delete = 0
+        where di.is_delete = 0
+        and di.is_expert = 1
+        <if test="dictIds != null and dictIds.size() > 0 ">
+            and el.dict_id in
+            <foreach collection="dictIds" item="dictId" open="(" close=")" separator=",">
+                #{dictId}
+            </foreach>
+        </if>
+        group by di.id
+    </select>
+
     <!-- 插入或者更新 -->
     <insert id="saveOrUpdate" keyProperty="id" useGeneratedKeys="true">
-        INSERT INTO doctor_info (id, name, sex, identity_no, birthday, ethnicity, phone_number, email, user_name, org_code, create_by, update_by)
-        VALUES (#{id}, #{name}, #{sex}, #{identityNo}, #{birthday}, #{ethnicity}, #{phoneNumber}, #{email}, #{userName}, #{orgCode}, #{createBy}, #{updateBy})
+        INSERT INTO doctor_info (id, name, sex, identity_no, birthday, ethnicity, phone_number, email, user_name, org_code, is_expert, create_by, update_by)
+        VALUES (#{id}, #{name}, #{sex}, #{identityNo}, #{birthday}, #{ethnicity}, #{phoneNumber}, #{email}, #{userName}, #{orgCode}, #{isExpert}, #{createBy}, #{updateBy})
         ON DUPLICATE KEY UPDATE
         name = VALUES(name),
         sex = VALUES(sex),
@@ -77,7 +172,67 @@
         phone_number = VALUES(phone_number),
         email = VALUES(email),
         org_code = VALUES(org_code),
+        is_expert = VALUES(is_expert),
         update_by = VALUES(update_by)
     </insert>
+
+    <select id="getDoctorScoreList" resultType="com.incaier.integration.platform.response.doctor.DoctorScoreVo">
+        select
+            di.id,
+            di.name,
+            di.phone_number,
+            di.identity_no,
+            di.org_code,
+            o.name as orgName,
+            di.score,
+            max(dsh.create_time) as lastUpdateTime
+        from
+            doctor_info di
+        inner join org o on di.org_code = o.code
+        left join doctor_score_history dsh on di.id = dsh.doctor_id and dsh.is_delete = 0
+        where di.is_delete = 0
+        <if test="keyword != null and keyword != ''">
+            and di.name LIKE concat('%',#{keyword},'%')
+        </if>
+        <if test="orgCode != null and orgCode != ''">
+            and di.org_code = #{orgCode}
+        </if>
+        group by
+            di.id
+    </select>
+
+    <select id="getScoreHistoryCount" resultType="java.lang.Integer">
+        select
+            count(*)
+        from
+        doctor_info di
+        inner join org o on di.org_code = o.code
+        left join doctor_score_history dsh on di.id = dsh.doctor_id and dsh.is_delete = 0
+        where di.is_delete = 0
+        <if test="keyword != null and keyword != ''">
+            and di.name LIKE concat('%',#{keyword},'%')
+        </if>
+        <if test="orgCode != null and orgCode != ''">
+            and di.org_code = #{orgCode}
+        </if>
+        group by
+            di.id
+    </select>
+
+    <select id="getDoctorInfoById" resultType="com.incaier.integration.platform.response.doctor.DoctorInfoVo">
+        select
+            di.id,
+            di.name,
+            di.phone_number,
+            di.identity_no,
+            di.org_code,
+            o.name as orgName,
+            di.score
+        from
+            doctor_info di
+        inner join org o on di.org_code = o.code
+        where di.is_delete = 0
+          and di.id = #{doctorId}
+    </select>
 
 </mapper>

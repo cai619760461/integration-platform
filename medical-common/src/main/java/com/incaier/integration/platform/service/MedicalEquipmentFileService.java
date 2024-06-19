@@ -11,6 +11,6 @@ import com.incaier.integration.platform.entity.equipment.MedicalEquipmentFile;
  * @author weijie.cai
  * @since 2024-06-18
  */
-public interface MedicalequipmentfileService extends IService<MedicalEquipmentFile> {
+public interface MedicalEquipmentFileService extends IService<MedicalEquipmentFile> {
 
 }

@@ -32,6 +32,22 @@
         id, name, code, equipment_model, manufacturer, equipment_image, equipment_type, purchase_price, supplier, contract_number, purchase_date, status, asset_department, asset_responsible_person, related_document, scrap_info, create_by, create_time, update_by, update_time, is_delete
     </sql>
 
+
+    <select id="getCount" resultType="java.lang.Integer">
+        select
+            count(*)
+        from
+            medical_equipment
+        where
+            is_delete = 0
+        <if test="name != null and name != ''">
+            and name LIKE concat('%',#{name},'%')
+        </if>
+        <if test="code != null and code != ''">
+            and code = #{code}
+        </if>
+    </select>
+
     <select id="getList" resultType="com.incaier.integration.platform.response.MedicalEquipmentVo">
         select
             id,
@@ -55,5 +71,30 @@
                 and code = #{code}
             </if>
     </select>
+
+    <insert id="saveOrUpdate" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO medical_equipment (id, name, code, equipment_model, manufacturer, equipment_image, equipment_type, equipment_type_name,
+            purchase_price, supplier, contract_number, purchase_date, status, asset_department, asset_responsible_person, scrap_info, create_by, update_by)
+        VALUES (#{id}, #{name}, #{code}, #{equipmentModel}, #{manufacturer}, #{equipmentImage}, #{equipmentType}, #{equipmentTypeName},
+            #{purchasePrice}, #{supplier}, #{contractNumber}, #{purchaseDate}, #{status}, #{assetDepartment}, #{assetResponsiblePerson}, #{scrapInfo}, #{createBy}, #{updateBy})
+        ON DUPLICATE KEY UPDATE
+        name = VALUES(name),
+        code = VALUES(code),
+        equipment_model = VALUES(equipment_model),
+        manufacturer = VALUES(manufacturer),
+        equipment_image = VALUES(equipment_image),
+        equipment_type = VALUES(equipment_type),
+        equipment_type_name = VALUES(equipment_type_name),
+        purchase_price = VALUES(purchase_price),
+        supplier = VALUES(supplier),
+        contract_number = VALUES(contract_number),
+        purchase_date = VALUES(purchase_date),
+        status = VALUES(status),
+        asset_department = VALUES(asset_department),
+        asset_responsible_person = VALUES(asset_responsible_person),
+        scrap_info = VALUES(scrap_info),
+        update_by = VALUES(update_by)
+    </insert>
+
 
 </mapper>

@@ -79,4 +79,19 @@ public class DoctorInfoVo implements Serializable {
      * 机构id，org-code
      */
     private String orgCode;
+
+    /**
+     * 机构名称，org-code
+     */
+    private String orgName;
+
+    /**
+     * 是否专家 0 不是 1 是
+     */
+    private Integer isExpert;
+
+    /**
+     * 专家标签信息
+     */
+    private List<LabelVo> expertLabels;
 }

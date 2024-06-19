@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.incaier.integration.platform.entity.equipment.MedicalEquipment;
 import com.incaier.integration.platform.request.MedicalEquipmentDto;
 import com.incaier.integration.platform.request.MedicalEquipmentQueryDto;
+import com.incaier.integration.platform.response.MedicalEquipmentDetailVo;
 import com.incaier.integration.platform.response.MedicalEquipmentVo;
 
 /**
@@ -15,7 +16,7 @@ import com.incaier.integration.platform.response.MedicalEquipmentVo;
  * @author weijie.cai
  * @since 2024-06-18
  */
-public interface MedicalequipmentService extends IService<MedicalEquipment> {
+public interface MedicalEquipmentService extends IService<MedicalEquipment> {
 
     /**
      * 获取列表
@@ -32,4 +33,12 @@ public interface MedicalequipmentService extends IService<MedicalEquipment> {
      * @return {@link Boolean}
      */
     Boolean saveOrUpdateEquipment(MedicalEquipmentDto medicalEquipmentDto);
+
+    /**
+     * 获取设备详细信息
+     *
+     * @param id 设备id
+     * @return {@link MedicalEquipmentDetailVo}
+     */
+    MedicalEquipmentDetailVo getDetail(Integer id);
 }

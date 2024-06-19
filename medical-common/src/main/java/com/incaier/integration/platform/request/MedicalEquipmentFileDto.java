@@ -1,6 +1,8 @@
 package com.incaier.integration.platform.request;
 
+import com.incaier.integration.platform.response.FileEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 
@@ -12,7 +14,8 @@ import java.io.Serializable;
  * @date 2024-06-04
  */
 @Data
-public class MedicalEquipmentFileDto implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class MedicalEquipmentFileDto extends FileEntity implements Serializable {
 
     private static final long serialVersionUID = 7337664233271539357L;
 
@@ -25,19 +28,4 @@ public class MedicalEquipmentFileDto implements Serializable {
      * 设备id
      */
     private Integer equipmentId;
-
-    /**
-     * 文件类别 doc,pdf,xls等
-     */
-    private String fileType;
-
-    /**
-     * 文件名称
-     */
-    private String fileName;
-
-    /**
-     * 文件路径
-     */
-    private String filePath;
 }

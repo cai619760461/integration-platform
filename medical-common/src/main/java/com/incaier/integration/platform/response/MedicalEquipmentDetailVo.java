@@ -1,24 +1,24 @@
-package com.incaier.integration.platform.request;
+package com.incaier.integration.platform.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
 /**
- * 医疗设备管理 dto
+ * 医疗设备详情 vo
  *
- * @author caiweijie
- * @date 2024/06/13
+ * @author weijie.cai
+ * @description 医疗设备详情
+ * @date 2024-06-04
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class MedicalEquipmentDto extends PageDto {
+public class MedicalEquipmentDetailVo implements Serializable {
+
+    private static final long serialVersionUID = -6018732444111067716L;
 
     /**
      * id
@@ -28,7 +28,6 @@ public class MedicalEquipmentDto extends PageDto {
     /**
      * 设备名称
      */
-    @NotNull(message = "设备名称不可为空")
     private String name;
 
     /**
@@ -52,12 +51,12 @@ public class MedicalEquipmentDto extends PageDto {
     private String equipmentImage;
 
     /**
-     * 设备类别 id
+     * 设备类别
      */
     private Integer equipmentType;
 
     /**
-     * 设备类别 名称
+     * 设备类别名称
      */
     private String equipmentTypeName;
 
@@ -80,7 +79,6 @@ public class MedicalEquipmentDto extends PageDto {
      * 购置日期
      */
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date purchaseDate;
 
     /**
@@ -99,19 +97,17 @@ public class MedicalEquipmentDto extends PageDto {
     private String assetResponsiblePerson;
 
     /**
-     * 删除附件
+     * 相关文档文件名
      */
-    private List<Integer> deleteIds;
-
-    /**
-     * 新增附件
-     */
-    private List<MedicalEquipmentFileDto> addAnnex;
+    private String relatedDocument;
 
     /**
      * 折旧信息
      */
     private String scrapInfo;
+
+    /**
+     * 附件
+     */
+    private List<MedicalEquipmentFileVo> annex;
 }
-
-

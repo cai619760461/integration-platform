@@ -40,7 +40,7 @@ public interface OrgMapper extends BaseMapper<Org> {
     /**
      * 获取机构计数
      *
-     * @param dto 到
+     * @param dto request
      * @return {@link Integer}
      */
     Integer getOrgRecordCount(OrgDto dto);

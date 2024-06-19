@@ -25,13 +25,8 @@ import com.incaier.integration.platform.request.doctor.DoctorInfoDto;
 import com.incaier.integration.platform.request.doctor.DoctorQueryDto;
 import com.incaier.integration.platform.request.excel.ExcelDoctorEntity;
 import com.incaier.integration.platform.response.RoleVO;
-import com.incaier.integration.platform.response.doctor.DoctorDetailVo;
-import com.incaier.integration.platform.response.doctor.DoctorInfoVo;
-import com.incaier.integration.platform.response.doctor.DoctorPracticepointVo;
-import com.incaier.integration.platform.response.doctor.DoctorVo;
+import com.incaier.integration.platform.response.doctor.*;
 import com.incaier.integration.platform.service.DoctorInfoService;
-import com.incaier.integration.platform.service.PersonnelService;
-import com.incaier.integration.platform.service.SysRoleUserService;
 import com.incaier.integration.platform.util.AesUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -42,7 +37,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -80,14 +74,8 @@ public class DoctorInfoServiceImpl extends ServiceImpl<DoctorInfoMapper, DoctorI
     @Autowired
     private DoctorEducationMapper doctorEducationMapper;
 
-    @Resource(name = "personnelService")
-    private PersonnelService personnelService;
-
     @Autowired
     private PersonnelMapper personnelMapper;
-
-    @Autowired
-    private SysRoleUserService sysRoleUserService;
 
     @Autowired
     private SysRoleUserMapper sysRoleUserMapper;
@@ -98,12 +86,16 @@ public class DoctorInfoServiceImpl extends ServiceImpl<DoctorInfoMapper, DoctorI
     @Value("${personnel.domainId}")
     private String domainId;
 
+    @Autowired
+    private ExpertLabelMapper expertLabelMapper;
+
     @Override
     public PageInfo<DoctorVo> getDoctorList(DoctorQueryDto dto) {
         PageInfo<DoctorVo> pageInfo;
         Page<DoctorVo> page = PageHelper.startPage(dto.getPageNum(), dto.getPageSize());
         List<DoctorVo> doctorList = doctorInfoMapper.getDoctorList(dto);
         doctorList.forEach(doctorInfo -> {
+            // 角色信息
             Personnel personnel = personnelMapper.selectOne(Wrappers.<Personnel>lambdaQuery().eq(Personnel::getHealthCareProviderId, doctorInfo.getUserName()).last(BYConstant.SQL_LIMIT_1));
             if (ObjectUtils.isNotEmpty(personnel)) {
                 doctorInfo.setLastLoginTime(personnel.getLastLoginTime());
@@ -119,7 +111,7 @@ public class DoctorInfoServiceImpl extends ServiceImpl<DoctorInfoMapper, DoctorI
     public DoctorDetailVo getDoctorDetail(Integer doctorId) {
         DoctorDetailVo doctorDetailVo = new DoctorDetailVo();
         // 医生基本信息
-        getDoctorInfo(doctorId, doctorDetailVo);
+        buildDoctorInfo(doctorId, doctorDetailVo);
         // 教育经历、连续教育、专业学习和培训经历、工作经历、获奖记录
         doctorDetailVo.setDoctorEducation(doctorEducationMapper.getDoctorEducationById(doctorId));
         // 资格信息
@@ -176,6 +168,8 @@ public class DoctorInfoServiceImpl extends ServiceImpl<DoctorInfoMapper, DoctorI
         saveRoles(dto.getDoctorInfo().getRoles(), personnel.getPk().intValue());
         // 更新医生数据
         saveOrUpdateDoctorRelation(doctorInfo.getId(), dto.getDoctorInfo(), x -> doctorInfoMapper.saveOrUpdate(x));
+        // 专家信息
+        handlerExpertInfo(doctorInfo);
         // 教育经历
         saveOrUpdateDoctorRelation(doctorInfo.getId(), dto.getDoctorEducation(), x -> doctorEducationMapper.saveOrUpdate(x));
         // 资格信息
@@ -282,9 +276,28 @@ public class DoctorInfoServiceImpl extends ServiceImpl<DoctorInfoMapper, DoctorI
         }
         saveOrUpdateDoctorRelation(0, doctorInfoDto, x -> doctorInfoMapper.saveOrUpdate(x));
         logger.info("新建医生，id：{}，工号：{}", doctorInfoDto.getId(), doctorInfoDto.getUserName());
+        // 更新专家信息
+        handlerExpertInfo(doctorInfoDto);
         // 新建 personnel & role
         saveRoles(doctorInfoDto.getRoles(), savePersonnel(doctorInfoDto));
         return doctorInfoDto.getId();
+    }
+
+    /**
+     * 处理专家信息
+     *
+     * @param doctorInfoDto 医生信息dto
+     */
+    private void handlerExpertInfo(DoctorInfoDto doctorInfoDto) {
+        if (BYConstant.INT_FALSE.equals(doctorInfoDto.getIsExpert())) {
+            expertLabelMapper.update(null, Wrappers.<ExpertLabel>lambdaUpdate()
+                    .eq(ExpertLabel::getDoctorId, doctorInfoDto.getId())
+                    .set(ExpertLabel::getIsDelete, BYConstant.INT_TRUE));
+        }else {
+            if (CollectionUtils.isNotEmpty(doctorInfoDto.getExpertLabels())) {
+                doctorInfoDto.getExpertLabels().forEach(labelDto -> saveOrUpdateDoctorRelation(doctorInfoDto.getId(), labelDto, x -> expertLabelMapper.saveOrUpdate(x)));
+            }
+        }
     }
 
     /**
@@ -336,7 +349,7 @@ public class DoctorInfoServiceImpl extends ServiceImpl<DoctorInfoMapper, DoctorI
      * @param doctorId       医生id
      * @param doctorDetailVo 医生详细信息vo
      */
-    private void getDoctorInfo(Integer doctorId, DoctorDetailVo doctorDetailVo) {
+    private void buildDoctorInfo(Integer doctorId, DoctorDetailVo doctorDetailVo) {
         DoctorInfo doctorInfo = doctorInfoMapper.selectById(doctorId);
         if (ObjectUtils.isEmpty(doctorInfo)) {
             throw new CommonBusinessException(ErrorCodeConstant.COMMON_INVALID_PARAMETER, "医生数据异常");
@@ -349,6 +362,12 @@ public class DoctorInfoServiceImpl extends ServiceImpl<DoctorInfoMapper, DoctorI
             doctorInfoVo.setRoles(personnelMapper.getRolesByPersonnelId(personnel.getPk()));
         }
         doctorDetailVo.setDoctorInfo(doctorInfoVo);
+        // 专家信息
+        doctorInfoVo.setIsExpert(doctorInfo.getIsExpert());
+        if (BYConstant.INT_FALSE.equals(doctorInfoVo.getIsExpert())) {
+            return;
+        }
+        doctorInfoVo.setExpertLabels(expertLabelMapper.getDoctorsLabels(doctorId));
     }
 
     @Override

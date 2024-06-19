@@ -10,7 +10,7 @@ import lombok.Data;
  * @date 2024/06/14
  */
 @Data
-public class FileVo {
+public class FileEntity {
 
     /**
      * 文件类别 doc,pdf,xls等

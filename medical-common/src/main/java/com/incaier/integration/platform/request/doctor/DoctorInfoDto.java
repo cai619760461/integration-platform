@@ -96,6 +96,17 @@ public class DoctorInfoDto extends BaseDto implements Serializable {
     private String orgCode;
 
     /**
+     * 是否专家
+     */
+    @NotNull(message = "是否专家不可为空", groups = {AddGroup.class, UpdateGroup.class})
+    private Integer isExpert;
+
+    /**
+     * 专家标签信息
+     */
+    private List<ExpertLabelDto> expertLabels;
+
+    /**
      * 域id
      */
     private String domainId;

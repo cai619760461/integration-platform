@@ -4,13 +4,13 @@ import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.excel.exception.ExcelAnalysisException;
 import com.alibaba.fastjson.JSON;
+import com.incaier.integration.platform.constant.BYConstant;
 import com.incaier.integration.platform.handler.excel.valid.ExcelImportValid;
 import com.incaier.integration.platform.handler.excel.valid.ExceptionCustom;
 import com.incaier.integration.platform.mapper.SysRoleUserMapper;
 import com.incaier.integration.platform.request.doctor.DoctorInfoDto;
 import com.incaier.integration.platform.request.excel.ExcelDoctorEntity;
 import com.incaier.integration.platform.service.DoctorInfoService;
-import com.incaier.integration.platform.service.PersonnelService;
 import com.incaier.integration.platform.util.SpringContextUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -37,12 +37,6 @@ public class ExcelUserListener extends AnalysisEventListener<ExcelDoctorEntity> 
      * 每隔5条存储数据库，实际使用中可以3000条，然后清理list ，方便内存回收
      */
     private static final int BATCH_COUNT = 3000;
-
-    /**
-     * 假设这个是一个DAO，当然有业务逻辑这个也可以是一个service。当然如果不用存储这个对象没用。
-     */
-    private final PersonnelService personnelService;
-
     /**
      * 医生信息服务
      */
@@ -56,7 +50,6 @@ public class ExcelUserListener extends AnalysisEventListener<ExcelDoctorEntity> 
      * 如果使用了spring,请使用这个构造方法。每次创建Listener的时候需要把spring管理的类传进来
      */
     public ExcelUserListener() {
-        personnelService = SpringContextUtils.getBean(PersonnelService.class);
         doctorInfoService = SpringContextUtils.getBean(DoctorInfoService.class);
         sysRoleUserMapper = SpringContextUtils.getBean(SysRoleUserMapper.class);
     }
@@ -104,6 +97,7 @@ public class ExcelUserListener extends AnalysisEventListener<ExcelDoctorEntity> 
             try {
                 DoctorInfoDto dto = new DoctorInfoDto();
                 BeanUtils.copyProperties(doctor, dto);
+                dto.setIsExpert(BYConstant.INT_FALSE);
                 if (StringUtils.isNotEmpty(doctor.getRoleIds())) {
                     dto.setRoles(sysRoleUserMapper.getRolesByIds(doctor.getRoleIds().split(",")));
                 }

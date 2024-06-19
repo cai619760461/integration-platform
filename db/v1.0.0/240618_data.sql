@@ -129,6 +129,8 @@ CREATE TABLE `doctor_info` (
     `email` varchar(128) DEFAULT NULL COMMENT '邮箱',
     `user_name` varchar(32) NOT NULL COMMENT '用户名（工号）',
     `district_code` varchar(128) NOT NULL COMMENT '机构id，org-code',
+    `score` int(4) NOT NULL DEFAULT '10' COMMENT '当前分数',
+    `is_expert` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否专家 0 不是 1 是',
     `create_by` varchar(64) DEFAULT NULL COMMENT '创建人',
     `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_by` varchar(64) DEFAULT NULL COMMENT '更新人',
@@ -243,32 +245,65 @@ CREATE TABLE `doctor_practicepoint_item` (
     KEY `PRACTICEPOINT_ID_IDX` (`practicepoint_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='医生执业项信息 多机构备案';
 
--- 医疗设备管理
-DROP TABLE IF EXISTS `medical_equipment`;
-CREATE TABLE `medical_equipment` (
+-- 医生评分历史
+DROP TABLE IF EXISTS `doctor_score_history`;
+CREATE TABLE `doctor_score_history` (
     `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
-    `name` VARCHAR(32) DEFAULT NULL COMMENT '设备名称',
-    `code` VARCHAR(128) DEFAULT NULL COMMENT '设备编号',
-    `equipment_model` VARCHAR(128) DEFAULT NULL COMMENT '设备型号',
-    `manufacturer` VARCHAR(32) DEFAULT NULL COMMENT '生产厂家',
-    `equipment_image` VARCHAR(255) DEFAULT NULL COMMENT '设备图片文件名',
-    `equipment_type` int(11) DEFAULT NULL COMMENT '设备类别',
-    `equipment_type_name` VARCHAR(64) DEFAULT NULL COMMENT '设备类别',
-    `purchase_price` DECIMAL(10, 2) DEFAULT NULL COMMENT '采购价格',
-    `supplier` VARCHAR(32) DEFAULT NULL COMMENT '供应商',
-    `contract_number` VARCHAR(64) DEFAULT NULL COMMENT '合同编号',
-    `purchase_date` datetime DEFAULT NULL COMMENT '购置日期',
-    `status` tinyint(4) NOT NULL DEFAULT 0 COMMENT '使用状态 0 正常使用 1 维修中 2 闲置',
-    `asset_department` VARCHAR(32) DEFAULT NULL COMMENT '资产归属部门',
-    `asset_responsible_person` VARCHAR(32) DEFAULT NULL COMMENT '资产责任人',
-    `related_document` VARCHAR(255) DEFAULT NULL COMMENT '相关文档文件名',
-    `scrap_info` TEXT DEFAULT NULL COMMENT '折旧信息',
+    `doctor_id` int(11) NOT NULL COMMENT '医生id',
+    `event_type` tinyint(4) NOT NULL COMMENT '事件类型 0 减分 1 加分',
+    `score` int(4) NOT NULL COMMENT '加减分值',
+    `reason` TEXT COMMENT '加减分描述',
     `create_by` varchar(64) DEFAULT NULL COMMENT '创建人',
     `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_by` varchar(64) DEFAULT NULL COMMENT '更新人',
     `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
     `is_delete` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否删除 0 未删除 1 已删除',
-    PRIMARY KEY (`id`) USING BTREE
+    PRIMARY KEY (`id`) USING BTREE,
+    KEY `DOCTOR_ID_IDX` (`doctor_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='医生评分历史';
+
+-- 专家标签
+DROP TABLE IF EXISTS `expert_label`;
+CREATE TABLE `expert_label` (
+     `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+     `doctor_id` int(11) NOT NULL COMMENT '医生id',
+     `dict_id` int(11) DEFAULT NULL COMMENT '标签id',
+     `create_by` varchar(64) DEFAULT NULL COMMENT '创建人',
+     `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+     `update_by` varchar(64) DEFAULT NULL COMMENT '更新人',
+     `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+     `is_delete` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否删除 0 未删除 1 已删除',
+     PRIMARY KEY (`id`) USING BTREE,
+     KEY `DICT_ID_IDX` (`dict_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='专家标签';
+
+-- 医疗设备管理
+DROP TABLE IF EXISTS `medical_equipment`;
+CREATE TABLE `medical_equipment` (
+    `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+    `name` varchar(32) DEFAULT NULL COMMENT '设备名称',
+    `code` varchar(128) DEFAULT NULL COMMENT '设备编号',
+    `equipment_model` varchar(64) DEFAULT NULL COMMENT '设备型号',
+    `manufacturer` varchar(32) DEFAULT NULL COMMENT '生产厂家',
+    `equipment_image` varchar(255) DEFAULT NULL COMMENT '设备图片文件名',
+    `equipment_type` varchar(255) DEFAULT NULL COMMENT '设备类别',
+    `equipment_type_name` int(11) DEFAULT NULL COMMENT '设备类别 名称',
+    `purchase_price` decimal(10,2) DEFAULT NULL COMMENT '采购价格',
+    `supplier` varchar(32) DEFAULT NULL COMMENT '供应商',
+    `contract_number` varchar(64) DEFAULT NULL COMMENT '合同编号',
+    `purchase_date` date DEFAULT NULL COMMENT '购置日期',
+    `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '使用状态 0 正常使用 1 维修中 2 闲置',
+    `asset_department` varchar(32) DEFAULT NULL COMMENT '资产归属部门',
+    `asset_responsible_person` varchar(32) DEFAULT NULL COMMENT '资产责任人',
+    `scrap_info` text COMMENT '折旧信息',
+    `create_by` varchar(64) DEFAULT NULL COMMENT '创建人',
+    `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_by` varchar(64) DEFAULT NULL COMMENT '更新人',
+    `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+    `is_delete` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否删除 0 未删除 1 已删除',
+    PRIMARY KEY (`id`) USING BTREE,
+    KEY `medical_equipment_name_IDX` (`name`) USING BTREE,
+    KEY `medical_equipment_code_IDX` (`code`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='医疗设备管理';
 
 -- 设备附件
@@ -276,9 +311,9 @@ DROP TABLE IF EXISTS `medical_equipment_file`;
 CREATE TABLE `medical_equipment_file` (
      `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
      `equipment_id` int(11) NOT NULL COMMENT '设备id',
-     `file_type` varchar(64) NOT NULL COMMENT '文件类别 doc,pdf,xls等',
-     `file_name` varchar(1000) NOT NULL COMMENT '文件名称',
-     `file_path` varchar(1000) NOT NULL COMMENT '文件路径',
+     `file_type` varchar(64) NOT NULL DEFAULT '' COMMENT '文件类别 doc,pdf,xls等',
+     `file_name` varchar(1000) NOT NULL DEFAULT '' COMMENT '文件名称',
+     `file_path` varchar(1000) NOT NULL DEFAULT '' COMMENT '文件路径',
      `create_by` varchar(64) DEFAULT NULL COMMENT '创建人',
      `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
      `update_by` varchar(64) DEFAULT NULL COMMENT '更新人',

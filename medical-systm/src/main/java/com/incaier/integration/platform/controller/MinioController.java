@@ -3,7 +3,7 @@ package com.incaier.integration.platform.controller;
 import com.incaier.integration.platform.config.MinioPropertiesConfig;
 import com.incaier.integration.platform.constant.ErrorCodeConstant;
 import com.incaier.integration.platform.exception.CommonBusinessException;
-import com.incaier.integration.platform.response.FileVo;
+import com.incaier.integration.platform.response.FileEntity;
 import com.incaier.integration.platform.response.Result;
 import com.incaier.integration.platform.util.MinioUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -44,8 +44,8 @@ public class MinioController {
      * @return {@link Result}<{@link String}> objectName
      */
     @PostMapping("/upload")
-    public Result<FileVo> upload(@RequestParam("file") MultipartFile file) {
-        FileVo fileVo = new FileVo();
+    public Result<FileEntity> upload(@RequestParam("file") MultipartFile file) {
+        FileEntity fileVo = new FileEntity();
         if (ObjectUtils.isEmpty(file)) {
             throw new CommonBusinessException(ErrorCodeConstant.COMMON_INVALID_PARAMETER, "文件错误");
         }
@@ -65,7 +65,7 @@ public class MinioController {
             minioUtils.uploadFile(minioPropertiesConfig.getBucketName(), file, objectName, contentType);
             fileVo.setFileType(contentType);
             fileVo.setFileName(fileName);
-            fileVo.setFileName(objectName);
+            fileVo.setFilePath(minioUtils.getFileUrl(objectName));
             // statObjectResponse = minioClient.statObject(StatObjectArgs.builder().bucket(minioPropertiesConfig.getBucketName()).object(objectName).build());
             return Result.success(fileVo);
         } catch (Exception e) {

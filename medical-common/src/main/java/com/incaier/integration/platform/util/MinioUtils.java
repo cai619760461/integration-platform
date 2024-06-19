@@ -7,6 +7,7 @@ import io.minio.messages.Bucket;
 import io.minio.messages.DeleteObject;
 import io.minio.messages.Item;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,15 +36,6 @@ public class MinioUtils {
 
     @Resource
     private MinioPropertiesConfig minioPropertiesConfig;
- 
-//    @Value("${minio.endpoint}")
-//    private String endpoint;
-//    @Value("${minio.bucketName}")
-//    private String bucketName;
-//    @Value("${minio.accessKey}")
-//    private String accessKey;
-//    @Value("${minio.secretKey}")
-//    private String secretKey;
 
     //100M
     private final Integer imgSize = 100 * 1024 * 1024;
@@ -436,5 +428,18 @@ public class MinioUtils {
     public String getUtf8ByUrlDecoder(String str) throws UnsupportedEncodingException {
         String url = str.replaceAll("%(?![0-9a-fA-F]{2})", "%25");
         return URLDecoder.decode(url, "UTF-8");
+    }
+
+    /**
+     * 获取文件url
+     *
+     * @param objectName 对象名称
+     * @return {@link String}
+     */
+    public String getFileUrl(String objectName) {
+        if (StringUtils.isEmpty(objectName)) {
+            return null;
+        }
+        return getBasisUrl() + objectName;
     }
 }
