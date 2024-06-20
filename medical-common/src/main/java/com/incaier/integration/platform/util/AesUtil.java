@@ -6,10 +6,17 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 
+/**
+ * AES 工具栏
+ *
+ * @author caiweijie
+ * @date 2024/06/20
+ */
 public class AesUtil {
+    private static final String ENCRYPTION_KEY = "YJZL@2022@GM57sN";
     private static final String ALGORITHMSTR = "AES/ECB/PKCS5Padding";
-    private static final String ENCRYPTION_KEY = "38jfdfhn1kgori2o";
 
     public static String base64Encode(byte[] bytes) {
         return Base64.encodeBase64String(bytes);
@@ -24,18 +31,12 @@ public class AesUtil {
         kgen.init(128);
         Cipher cipher = Cipher.getInstance(ALGORITHMSTR);
         cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(encryptKey.getBytes(), "AES"));
-        return cipher.doFinal(content.getBytes("utf-8"));
+        return cipher.doFinal(content.getBytes(StandardCharsets.UTF_8));
     }
 
     @SneakyThrows
     public static String encrypt(String content) {
         return base64Encode(aesEncryptToBytes(content, ENCRYPTION_KEY));
-    }
-
-    public static void main(String[] args) {
-        String test = encrypt("1qaz!QAZ");
-        System.out.println(test);
-        System.out.println(decrypt("Yj9COiAesRJOwlCWFbf8eg=="));
     }
 
     public static String aesDecryptByBytes(byte[] encryptBytes, String decryptKey) throws Exception {
@@ -44,7 +45,7 @@ public class AesUtil {
         Cipher cipher = Cipher.getInstance(ALGORITHMSTR);
         cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(decryptKey.getBytes(), "AES"));
         byte[] decryptBytes = cipher.doFinal(encryptBytes);
-        return new String(decryptBytes, "utf-8");
+        return new String(decryptBytes, StandardCharsets.UTF_8);
     }
 
     @SneakyThrows
@@ -60,5 +61,9 @@ public class AesUtil {
         }
     }
 
-
+//    public static void main(String[] args) {
+//        String test = encrypt("YLZtdy@5tgb");
+//        System.out.println(test);
+//        System.out.println(decrypt("YnOmZOIRSIAOvd0C6/BRVw=="));
+//    }
 }

@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.incaier.integration.platform.entity.valid.AddGroup;
 import com.incaier.integration.platform.entity.valid.QueryGroup;
 import com.incaier.integration.platform.entity.valid.UpdateGroup;
+import com.incaier.integration.platform.mapper.SysDictDataMapper;
 import com.incaier.integration.platform.request.SysDictDataDto;
 import com.incaier.integration.platform.request.SysDictTypeDto;
 import com.incaier.integration.platform.response.Result;
@@ -14,6 +15,8 @@ import com.incaier.integration.platform.service.SysDictTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 数据字典通知
@@ -32,6 +35,9 @@ public class DictController {
     @Autowired
     private SysDictDataService sysDictDataService;
 
+    @Autowired
+    private SysDictDataMapper sysDictDataMapper;
+
     /**
      * 获取所有字典类型
      *
@@ -44,7 +50,7 @@ public class DictController {
     }
 
     /**
-     * 获取某字典类型下，字典数据
+     * 获取某字典类型下，字典数据（分页）
      *
      * @param sysDictDataDto dto
      * @return {@link Result}<{@link PageInfo}<{@link SysDictTypeVo}>>
@@ -52,6 +58,17 @@ public class DictController {
     @PostMapping("/dataList")
     public Result<PageInfo<SysDictDataVo>> getDataList(@Validated({QueryGroup.class}) @RequestBody SysDictDataDto sysDictDataDto) {
         return Result.success(sysDictDataService.getDataList(sysDictDataDto));
+    }
+
+    /**
+     * 获取某字典类型下，字典数据（所有）
+     *
+     * @param sysDictDataDto dto
+     * @return {@link Result}<{@link PageInfo}<{@link SysDictTypeVo}>>
+     */
+    @PostMapping("/allDataList")
+    public Result<List<SysDictDataVo>> getAllDataList(@Validated({QueryGroup.class}) @RequestBody SysDictDataDto sysDictDataDto) {
+        return Result.success(sysDictDataMapper.getDataList(sysDictDataDto));
     }
 
     /**

@@ -1,3 +1,4 @@
+-- 新建数据库
 CREATE DATABASE IF NOT EXISTS test_medical_manage DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_general_ci;
 
 -- 数据字典类型
@@ -65,6 +66,90 @@ CREATE TABLE `org` (
 
 
 -- 字典数据
+-- 机构类别
+INSERT INTO sys_dict_type (dict_name, dict_type, status, create_by, update_by, remark) VALUES ('区县', 'sys_base_area', 0, 'system', 'system', '区县');
+INSERT INTO sys_dict_data (dict_sort, dict_label, dict_value, dict_type, css_class, list_class, is_default, status, create_by, update_by, remark) VALUES
+(1, '白银区', '620402', 'sys_base_area', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(2, '平川区', '620403', 'sys_base_area', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(3, '靖远县', '620421', 'sys_base_area', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(4, '会宁县', '620422', 'sys_base_area', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(4, '景泰县', '620423', 'sys_base_area', NULL, NULL, 0, 0, 'system', 'system', NULL);
+
+-- 机构类别
+INSERT INTO sys_dict_type (dict_name, dict_type, status, create_by, update_by, remark) VALUES ('机构类别', 'sys_org_type', 0, 'system', 'system', '机构类别');
+INSERT INTO sys_dict_data (dict_sort, dict_label, dict_value, dict_type, css_class, list_class, is_default, status, create_by, update_by, remark) VALUES
+(1, '综合医院', 'A100', 'sys_org_type', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(2, '中医院', 'A210', 'sys_org_type', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(3, '精神卫生中心', 'A520', 'sys_org_type', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(4, '专科医院', 'A526', 'sys_org_type', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(5, '社区卫生服务中心', 'B100', 'sys_org_type', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(6, '社区卫生服务站', 'B200', 'sys_org_type', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(7, '中心卫生院', 'C210', 'sys_org_type', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(8, '卫生院', 'C220', 'sys_org_type', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(9, '门诊部', 'D110', 'sys_org_type', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(10, '村卫生室', 'D600', 'sys_org_type', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(11, '普通诊所', 'D211', 'sys_org_type', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(12, '妇幼保健院', 'G100', 'sys_org_type', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(13, '妇幼保健站', 'G300', 'sys_org_type', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(14, '卫健委', 'P9', 'sys_org_type', NULL, NULL, 0, 0, 'system', 'system', NULL);
+
+-- 任职资格
+INSERT INTO sys_dict_type (dict_name, dict_type, status, create_by, update_by, remark) VALUES ('任职资格', 'sys_qualifications', 0, 'system', 'system', '任职资格');
+INSERT INTO sys_dict_data (dict_sort, dict_label, dict_value, dict_type, css_class, list_class, is_default, status, create_by, update_by, remark) VALUES
+(1, '主任医师', '231', 'sys_qualifications', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(2, '副主任医师', '232', 'sys_qualifications', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(3, '主治医师', '233', 'sys_qualifications', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(4, '医师', '234', 'sys_qualifications', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(5, '执业助理医师', '235', 'sys_qualifications', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(6, '主治中医师', '236', 'sys_qualifications', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(7, '副主任药师', '242', 'sys_qualifications', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(8, '主管护师', '253', 'sys_qualifications', NULL, NULL, 0, 0, 'system', 'system', NULL);
+
+-- 执业级别
+INSERT INTO sys_dict_type (dict_name, dict_type, status, create_by, update_by, remark) VALUES ('执业级别', 'sys_practice_level', 0, 'system', 'system', '执业级别');
+INSERT INTO sys_dict_data (dict_sort, dict_label, dict_value, dict_type, css_class, list_class, is_default, status, create_by, update_by, remark) VALUES
+(0, '执业医师', '1', 'sys_practice_level', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(1, '主治中医师', '2', 'sys_practice_level', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(2, '主治医师', '3', 'sys_practice_level', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(3, '副主任护师', '4', 'sys_practice_level', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(4, '执业助理医师', '5', 'sys_practice_level', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(5, '主管护师', '6', 'sys_practice_level', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(6, '副主任药师', '7', 'sys_practice_level', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(7, '副主任医师', '8', 'sys_practice_level', NULL, NULL, 0, 0, 'system', 'system', NULL);
+
+-- 执业范围
+INSERT INTO sys_dict_type (dict_name, dict_type, status, create_by, update_by, remark) VALUES ('执业范围', 'sys_practice_item', 0, 'system', 'system', '执业范围');
+INSERT INTO sys_dict_data (dict_sort, dict_label, dict_value, dict_type, css_class, list_class, is_default, status, create_by, update_by, remark) VALUES
+(0, '妇产科专业', '3', 'sys_practice_item', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(0, '医学检验、病理专业', '10', 'sys_practice_item', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(0, '医学影像和放射治疗专业', '9', 'sys_practice_item', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(0, '职业病专业', '8', 'sys_practice_item', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(0, '精神卫生专业', '7', 'sys_practice_item', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(0, '皮肤病与性病专业', '6', 'sys_practice_item', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(0, '眼耳鼻咽喉科专业', '5', 'sys_practice_item', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(0, '急救医学专业', '12', 'sys_practice_item', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(0, '康复医学专业', '13', 'sys_practice_item', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(0, '预防保健专业', '14', 'sys_practice_item', NULL, NULL, 0, 0, 'system', 'system', NULL)
+(0, '特种医学与军事医学专业', '15', 'sys_practice_item', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(0, '内科', '1', 'sys_practice_item', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(0, '外科', '2', 'sys_practice_item', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(0, '全科医学专业', '11', 'sys_practice_item', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(0, '儿科', '4', 'sys_practice_item', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(0, '省级以上卫生行政部门规定的其他专业', '17', 'sys_practice_item', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(0, '计划生育技术服务专业', '16', 'sys_practice_item', NULL, NULL, 0, 0, 'system', 'system', NULL);
+
+-- 执业类型
+INSERT INTO sys_dict_type (dict_name, dict_type, status, create_by, update_by, remark) VALUES ('执业类型', 'sys_practice_type', 0, 'system', 'system', '执业类型');
+INSERT INTO sys_dict_data (dict_sort, dict_label, dict_value, dict_type, css_class, list_class, is_default, status, create_by, update_by, remark) VALUES
+(0, '公共卫生', '3', 'sys_practice_type', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(0, '中医', '4', 'sys_practice_type', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(0, '口腔', '2', 'sys_practice_type', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(0, '临床', '1', 'sys_practice_type', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(0, '药学', '5', 'sys_practice_type', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(0, '中医学', '6', 'sys_practice_type', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(0, '妇产科护理', '7', 'sys_practice_type', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(0, '外科护理', '8', 'sys_practice_type', NULL, NULL, 0, 0, 'system', 'system', NULL);
+
 -- 专家科室
 INSERT INTO sys_dict_type (dict_name, dict_type, status, create_by, update_by, remark) VALUES ('专家科室', 'sys_expert_dept', 0, 'system', 'system', '专家科室列表');
 INSERT INTO sys_dict_data (dict_sort, dict_label, dict_value, dict_type, css_class, list_class, is_default, status, create_by, update_by, remark) VALUES

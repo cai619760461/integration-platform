@@ -21,7 +21,7 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
- * minio 文件上传控制器
+ * 文件上传
  *
  * @author caiweijie
  * @date 2024/06/18
