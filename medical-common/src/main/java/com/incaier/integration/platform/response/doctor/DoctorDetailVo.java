@@ -42,7 +42,7 @@ public class DoctorDetailVo implements Serializable {
     private DoctorPracticepointVo doctorPracticepoint;
 
     /**
-     * 医生执业信息
+     * 多机构备案
      */
     private List<DoctorPracticepointItemVo> doctorPracticepointItems;
 }

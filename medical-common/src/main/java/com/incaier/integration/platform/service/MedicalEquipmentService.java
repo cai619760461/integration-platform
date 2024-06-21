@@ -41,4 +41,12 @@ public interface MedicalEquipmentService extends IService<MedicalEquipment> {
      * @return {@link MedicalEquipmentDetailVo}
      */
     MedicalEquipmentDetailVo getDetail(Integer id);
+
+    /**
+     * 删除设备
+     *
+     * @param id 身份证件
+     * @return {@link Boolean}
+     */
+    Boolean delete(Integer id);
 }

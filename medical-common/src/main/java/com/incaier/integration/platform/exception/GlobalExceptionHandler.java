@@ -26,12 +26,13 @@ public class GlobalExceptionHandler {
         BindingResult bindingResult = e.getBindingResult();
         HashSet<String> errorList = new HashSet<>();
         for (ObjectError error : bindingResult.getAllErrors()) {
-            if (error instanceof FieldError) {
-                FieldError fieldError = (FieldError) error;
-                errorList.add(fieldError.getField() + "参数:" + fieldError.getDefaultMessage());
-            } else {
-                errorList.add(error.getDefaultMessage());
-            }
+//            if (error instanceof FieldError) {
+//                FieldError fieldError = (FieldError) error;
+//                errorList.add(fieldError.getField() + "参数:" + fieldError.getDefaultMessage());
+//            } else {
+//                errorList.add(error.getDefaultMessage());
+//            }
+            errorList.add(error.getDefaultMessage());
         }
         return Result.error(StrUtil.join(" ; ", errorList));
     }
@@ -68,14 +69,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CommonBusinessException.class)
     public Result<Object> handleCommonBusinessException(CommonBusinessException e) {
-//        e.printStackTrace();
+        log.error(e.getMessage(), e);
         return Result.error(e.getCode(), e.getMessage());
     }
 
     // 全局异常拦截
     @ExceptionHandler
     public Result<String> handlerException(Exception e) {
-        e.printStackTrace();
+        log.error(e.getMessage(), e);
         return Result.error(e.getMessage());
     }
 }

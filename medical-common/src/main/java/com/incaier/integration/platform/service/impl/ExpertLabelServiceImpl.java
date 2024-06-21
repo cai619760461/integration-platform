@@ -54,7 +54,7 @@ public class ExpertLabelServiceImpl extends ServiceImpl<ExpertLabelMapper, Exper
     public List<DoctorExpertLabelVo> buildExpertList(ExpertLabelQueryDto dto) {
         List<DoctorExpertLabelVo> expertList = doctorInfoMapper.getDoctorExpertList(dto);
         expertList.forEach(expert -> {
-            DoctorPracticepointVo doctorPracticepoint = doctorPracticepointMapper.getDoctorPracticepointById(expert.getId());
+            DoctorPracticepointVo doctorPracticepoint = doctorPracticepointMapper.getDoctorPraTypeLevelById(expert.getId());
             if (ObjectUtils.isNotEmpty(doctorPracticepoint)) {
                 expert.setPracticeLevel(doctorPracticepoint.getPracticeLevel());
                 expert.setPracticeType(doctorPracticepoint.getPracticeType());

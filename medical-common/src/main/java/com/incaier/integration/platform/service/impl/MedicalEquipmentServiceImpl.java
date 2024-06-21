@@ -86,7 +86,7 @@ public class MedicalEquipmentServiceImpl extends ServiceImpl<MedicalEquipmentMap
         medicalEquipment.setCreateBy(UserHolder.getUserName());
         medicalEquipment.setUpdateBy(UserHolder.getUserName());
         medicalEquipmentMapper.saveOrUpdate(medicalEquipment);
-        if (ObjectUtils.isEmpty(medicalEquipmentDto.getId())) {
+        if (ObjectUtils.isEmpty(medicalEquipment.getId())) {
             throw new CommonBusinessException(ErrorCodeConstant.COMMON_ERROR, "saveOrUpdate failed");
         }
         // 新增附件
@@ -94,7 +94,7 @@ public class MedicalEquipmentServiceImpl extends ServiceImpl<MedicalEquipmentMap
             List<MedicalEquipmentFile> files = medicalEquipmentDto.getAddAnnex().stream().map(x -> {
                 MedicalEquipmentFile medicalEquipmentFile = new MedicalEquipmentFile();
                 BeanUtils.copyProperties(x, medicalEquipmentFile);
-                medicalEquipmentFile.setEquipmentId(medicalEquipmentDto.getId());
+                medicalEquipmentFile.setEquipmentId(medicalEquipment.getId());
                 medicalEquipmentFile.setCreateBy(UserHolder.getUserName());
                 medicalEquipmentFile.setUpdateBy(UserHolder.getUserName());
                 return medicalEquipmentFile;
@@ -102,14 +102,19 @@ public class MedicalEquipmentServiceImpl extends ServiceImpl<MedicalEquipmentMap
             medicalequipmentfileService.saveBatch(files);
         }
         // 删除附件信息
-        if (CollectionUtils.isNotEmpty(medicalEquipmentDto.getDeleteIds())) {
-            List<MedicalEquipmentFile> files = medicalEquipmentFileMapper.selectBatchIds(medicalEquipmentDto.getDeleteIds());
-            medicalEquipmentFileMapper.update(null, Wrappers.<MedicalEquipmentFile>lambdaUpdate()
-                    .in(MedicalEquipmentFile::getId, medicalEquipmentDto.getDeleteIds())
-                    .set(MedicalEquipmentFile::getIsDelete, BYConstant.INT_TRUE));
-            minioUtils.removeFiles(minioPropertiesConfig.getBucketName(), files.stream().map(MedicalEquipmentFile::getFilePath).collect(Collectors.toList()));
-        }
+        deleteMedicalEquipmentFiles(medicalEquipmentDto.getDeleteIds());
         return true;
+    }
+
+    private void deleteMedicalEquipmentFiles(List<Integer> deleteIds) {
+        if (CollectionUtils.isEmpty(deleteIds)) {
+            return;
+        }
+        List<MedicalEquipmentFile> files = medicalEquipmentFileMapper.selectBatchIds(deleteIds);
+        medicalEquipmentFileMapper.update(null, Wrappers.<MedicalEquipmentFile>lambdaUpdate()
+                .in(MedicalEquipmentFile::getId, deleteIds)
+                .set(MedicalEquipmentFile::getIsDelete, BYConstant.INT_TRUE));
+        minioUtils.removeFiles(minioPropertiesConfig.getBucketName(), files.stream().map(x -> x.getFilePath().replaceFirst(minioUtils.getBasisUrl(), "")).collect(Collectors.toList()));
     }
 
     @Override
@@ -127,5 +132,17 @@ public class MedicalEquipmentServiceImpl extends ServiceImpl<MedicalEquipmentMap
             response.setAnnex(Convert.toList(MedicalEquipmentFileVo.class, annex));
         }
         return response;
+    }
+
+    @Override
+    public Boolean delete(Integer id) {
+        // 删除附件
+        List<MedicalEquipmentFile> files = medicalEquipmentFileMapper.selectList(Wrappers.<MedicalEquipmentFile>lambdaQuery().select(MedicalEquipmentFile::getId).eq(MedicalEquipmentFile::getEquipmentId, id));
+        deleteMedicalEquipmentFiles(files.stream().map(MedicalEquipmentFile::getId).collect(Collectors.toList()));
+        // 删除设备
+        medicalEquipmentMapper.update(null, Wrappers.<MedicalEquipment>lambdaUpdate()
+                .eq(MedicalEquipment::getId, id)
+                .set(MedicalEquipment::getIsDelete, BYConstant.INT_TRUE));
+        return true;
     }
 }

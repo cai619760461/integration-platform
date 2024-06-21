@@ -20,12 +20,11 @@ import java.util.List;
 @Service
 public class HospitalServiceImpl extends ServiceImpl<HospitalMapper, Hospital> implements HospitalService {
 
-	@Resource
-	private HospitalMapper hospitalMapper;
+    @Resource
+    private HospitalMapper hospitalMapper;
 
-
-	@Override
-	public List<HospitalVo> getAgencies() {
-		return hospitalMapper.getAgencies();
-	}
+    @Override
+    public List<HospitalVo> getHospitalList() {
+        return hospitalMapper.getHospitalList();
+    }
 }

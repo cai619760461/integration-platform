@@ -49,17 +49,20 @@ public class ExcelConverter {
         }
     }
 
-    public static class GenderConverter implements Converter<String> {
-        private static final Map<String, String> GENDER_MAP = new HashMap<>();
+    public static class GenderConverter implements Converter<Object> {
+        private static final Map<Object, String> GENDER_MAP = new HashMap<>();
 
         static {
             GENDER_MAP.put("1", "男");
+            GENDER_MAP.put(1, "男");
             GENDER_MAP.put("2", "女");
+            GENDER_MAP.put(2, "女");
             GENDER_MAP.put("9", "未知");
+            GENDER_MAP.put(9, "未知");
         }
 
         @Override
-        public WriteCellData<?> convertToExcelData(WriteConverterContext<String> context) {
+        public WriteCellData<?> convertToExcelData(WriteConverterContext<Object> context) {
             return new WriteCellData<>(GENDER_MAP.getOrDefault(context.getValue(), "未知"));
         }
     }

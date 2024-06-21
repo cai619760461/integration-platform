@@ -42,19 +42,18 @@ CREATE TABLE `org` (
     `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
     `code` varchar(128) NOT NULL COMMENT '机构id',
     `position` int(11) DEFAULT NULL COMMENT '机构序号',
-    `type_code` varchar(128) DEFAULT NULL COMMENT '机构类型编码',
-    `type_name` varchar(128) NOT NULL COMMENT '机构类型名称',
+    `type_id` int(11) DEFAULT NULL COMMENT '结构类型 字典id',
     `name` varchar(128) DEFAULT NULL COMMENT '机构名称',
     `contact_name` varchar(128) DEFAULT NULL COMMENT '机构联系人',
     `contact_title` varchar(128) DEFAULT NULL COMMENT '机构联系人职位',
     `contact_phone` varchar(128) DEFAULT NULL COMMENT '机构联系人电话',
-    `district` varchar(512) DEFAULT NULL COMMENT '机构所属区域',
+    `district_dict_id` int(11) DEFAULT NULL COMMENT '市县 字典id',
     `county` varchar(512) DEFAULT NULL COMMENT '机构所属县镇',
     `address` varchar(512) DEFAULT NULL COMMENT '机构地址',
-    `picturl` blob COMMENT '机构图片',
+    `picturl` varchar(512) DEFAULT NULL COMMENT '机构图片',
     `content_type` varchar(128) DEFAULT NULL COMMENT '机构图片类型',
     `remark` varchar(512) DEFAULT NULL COMMENT '备注',
-    `enabled` tinyint(4) NOT NULL DEFAULT 1 COMMENT '是否启用 1启用/0未启用',
+    `enabled` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否启用 1启用/0未启用',
     `create_by` varchar(64) DEFAULT NULL COMMENT '创建人',
     `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_by` varchar(64) DEFAULT NULL COMMENT '更新人',
@@ -64,9 +63,8 @@ CREATE TABLE `org` (
     KEY `org_code_IDX` (`code`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='机构信息表';
 
-
 -- 字典数据
--- 机构类别
+-- 白银市区县
 INSERT INTO sys_dict_type (dict_name, dict_type, status, create_by, update_by, remark) VALUES ('区县', 'sys_base_area', 0, 'system', 'system', '区县');
 INSERT INTO sys_dict_data (dict_sort, dict_label, dict_value, dict_type, css_class, list_class, is_default, status, create_by, update_by, remark) VALUES
 (1, '白银区', '620402', 'sys_base_area', NULL, NULL, 0, 0, 'system', 'system', NULL),
@@ -193,14 +191,6 @@ INSERT INTO sys_dict_data (dict_sort, dict_label, dict_value, dict_type, css_cla
 (1, '治疗设备', '1', 'sys_equipment_type', NULL, NULL, 0, 0, 'system', 'system', NULL),
 (2, '监护设备', '2', 'sys_equipment_type', NULL, NULL, 0, 0, 'system', 'system', NULL);
 
--- 使用状态 0 正常使用 1 维修中 2 闲置
--- 设备类别
--- INSERT INTO sys_dict_type (dict_name, dict_type, status, create_by, update_by, remark) VALUES ('使用状态', 'sys_usage_status', 0, 'system', 'system', '使用状态');
--- INSERT INTO sys_dict_data (dict_sort, dict_label, dict_value, dict_type, css_class, list_class, is_default, status, create_by, update_by, remark) VALUES
--- (0, '正常使用', '0', 'sys_usage_status', NULL, NULL, 0, 0, 'system', 'system', NULL),
--- (1, '维修中', '1', 'sys_usage_status', NULL, NULL, 0, 0, 'system', 'system', NULL),
--- (2, '闲置', '2', 'sys_usage_status', NULL, NULL, 0, 0, 'system', 'system', NULL);
-
 -- 医师基本信息
 DROP TABLE IF EXISTS `doctor_info`;
 CREATE TABLE `doctor_info` (
@@ -283,11 +273,11 @@ CREATE TABLE `doctor_practicepoint` (
     `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '医生执业信息id',
     `doctor_id` int(11) DEFAULT NULL COMMENT '医生Id',
     `code` varchar(128) DEFAULT NULL COMMENT '执业证书编码',
-    `practice_level` varchar(128) DEFAULT NULL COMMENT '执业级别',
-    `practice_title` varchar(128) DEFAULT NULL COMMENT '任职资格',
+    `practice_level_id` int(11) DEFAULT NULL COMMENT '执业级别 字典id',
+    `practice_title_id` int(11) DEFAULT NULL COMMENT '任职资格 字典id',
     `practice_title_code` varchar(128) DEFAULT NULL COMMENT '发证机关',
-    `practice_item` varchar(128) DEFAULT NULL COMMENT '执业范围',
-    `practice_type` varchar(128) DEFAULT NULL COMMENT '执业类型',
+    `practice_item_id` int(11) DEFAULT NULL COMMENT '执业范围 字典id',
+    `practice_type_id` int(11) DEFAULT NULL COMMENT '执业类型 字典id',
     `check_org` varchar(128) DEFAULT NULL COMMENT '审批机构',
     `check_date` date DEFAULT NULL COMMENT '审批日期',
     `practice_address` varchar(128) DEFAULT NULL COMMENT '执业地点',
@@ -302,7 +292,7 @@ CREATE TABLE `doctor_practicepoint` (
     `document3_avatar_type` varchar(128) DEFAULT NULL COMMENT '执业证书图片3类型',
     `enabled` tinyint(11) NOT NULL DEFAULT '1' COMMENT '是否有效 1有效/0无效',
     `title_information` varchar(128) DEFAULT '' COMMENT '职称信息',
-    `is_general_practitioner` char(1) DEFAULT '' COMMENT '是否全科医生',
+    `is_general_practitioner` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否全科医生 0 不是 1 是',
     `create_by` varchar(64) DEFAULT NULL COMMENT '创建人',
     `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_by` varchar(64) DEFAULT NULL COMMENT '更新人',
@@ -371,8 +361,7 @@ CREATE TABLE `medical_equipment` (
     `equipment_model` varchar(64) DEFAULT NULL COMMENT '设备型号',
     `manufacturer` varchar(32) DEFAULT NULL COMMENT '生产厂家',
     `equipment_image` varchar(255) DEFAULT NULL COMMENT '设备图片文件名',
-    `equipment_type` varchar(255) DEFAULT NULL COMMENT '设备类别',
-    `equipment_type_name` int(11) DEFAULT NULL COMMENT '设备类别 名称',
+    `equipment_type_id` int(11) DEFAULT NULL COMMENT '设备类别 字典id',
     `purchase_price` decimal(10,2) DEFAULT NULL COMMENT '采购价格',
     `supplier` varchar(32) DEFAULT NULL COMMENT '供应商',
     `contract_number` varchar(64) DEFAULT NULL COMMENT '合同编号',
@@ -396,7 +385,7 @@ DROP TABLE IF EXISTS `medical_equipment_file`;
 CREATE TABLE `medical_equipment_file` (
      `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
      `equipment_id` int(11) NOT NULL COMMENT '设备id',
-     `file_type` varchar(64) NOT NULL DEFAULT '' COMMENT '文件类别 doc,pdf,xls等',
+     `file_type` varchar(256) NOT NULL DEFAULT '' COMMENT '文件类别 doc,pdf,xls等',
      `file_name` varchar(1000) NOT NULL DEFAULT '' COMMENT '文件名称',
      `file_path` varchar(1000) NOT NULL DEFAULT '' COMMENT '文件路径',
      `create_by` varchar(64) DEFAULT NULL COMMENT '创建人',

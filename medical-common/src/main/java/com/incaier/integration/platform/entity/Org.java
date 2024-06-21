@@ -36,14 +36,9 @@ public class Org implements Serializable {
     private Integer position;
 
     /**
-    * 机构类型编码
-    */
-    private String typeCode;
-
-    /**
-    * 机构类型名称
-    */
-    private String typeName;
+     * 机构类型 字典id
+     */
+    private Integer typeId;
 
     /**
     * 机构名称
@@ -66,9 +61,9 @@ public class Org implements Serializable {
     private String contactPhone;
 
     /**
-    * 机构所属区域
-    */
-    private String district;
+     * 机构所属区域 字典id
+     */
+    private Integer districtDictId;
 
     /**
     * 机构所属县镇

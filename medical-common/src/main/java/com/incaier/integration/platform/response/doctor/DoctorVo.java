@@ -8,10 +8,11 @@ import com.incaier.integration.platform.response.RoleVO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -50,15 +51,15 @@ public class DoctorVo implements Serializable {
      * 性别 1 男 2 女 9 未知
      */
     @ExcelProperty(value = "性别", converter = ExcelConverter.GenderConverter.class)
-//    @JsonSerialize(using = DataJsonSerializer.GenderSerializer.class)
     private Integer sex;
 
     /**
      * 出生日期
      */
-    @ExcelProperty("出生日期")
-    @JsonFormat( pattern="yyyy-MM-dd",timezone = "GMT+8")
-    private Date birthday;
+    @ExcelProperty(value = "出生日期", converter = ExcelConverter.LocalDateStringConverter.class)
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate birthday;
 
     /**
      * 执业证书编码
@@ -73,16 +74,34 @@ public class DoctorVo implements Serializable {
     private String practiceOrg;
 
     /**
+     * 执业级别 字典id
+     */
+    @ExcelIgnore
+    private Integer practiceLevelId;
+
+    /**
      * 执业级别
      */
     @ExcelProperty("执业级别")
     private String practiceLevel;
 
     /**
+     * 执业类型 字典id
+     */
+    @ExcelIgnore
+    private Integer practiceTypeId;
+
+    /**
      * 执业类型
      */
     @ExcelProperty("执业类型")
     private String practiceType;
+
+    /**
+     * 执业范围 字典id
+     */
+    @ExcelIgnore
+    private Integer practiceItemId;
 
     /**
      * 执业范围
@@ -105,7 +124,8 @@ public class DoctorVo implements Serializable {
     /**
      * 最后一次登录时间
      */
-    @ExcelProperty("最后一次登录时间")
+//    @ExcelProperty("最后一次登录时间")
+    @ExcelIgnore
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime lastLoginTime;
 }

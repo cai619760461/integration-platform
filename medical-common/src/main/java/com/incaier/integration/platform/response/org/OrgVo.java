@@ -40,10 +40,10 @@ public class OrgVo implements Serializable {
     private Integer position;
 
     /**
-    * 机构类型编码
-    */
-    @ExcelProperty("机构类型编码")
-    private String typeCode;
+     * 机构类型 字典id
+     */
+    @ExcelIgnore
+    private Integer typeId;
 
     /**
     * 机构类型名称
@@ -74,6 +74,12 @@ public class OrgVo implements Serializable {
     */
     @ExcelProperty("机构联系人电话")
     private String contactPhone;
+
+    /**
+     * 机构所属区域 字典id
+     */
+    @ExcelIgnore
+    private Integer districtDictId;
 
     /**
     * 机构所属区域

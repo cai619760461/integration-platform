@@ -54,12 +54,7 @@ public class MedicalEquipmentDto extends PageDto {
     /**
      * 设备类别 id
      */
-    private Integer equipmentType;
-
-    /**
-     * 设备类别 名称
-     */
-    private String equipmentTypeName;
+    private Integer equipmentTypeId;
 
     /**
      * 采购价格

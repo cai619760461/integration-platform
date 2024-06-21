@@ -45,6 +45,20 @@ public class MinioUtils {
 
 
     /**
+     * 获取文件元数据
+     *
+     * @param objectName 对象名称
+     * @return {@link String}
+     */
+    public StatObjectResponse statObject(String objectName) {
+        try {
+            return minioClient.statObject(StatObjectArgs.builder().bucket(minioPropertiesConfig.getBucketName()).object(objectName).build());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
      * 获取上传文件前缀路径
      *
      * @return {@link String}

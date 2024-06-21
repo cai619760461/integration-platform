@@ -47,7 +47,7 @@ public class OrgController {
     }
 
     /**
-     * 新增机构
+     * 新增或更新机构
      *
      * @param orgDto org dto
      * @return {@link Result}<{@link Boolean}>
@@ -65,7 +65,9 @@ public class OrgController {
      */
     @DeleteMapping("/delete")
     public Result<Boolean> dataDelete(@RequestParam Integer id) {
-        return Result.success(orgService.update(Wrappers.<Org>lambdaUpdate().eq(Org::getId, id).set(Org::getIsDelete, BYConstant.INT_TRUE)));
+        return Result.success(orgService.update(Wrappers.<Org>lambdaUpdate()
+                .eq(Org::getId, id)
+                .set(Org::getIsDelete, BYConstant.INT_TRUE)));
     }
 
     /**

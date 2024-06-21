@@ -86,6 +86,11 @@ public class DoctorInfoVo implements Serializable {
     private String orgName;
 
     /**
+     * 分数
+     */
+    private Integer score;
+
+    /**
      * 是否专家 0 不是 1 是
      */
     private Integer isExpert;

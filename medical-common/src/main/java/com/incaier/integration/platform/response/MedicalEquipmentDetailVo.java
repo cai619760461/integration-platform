@@ -53,7 +53,7 @@ public class MedicalEquipmentDetailVo implements Serializable {
     /**
      * 设备类别
      */
-    private Integer equipmentType;
+    private Integer equipmentTypeId;
 
     /**
      * 设备类别名称

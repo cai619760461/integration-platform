@@ -41,6 +41,11 @@ public class DoctorPracticepointVo implements Serializable {
     private String practiceLevel;
 
     /**
+     * 执业级别
+     */
+    private Integer practiceLevelId;
+
+    /**
      * 院内科室
      */
     private String practiceDept;
@@ -51,9 +56,14 @@ public class DoctorPracticepointVo implements Serializable {
     private String practiceType;
 
     /**
+     * 执业类型
+     */
+    private Integer practiceTypeId;
+
+    /**
      * 执业范围
      */
-    private String practiceItem;
+    private Integer practiceItemId;
 
     /**
      * 主要执业机构
@@ -94,10 +104,10 @@ public class DoctorPracticepointVo implements Serializable {
     /**
      * 任职资格
      */
-    private String practiceTitle;
+    private Integer practiceTitleId;
 
     /**
      * 是否全科医生
      */
-    private String isGeneralPractitioner;
+    private Integer isGeneralPractitioner;
 }

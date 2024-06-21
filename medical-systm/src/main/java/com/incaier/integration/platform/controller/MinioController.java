@@ -66,7 +66,8 @@ public class MinioController {
             fileVo.setFileType(contentType);
             fileVo.setFileName(fileName);
             fileVo.setFilePath(minioUtils.getFileUrl(objectName));
-            // statObjectResponse = minioClient.statObject(StatObjectArgs.builder().bucket(minioPropertiesConfig.getBucketName()).object(objectName).build());
+            // 获取元数据
+            // StatObjectResponse statObjectResponse = minioUtils.statObject(objectName);
             return Result.success(fileVo);
         } catch (Exception e) {
             log.error(e.getMessage(), e);

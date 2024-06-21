@@ -1,6 +1,9 @@
 package com.incaier.integration.platform.controller;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageInfo;
+import com.incaier.integration.platform.constant.BYConstant;
+import com.incaier.integration.platform.entity.equipment.MedicalEquipment;
 import com.incaier.integration.platform.mapper.MedicalEquipmentMapper;
 import com.incaier.integration.platform.request.MedicalEquipmentDto;
 import com.incaier.integration.platform.request.MedicalEquipmentQueryDto;
@@ -64,16 +67,21 @@ public class MedicalEquipmentController {
         return Result.success(medicalequipmentService.saveOrUpdateEquipment(medicalEquipmentDto));
     }
 
-    @PostMapping(value = "/delete/{id}")
-    public Result<Object> delete(@PathVariable("id") String id) {
-        medicalequipmentService.removeById(id);
-        return Result.success("deleted successfully");
+    /**
+     * 删除设备
+     *
+     * @param id 身份证件
+     * @return {@link Result}<{@link Boolean}>
+     */
+    @DeleteMapping(value = "/delete")
+    public Result<Boolean> delete(@RequestParam("id") Integer id) {
+        return Result.success(medicalequipmentService.delete(id));
     }
 
     /**
      * 医疗设备数据导出
      *
-     * @param response            响应体
+     * @param response  响应体
      * @param queryDto 医疗设备dto
      */
     @PostMapping("/export")

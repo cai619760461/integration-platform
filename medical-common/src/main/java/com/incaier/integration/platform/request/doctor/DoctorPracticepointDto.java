@@ -37,7 +37,7 @@ public class DoctorPracticepointDto extends BaseDto implements Serializable {
     /**
      * 执业级别
      */
-    private String practiceLevel;
+    private Integer practiceLevelId;
 
     /**
      * 院内科室
@@ -47,12 +47,12 @@ public class DoctorPracticepointDto extends BaseDto implements Serializable {
     /**
      * 执业类型
      */
-    private String practiceType;
+    private Integer practiceTypeId;
 
     /**
      * 执业范围
      */
-    private String practiceItem;
+    private Integer practiceItemId;
 
     /**
      * 主要执业机构
@@ -93,10 +93,10 @@ public class DoctorPracticepointDto extends BaseDto implements Serializable {
     /**
      * 任职资格
      */
-    private String practiceTitle;
+    private Integer practiceTitleId;
 
     /**
      * 是否全科医生
      */
-    private String isGeneralPractitioner;
+    private Integer isGeneralPractitioner;
 }

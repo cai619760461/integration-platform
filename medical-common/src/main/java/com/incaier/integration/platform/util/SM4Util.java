@@ -189,7 +189,9 @@ public class SM4Util {
     }
 
     /**
-     * @Description:测试类
+     * 测试
+     *
+     * @param args args
      */
     public static void main(String[] args) {
         try {

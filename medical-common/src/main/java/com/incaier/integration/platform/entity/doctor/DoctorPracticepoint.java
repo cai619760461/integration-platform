@@ -46,16 +46,16 @@ public class DoctorPracticepoint implements Serializable {
     private String code;
 
     /**
-     * 执业级别
+     * 执业级别 id
      */
-    @TableField("practice_level")
-    private String practiceLevel;
+    @TableField("practice_level_id")
+    private Integer practiceLevelId;
 
     /**
-     * 任职资格
+     * 任职资格 id
      */
-    @TableField("practice_title")
-    private String practiceTitle;
+    @TableField("practice_title_id")
+    private Integer practiceTitleId;
 
     /**
      * 发证机关
@@ -64,16 +64,16 @@ public class DoctorPracticepoint implements Serializable {
     private String practiceTitleCode;
 
     /**
-     * 执业范围
+     * 执业范围 id
      */
-    @TableField("practice_item")
-    private String practiceItem;
+    @TableField("practice_item_id")
+    private Integer practiceItemId;
 
     /**
-     * 执业类型
+     * 执业类型 id
      */
-    @TableField("practice_type")
-    private String practiceType;
+    @TableField("practice_type_id")
+    private Integer practiceTypeId;
 
     /**
      * 审批机构
@@ -163,7 +163,7 @@ public class DoctorPracticepoint implements Serializable {
      * 是否全科医生
      */
     @TableField("is_general_practitioner")
-    private String isGeneralPractitioner;
+    private Integer isGeneralPractitioner;
 
     /**
      * 创建人

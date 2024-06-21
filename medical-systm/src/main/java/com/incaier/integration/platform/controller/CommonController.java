@@ -25,10 +25,10 @@ public class CommonController {
     private HospitalService hospitalService;
 
     /**
-     * 下拉获取所有机构
+     * 下拉获取所有医院
      */
     @GetMapping("/agencies")
-    public Result<List<HospitalVo>> agencies() {
-        return Result.success(hospitalService.getAgencies());
+    public Result<List<HospitalVo>> getHospitalList() {
+        return Result.success(hospitalService.getHospitalList());
     }
 }

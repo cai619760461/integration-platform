@@ -60,7 +60,7 @@ public final class CookieUtils {
                 }
             }
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         return retValue;
     }
@@ -88,7 +88,7 @@ public final class CookieUtils {
                 }
             }
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         return retValue;
     }
@@ -178,7 +178,6 @@ public final class CookieUtils {
      */
     public static void deleteCookie(HttpServletRequest request, HttpServletResponse response, String cookieName) {
         doSetCookie(request, response, cookieName, null, -1, false);
-//        doSetCookie(request, response, cookieName, "", -1, false);
     }
 
 
@@ -201,7 +200,9 @@ public final class CookieUtils {
                 cookieValue = URLEncoder.encode(cookieValue, "utf-8");
             }
             Cookie cookie = new Cookie(cookieName, cookieValue);
-            if (cookieMaxage > 0) cookie.setMaxAge(cookieMaxage);
+            if (cookieMaxage > 0) {
+                cookie.setMaxAge(cookieMaxage);
+            }
             // 设置域名的cookie
             if (null != request) {
                 String domainName = getDomainName(request);
@@ -213,7 +214,7 @@ public final class CookieUtils {
             cookie.setPath("/");
             response.addCookie(cookie);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -236,7 +237,9 @@ public final class CookieUtils {
                 cookieValue = URLEncoder.encode(cookieValue, encodeString);
             }
             Cookie cookie = new Cookie(cookieName, cookieValue);
-            if (cookieMaxage > 0) cookie.setMaxAge(cookieMaxage);
+            if (cookieMaxage > 0) {
+                cookie.setMaxAge(cookieMaxage);
+            }
             // 设置域名的cookie
             if (null != request) {
                 String domainName = getDomainName(request);
@@ -248,7 +251,7 @@ public final class CookieUtils {
             cookie.setPath("/");
             response.addCookie(cookie);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -282,7 +285,7 @@ public final class CookieUtils {
             // rfc6265中域属性这段话，域属性不要以dot开头
             // 所以，类似的cookie.setDomain(".test.com");
             // 在rfc6265标准中应该改为cookie.setDomain(“test.com”)，即开头不要加点号
-            if (len > 3 && !isIp(serverName)) {
+            if (len > 3 && isIp(serverName)) {
                 // www.xxx.com.cn
                 domainName = domains[len - 3] + "." + domains[len - 2] + "." + domains[len - 1];
             } else if (len <= 3 && len > 1) {
@@ -299,26 +302,45 @@ public final class CookieUtils {
         return domainName;
     }
 
-    public static String trimSpaces(String IP) {//去掉IP字符串前后所有的空格
-        while (IP.startsWith(" ")) {
-            IP = IP.substring(1, IP.length()).trim();
+    /**
+     * 去除IP字符串前后所有的空格
+     *
+     * @param ip ip
+     * @return {@link String}
+     */
+    public static String trimSpaces(String ip) {
+        while (ip.startsWith(" ")) {
+            ip = ip.substring(1).trim();
         }
-        while (IP.endsWith(" ")) {
-            IP = IP.substring(0, IP.length() - 1).trim();
+        while (ip.endsWith(" ")) {
+            ip = ip.substring(0, ip.length() - 1).trim();
         }
-        return IP;
+        return ip;
     }
 
-    public static boolean isIp(String IP) {//判断是否是一个IP
+    /**
+     * 判断是否是一个IP
+     *
+     * @param ip ip
+     * @return boolean
+     */
+    public static boolean isIp(String ip) {
         boolean b = false;
-        IP = trimSpaces(IP);
-        if (IP.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")) {
-            String s[] = IP.split("\\.");
-            if (Integer.parseInt(s[0]) < 255) if (Integer.parseInt(s[1]) < 255)
-                if (Integer.parseInt(s[2]) < 255) if (Integer.parseInt(s[3]) < 255) b = true;
-        }
-        return b;
-    }
+        ip = trimSpaces(ip);
+        if (ip.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")) {
+            String[] s = ip.split("\\.");
+            if (Integer.parseInt(s[0]) < 255) {
+                if (Integer.parseInt(s[1]) < 255) {
+                    if (Integer.parseInt(s[2]) < 255) {
+                        if (Integer.parseInt(s[3]) < 255) {
+                            b = true;
+                        }
+                    }
+                }
+            }
 
+        }
+        return !b;
+    }
 }
 

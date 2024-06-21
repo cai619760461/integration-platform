@@ -1,10 +1,12 @@
 package com.incaier.integration.platform.controller;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageInfo;
+import com.incaier.integration.platform.constant.BYConstant;
+import com.incaier.integration.platform.entity.SysDictData;
 import com.incaier.integration.platform.entity.valid.AddGroup;
 import com.incaier.integration.platform.entity.valid.QueryGroup;
 import com.incaier.integration.platform.entity.valid.UpdateGroup;
-import com.incaier.integration.platform.mapper.SysDictDataMapper;
 import com.incaier.integration.platform.request.SysDictDataDto;
 import com.incaier.integration.platform.request.SysDictTypeDto;
 import com.incaier.integration.platform.response.Result;
@@ -35,9 +37,6 @@ public class DictController {
     @Autowired
     private SysDictDataService sysDictDataService;
 
-    @Autowired
-    private SysDictDataMapper sysDictDataMapper;
-
     /**
      * 获取所有字典类型
      *
@@ -50,7 +49,7 @@ public class DictController {
     }
 
     /**
-     * 获取某字典类型下，字典数据（分页）
+     * 获取某字典类型下所有字典数据（分页）
      *
      * @param sysDictDataDto dto
      * @return {@link Result}<{@link PageInfo}<{@link SysDictTypeVo}>>
@@ -61,14 +60,18 @@ public class DictController {
     }
 
     /**
-     * 获取某字典类型下，字典数据（所有）
+     * 获取某字典类型下所有有效字典数据（所有）
      *
-     * @param sysDictDataDto dto
-     * @return {@link Result}<{@link PageInfo}<{@link SysDictTypeVo}>>
+     * @param dictType dict类型
+     * @return {@link Result}<{@link List}<{@link SysDictData}>>
      */
-    @PostMapping("/allDataList")
-    public Result<List<SysDictDataVo>> getAllDataList(@Validated({QueryGroup.class}) @RequestBody SysDictDataDto sysDictDataDto) {
-        return Result.success(sysDictDataMapper.getDataList(sysDictDataDto));
+    @GetMapping("/dataList")
+    public Result<List<SysDictData>> getAllDataList(@RequestParam("dictType") String dictType) {
+        return Result.success(sysDictDataService.list(Wrappers.<SysDictData>lambdaQuery()
+                .select(SysDictData::getId, SysDictData::getDictLabel, SysDictData::getDictValue, SysDictData::getDictType, SysDictData::getIsDefault)
+                .eq(SysDictData::getDictType, dictType)
+                .eq(SysDictData::getStatus, BYConstant.INT_FALSE)
+                .orderByAsc(SysDictData::getDictSort)));
     }
 
     /**

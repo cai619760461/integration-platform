@@ -70,14 +70,8 @@ public class MedicalEquipment implements Serializable {
     /**
      * 设备类别
      */
-    @TableField("equipment_type")
-    private Integer equipmentType;
-
-    /**
-     * 设备类别
-     */
-    @TableField("equipment_type_name")
-    private String equipmentTypeName;
+    @TableField("equipment_type_id")
+    private Integer equipmentTypeId;
 
     /**
      * 采购价格

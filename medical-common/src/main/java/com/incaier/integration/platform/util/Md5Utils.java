@@ -1,15 +1,20 @@
 package com.incaier.integration.platform.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 
 /**
- * 功能描述:PICC加密方式
+ * md5 util
  *
- * @author: hzw
- * @date: 2021-08-10 17:13
+ * @author caiweijie
+ * @date 2024/06/21
  */
 public class Md5Utils {
+
+    private static final Logger logger = LoggerFactory.getLogger(Md5Utils.class);
 
     /**
      * md5 加密
@@ -64,13 +69,17 @@ public class Md5Utils {
             StringBuilder buf = new StringBuilder();
             for (byte value : b) {
                 i = value;
-                if (i < 0) i += 256;
-                if (i < 16) buf.append("0");
+                if (i < 0) {
+                    i += 256;
+                }
+                if (i < 16) {
+                    buf.append("0");
+                }
                 buf.append(Integer.toHexString(i));
             }
             reMd5 = buf.toString();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return reMd5;
     }

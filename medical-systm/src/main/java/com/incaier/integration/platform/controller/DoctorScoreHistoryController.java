@@ -16,9 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * <p>
- * 医生评分历史 前端控制器
- * </p>
+ * 医生评分历史
  *
  * @author weijie.cai
  * @since 2024-06-19

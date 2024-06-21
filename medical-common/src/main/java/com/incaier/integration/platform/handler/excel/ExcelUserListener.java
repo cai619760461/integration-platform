@@ -3,7 +3,6 @@ package com.incaier.integration.platform.handler.excel;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.excel.exception.ExcelAnalysisException;
-import com.alibaba.fastjson.JSON;
 import com.incaier.integration.platform.constant.BYConstant;
 import com.incaier.integration.platform.handler.excel.valid.ExcelImportValid;
 import com.incaier.integration.platform.handler.excel.valid.ExceptionCustom;
@@ -19,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -44,7 +42,7 @@ public class ExcelUserListener extends AnalysisEventListener<ExcelDoctorEntity> 
 
     private final SysRoleUserMapper sysRoleUserMapper;
 
-    private final HashMap<String, String> errorInsert = new HashMap<>();
+    private final List<String> errorInsert = new ArrayList<>();
 
     /**
      * 如果使用了spring,请使用这个构造方法。每次创建Listener的时候需要把spring管理的类传进来
@@ -85,7 +83,7 @@ public class ExcelUserListener extends AnalysisEventListener<ExcelDoctorEntity> 
         // 确保所有数据都能入库
         saveData();
         if (ObjectUtils.isNotEmpty(errorInsert)) {
-            throw new ExcelAnalysisException(JSON.toJSONString(errorInsert));
+            throw new ExcelAnalysisException("失败" + errorInsert.size() + "条，" + String.join(";", errorInsert));
         }
     }
 
@@ -104,7 +102,7 @@ public class ExcelUserListener extends AnalysisEventListener<ExcelDoctorEntity> 
                 doctorInfoService.buildDoctorBasicInfo(dto);
             }catch (Exception e) {
                 logger.error(e.getMessage());
-                errorInsert.put(doctor.getUserName(), e.getMessage());
+                errorInsert.add(doctor.getUserName() + ":" + e.getMessage());
             }
         });
     }

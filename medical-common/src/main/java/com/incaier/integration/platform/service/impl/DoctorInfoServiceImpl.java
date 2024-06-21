@@ -159,7 +159,6 @@ public class DoctorInfoServiceImpl extends ServiceImpl<DoctorInfoMapper, DoctorI
         logger.info("更新医生信息，医生id：{}", doctorInfo.getId());
         Personnel personnel = personnelMapper.selectOne(Wrappers.<Personnel>lambdaQuery()
                 .eq(Personnel::getHealthCareProviderId, doctorInfo.getUserName())
-                .eq(Personnel::getDeleteFlag, "doctorInfo.getUserName()")
                 .last(BYConstant.SQL_LIMIT_1));
         if (ObjectUtils.isEmpty(personnel)) {
             throw new CommonBusinessException(ErrorCodeConstant.COMMON_ERROR, "用户数据异常");
@@ -218,7 +217,8 @@ public class DoctorInfoServiceImpl extends ServiceImpl<DoctorInfoMapper, DoctorI
         if (ObjectUtils.isNotEmpty(doctorPracticepoint)) {
             // 多机构备案
             doctorPracticepointItemMapper.update(null, Wrappers.<DoctorPracticepointItem>lambdaUpdate().eq(DoctorPracticepointItem::getPracticepointId, doctorPracticepoint.getId()).eq(DoctorPracticepointItem::getIsDelete, BYConstant.INT_FALSE).set(DoctorPracticepointItem::getIsDelete, BYConstant.INT_TRUE));
-            doctorPracticepointMapper.deleteById(doctorPracticepoint.getId());
+            doctorPracticepoint.setIsDelete(BYConstant.INT_TRUE);
+            doctorPracticepointMapper.updateById(doctorPracticepoint);
         }
         // 删除资格信息
         doctorQualificationMapper.update(null, Wrappers.<DoctorQualification>lambdaUpdate().eq(DoctorQualification::getDoctorId, doctorId).eq(DoctorQualification::getIsDelete, BYConstant.INT_FALSE).set(DoctorQualification::getIsDelete, BYConstant.INT_TRUE));
@@ -235,8 +235,7 @@ public class DoctorInfoServiceImpl extends ServiceImpl<DoctorInfoMapper, DoctorI
         if (ObjectUtils.isNotEmpty(personnel)) {
             sysRoleUserMapper.delete(Wrappers.<SysRoleUser>lambdaQuery().eq(SysRoleUser::getUserId, personnel.getPk()));
             // 删除用户数据
-            personnel.setDeleteFlag("1");
-            personnelMapper.updateById(personnel);
+            personnelMapper.deleteById(personnel.getPk());
         }
         // 删除医生数据
         doctorInfo.setIsDelete(BYConstant.INT_TRUE);
@@ -351,7 +350,7 @@ public class DoctorInfoServiceImpl extends ServiceImpl<DoctorInfoMapper, DoctorI
      */
     private void buildDoctorInfo(Integer doctorId, DoctorDetailVo doctorDetailVo) {
         DoctorInfo doctorInfo = doctorInfoMapper.selectById(doctorId);
-        if (ObjectUtils.isEmpty(doctorInfo)) {
+        if (ObjectUtils.isEmpty(doctorInfo) || BYConstant.INT_TRUE.equals(doctorInfo.getIsDelete())) {
             throw new CommonBusinessException(ErrorCodeConstant.COMMON_INVALID_PARAMETER, "医生数据异常");
         }
         DoctorInfoVo doctorInfoVo = new DoctorInfoVo();

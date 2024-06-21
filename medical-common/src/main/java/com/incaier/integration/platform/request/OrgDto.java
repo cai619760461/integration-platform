@@ -33,9 +33,9 @@ public class OrgDto extends PageDto {
     private String name;
 
     /**
-     * 机构类型名称
+     * 机构类型 字典id
      */
-    private String typeName;
+    private Integer typeId;
 
     /**
      * 机构联系人
@@ -53,9 +53,9 @@ public class OrgDto extends PageDto {
     private String contactPhone;
 
     /**
-     * 机构所属区域
+     * 区域 字典id
      */
-    private String district;
+    private Integer districtDictId;
 
     /**
      * 机构所属县镇

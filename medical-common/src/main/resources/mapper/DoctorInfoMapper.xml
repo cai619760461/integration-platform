@@ -30,29 +30,7 @@
         select
             count(*)
         from
-            doctor_info di
-        left join doctor_practicepoint dp on di.id = dp.doctor_id
-        and dp.is_delete = 0
-        where
-            di.is_delete = 0
-        <if test="keyword != null and keyword != ''">
-            and name LIKE concat('%',#{keyword},'%')
-        </if>
-        <if test="orgCode != null and orgCode != ''">
-            and di.org_code = #{orgCode}
-        </if>
-        <if test="practiceLevel != null and practiceLevel != ''">
-            and dp.practice_level = #{practiceLevel}
-        </if>
-        <if test="practiceType != null and practiceType != ''">
-            and dp.practice_type = #{practiceType}
-        </if>
-        <if test="practiceItem != null and practiceItem != ''">
-            and dp.practice_item = #{practiceItem}
-        </if>
-        <if test="keyword != null and keyword != ''">
-            and (di.name LIKE concat('%',#{keyword},'%') or di.phone_number = #{keyword})
-        </if>
+        <include refid="Common_DoctorInfo" />
     </select>
 
     <select id="getDoctorList" resultType="com.incaier.integration.platform.response.doctor.DoctorVo">
@@ -65,60 +43,23 @@
             di.user_name,
             dp.code,
             dp.practice_org,
-            dp.practice_level,
-            dp.practice_type,
-            dp.practice_item
+            sdd1.id as practice_level_id,
+            sdd1.dict_label as practice_level,
+            sdd3.id as practice_item_id,
+            sdd3.dict_label as practice_item,
+            sdd4.id as practice_type_id,
+            sdd4.dict_label as practice_type
         from
-            doctor_info di
-        left join doctor_practicepoint dp on di.id = dp.doctor_id
-        and dp.is_delete = 0
-        where
-            di.is_delete = 0
-        <if test="orgCode != null and orgCode != ''">
-            and di.org_code = #{orgCode}
-        </if>
-        <if test="practiceLevel != null and practiceLevel != ''">
-            and dp.practice_level = #{practiceLevel}
-        </if>
-        <if test="practiceType != null and practiceType != ''">
-            and dp.practice_type = #{practiceType}
-        </if>
-        <if test="practiceItem != null and practiceItem != ''">
-            and dp.practice_item = #{practiceItem}
-        </if>
-        <if test="keyword != null and keyword != ''">
-            and (di.name LIKE concat('%',#{keyword},'%') or di.phone_number = #{keyword})
-        </if>
+        <include refid="Common_DoctorInfo" />
     </select>
 
     <select id="getDoctorList_COUNT" resultType="java.lang.Integer">
         select
             count(*)
         from
-            doctor_info di
-        left join doctor_practicepoint dp on di.id = dp.doctor_id
-        and dp.is_delete = 0
-        where
-            di.is_delete = 0
-            <if test="keyword != null and keyword != ''">
-                and name LIKE concat('%',#{keyword},'%')
-            </if>
-            <if test="orgCode != null and orgCode != ''">
-                and di.org_code = #{orgCode}
-            </if>
-            <if test="practiceLevel != null and practiceLevel != ''">
-                and dp.practice_level = #{practiceLevel}
-            </if>
-            <if test="practiceType != null and practiceType != ''">
-                and dp.practice_type = #{practiceType}
-            </if>
-            <if test="practiceItem != null and practiceItem != ''">
-                and dp.practice_item = #{practiceItem}
-            </if>
-            <if test="keyword != null and keyword != ''">
-                and (di.name LIKE concat('%',#{keyword},'%') or di.phone_number = #{keyword})
-            </if>
+        <include refid="Common_DoctorInfo" />
     </select>
+
     <select id="getDoctorExpertList" resultType="com.incaier.integration.platform.response.doctor.DoctorExpertLabelVo">
         select
             di.id as id,
@@ -191,6 +132,7 @@
         inner join org o on di.org_code = o.code
         left join doctor_score_history dsh on di.id = dsh.doctor_id and dsh.is_delete = 0
         where di.is_delete = 0
+          and o.is_delete = 0
         <if test="keyword != null and keyword != ''">
             and di.name LIKE concat('%',#{keyword},'%')
         </if>
@@ -202,13 +144,22 @@
     </select>
 
     <select id="getScoreHistoryCount" resultType="java.lang.Integer">
+        select count(*) from (
         select
-            count(*)
+            di.id,
+            di.name,
+            di.phone_number,
+            di.identity_no,
+            di.org_code,
+            o.name as orgName,
+            di.score,
+        max(dsh.create_time) as lastUpdateTime
         from
         doctor_info di
         inner join org o on di.org_code = o.code
         left join doctor_score_history dsh on di.id = dsh.doctor_id and dsh.is_delete = 0
         where di.is_delete = 0
+        and o.is_delete = 0
         <if test="keyword != null and keyword != ''">
             and di.name LIKE concat('%',#{keyword},'%')
         </if>
@@ -216,7 +167,7 @@
             and di.org_code = #{orgCode}
         </if>
         group by
-            di.id
+        di.id) as a
     </select>
 
     <select id="getDoctorInfoById" resultType="com.incaier.integration.platform.response.doctor.DoctorInfoVo">
@@ -232,7 +183,34 @@
             doctor_info di
         inner join org o on di.org_code = o.code
         where di.is_delete = 0
+          and o.is_delete = 0
           and di.id = #{doctorId}
     </select>
 
+    <sql id="Common_DoctorInfo">
+            doctor_info di
+        left join doctor_practicepoint dp on di.id = dp.doctor_id
+        left join sys_dict_data sdd1 on dp.practice_level_id = sdd1.id and sdd1.status = 0
+        left join sys_dict_data sdd2 on dp.practice_title_id = sdd2.id and sdd2.status = 0
+        left join sys_dict_data sdd3 on dp.practice_item_id = sdd3.id and sdd3.status = 0
+        left join sys_dict_data sdd4 on dp.practice_type_id = sdd4.id and sdd4.status = 0
+        and dp.is_delete = 0
+        where
+        di.is_delete = 0
+        <if test="orgCode != null and orgCode != ''">
+            and di.org_code = #{orgCode}
+        </if>
+        <if test="practiceLevelId != null and practiceLevelId != ''">
+            and dp.practice_level_id = #{practiceLevelId}
+        </if>
+        <if test="practiceTypeId != null and practiceTypeId != ''">
+            and dp.practice_type_id = #{practiceTypeId}
+        </if>
+        <if test="practiceItemId != null and practiceItemId != ''">
+            and dp.practice_item_id = #{practiceItemId}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            and (di.name LIKE concat('%',#{keyword},'%') or di.phone_number = #{keyword})
+        </if>
+    </sql>
 </mapper>

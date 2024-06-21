@@ -7,11 +7,11 @@
         <id column="id" property="id" />
         <result column="doctor_id" property="doctorId" />
         <result column="code" property="code" />
-        <result column="practice_level" property="practiceLevel" />
-        <result column="practice_title" property="practiceTitle" />
+        <result column="practice_level_id" property="practiceLevel_id" />
+        <result column="practice_title_id" property="practiceTitle_id" />
         <result column="practice_title_code" property="practiceTitleCode" />
-        <result column="practice_item" property="practiceItem" />
-        <result column="practice_type" property="practiceType" />
+        <result column="practice_item_id" property="practiceItem_id" />
+        <result column="practice_type_id" property="practiceType_id" />
         <result column="check_org" property="checkOrg" />
         <result column="check_date" property="checkDate" />
         <result column="practice_address" property="practiceAddress" />
@@ -42,10 +42,10 @@
         select
             id,
             code,
-            practice_level,
+            practice_level_id,
+            practice_type_id,
+            practice_item_id,
             practice_dept,
-            practice_type,
-            practice_item,
             practice_org,
             practice_org_address,
             enabled,
@@ -53,7 +53,7 @@
             check_org,
             check_date,
             practice_address,
-            practice_title,
+            practice_title_id,
             is_general_practitioner
         from
             doctor_practicepoint
@@ -64,38 +64,65 @@
         limit 1
     </select>
 
+    <select id="getDoctorPraTypeLevelById"
+            resultType="com.incaier.integration.platform.response.doctor.DoctorPracticepointVo">
+        select
+            dp.id,
+            sdd1.id as practiceLevelId,
+            sdd1.dict_label as practiceLevel,
+            sdd2.id as practiceTypeId,
+            sdd2.dict_label as practiceType
+        from
+            doctor_practicepoint dp
+        left join sys_dict_data sdd1 on dp.practice_level_id = sdd1.id and sdd1.status = 0
+        left join sys_dict_data sdd2 on dp.practice_type_id = sdd2.id and sdd2.status = 0
+        where
+            dp.is_delete = 0
+            and dp.doctor_id = #{doctorId}
+        order by dp.id desc
+            limit 1
+    </select>
+
     <insert id="saveOrUpdate" keyProperty="id" useGeneratedKeys="true">
-        INSERT INTO doctor_practicepoint (id, doctor_id, code, practice_level, practice_title, practice_item, practice_type,
+        INSERT INTO doctor_practicepoint (id, doctor_id, code, practice_level_id, practice_title_id, practice_item_id, practice_type_id,
         check_org, check_date, practice_address, practice_org, practice_org_address, practice_dept,
-        <if test="enabled != null and enable != ''">
+        <if test="enabled != null and enabled != ''">
             enabled,
         </if>
-        title_information, is_general_practitioner, create_by, update_by)
-        VALUES (#{id}, #{doctorId}, #{code}, #{practiceLevel}, #{practiceTitle}, #{practiceItem}, #{practiceType},
+        <if test="isGeneralPractitioner != null and isGeneralPractitioner != ''">
+            is_general_practitioner,
+        </if>
+        title_information, create_by, update_by)
+        VALUES (#{id}, #{doctorId}, #{code}, #{practiceLevelId}, #{practiceTitleId}, #{practiceItemId}, #{practiceTypeId},
         #{checkOrg}, #{checkDate}, #{practiceAddress}, #{practiceOrg}, #{practiceOrgAddress}, #{practiceDept},
-        <if test="enabled != null and enable != ''">
+        <if test="enabled != null and enabled != ''">
             #{enabled},
         </if>
-        #{titleInformation}, #{isGeneralPractitioner}, #{createBy}, #{updateBy}
+        <if test="isGeneralPractitioner != null and isGeneralPractitioner != ''">
+            #{isGeneralPractitioner},
+        </if>
+        #{titleInformation}, #{createBy}, #{updateBy}
         ) ON DUPLICATE KEY UPDATE
         doctor_id = VALUES(doctor_id),
         code = VALUES(code),
-        practice_level = VALUES(practice_level),
-        practice_title = VALUES(practice_title),
+        practice_level_id = VALUES(practice_level_id),
+        practice_title_id = VALUES(practice_title_id),
         practice_title_code = VALUES(practice_title_code),
-        practice_item = VALUES(practice_item),
-        practice_type = VALUES(practice_type),
+        practice_item_id = VALUES(practice_item_id),
+        practice_type_id = VALUES(practice_type_id),
         check_org = VALUES(check_org),
         check_date = VALUES(check_date),
         practice_address = VALUES(practice_address),
         practice_org = VALUES(practice_org),
         practice_org_address = VALUES(practice_org_address),
         practice_dept = VALUES(practice_dept),
-        <if test="enabled != null and enable != ''">
+        <if test="enabled != null and enabled != ''">
             enabled = VALUES(enabled),
         </if>
+        <if test="isGeneralPractitioner != null and isGeneralPractitioner != ''">
+            is_general_practitioner = VALUES(is_general_practitioner),
+        </if>
         title_information = VALUES(title_information),
-        is_general_practitioner = VALUES(is_general_practitioner),
         update_by = VALUES(update_by)
     </insert>
 </mapper>

@@ -3,54 +3,56 @@
 <mapper namespace="com.incaier.integration.platform.mapper.OrgMapper">
     <select id="getOrgList" resultType="com.incaier.integration.platform.response.org.OrgVo">
         select
-            id,
-            code,
-            position,
-            type_code,
-            type_name,
-            name,
-            contact_name,
-            contact_title,
-            contact_phone,
-            district,
-            county,
-            address,
-            remark,
-            enabled,
-            create_time,
-            update_time
+            o.id,
+            o.code,
+            o.position,
+            sdd1.id as typeId,
+            sdd1.dict_label as typeName,
+            o.name,
+            o.contact_name,
+            o.contact_title,
+            o.contact_phone,
+            sdd2.id as districtDictId,
+            sdd2.dict_label as district,
+            o.county,
+            o.address,
+            o.remark,
+            o.enabled,
+            o.create_time,
+            o.update_time
         from
-            org
+            org o
+        left join sys_dict_data sdd1 on o.type_id = sdd1.id and sdd1.status = 0
+        left join sys_dict_data sdd2 on o.district_dict_id = sdd2.id and sdd2.status = 0
         where
-            is_delete = 0
+            o.is_delete = 0
             <if test="keyword != null and keyword != ''">
-                and name LIKE concat('%',#{keyword},'%')
+                and o.name LIKE concat('%',#{keyword},'%')
             </if>
-            <if test="typeName != null and typeName != ''">
-                and type_name = #{typeName}
+            <if test="typeId != null and typeId != ''">
+                and o.type_id = #{typeId}
             </if>
-            <if test="district != null and district != ''">
-                and district = #{district}
+            <if test="districtDictId != null and districtDictId != ''">
+                and o.district_dict_id = #{districtDictId}
             </if>
-        order by id asc
+        order by o.id asc
     </select>
 
     <!-- 插入或者更新 -->
     <insert id="saveOrUpdate" keyProperty="id" useGeneratedKeys="true">
-        insert into org (id, code, position, type_code, type_name, name, contact_name, contact_title,
-            contact_phone, district, county, address, picturl, content_type, remark, enabled, create_by, update_by
-        ) values (#{id}, #{code}, #{position}, #{typeCode}, #{typeName}, #{name}, #{contactName}, #{contactTitle},
-            #{contactPhone}, #{district}, #{county}, #{address}, #{picturl}, #{contentType}, #{remark}, #{enabled}, #{createBy}, #{updateBy})
+        insert into org (id, code, position, type_id, name, contact_name, contact_title,
+            contact_phone, district_dict_id, county, address, picturl, content_type, remark, enabled, create_by, update_by
+        ) values (#{id}, #{code}, #{position}, #{typeId}, #{name}, #{contactName}, #{contactTitle},
+            #{contactPhone}, #{districtDictId}, #{county}, #{address}, #{picturl}, #{contentType}, #{remark}, #{enabled}, #{createBy}, #{updateBy})
         on duplicate key update
         code = values(code),
         position = values(position),
-        type_code = values(type_code),
-        type_name = values(type_name),
+        type_id = values(type_id),
         name = values(name),
         contact_name = values(contact_name),
         contact_title = values(contact_title),
         contact_phone = values(contact_phone),
-        district = values(district),
+        district_dict_id = values(district_dict_id),
         county = values(county),
         address = values(address),
         picturl = values(picturl),
@@ -64,19 +66,20 @@
         select
             count(*)
         from
-            org
+            org o
+        left join sys_dict_data sdd1 on o.type_id = sdd1.id and sdd1.status = 0
+        left join sys_dict_data sdd2 on o.district_dict_id = sdd2.id and sdd2.status = 0
         where
-            is_delete = 0
+            o.is_delete = 0
             <if test="keyword != null and keyword != ''">
-                and name LIKE concat('%',#{keyword},'%')
+                and o.name LIKE concat('%',#{keyword},'%')
             </if>
-            <if test="typeName != null and typeName != ''">
-                and type_name = #{typeName}
+            <if test="typeId != null and typeId != ''">
+                and o.type_id = #{typeId}
             </if>
-            <if test="district != null and district != ''">
-                and district = #{district}
+            <if test="districtDictId != null and districtDictId != ''">
+                and o.district_dict_id = #{districtDictId}
             </if>
-        order by
-            id asc
+        order by o.id asc
     </select>
 </mapper>

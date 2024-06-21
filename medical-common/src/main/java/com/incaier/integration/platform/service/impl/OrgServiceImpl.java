@@ -1,12 +1,16 @@
 package com.incaier.integration.platform.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.incaier.integration.platform.config.UserHolder;
+import com.incaier.integration.platform.constant.BYConstant;
+import com.incaier.integration.platform.constant.ErrorCodeConstant;
 import com.incaier.integration.platform.entity.Org;
+import com.incaier.integration.platform.exception.CommonBusinessException;
 import com.incaier.integration.platform.mapper.OrgMapper;
 import com.incaier.integration.platform.request.OrgDto;
 import com.incaier.integration.platform.response.org.OrgVo;
@@ -51,6 +55,15 @@ public class OrgServiceImpl extends ServiceImpl<OrgMapper, Org> implements OrgSe
     @Override
     @Transactional(isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     public Boolean saveOrUpdateOrg(OrgDto orgDto) {
+        if (ObjectUtils.isEmpty(orgDto.getId())) {
+            Org org = orgMapper.selectOne(Wrappers.<Org>lambdaQuery()
+                    .eq(Org::getCode, orgDto.getCode())
+                    .eq(Org::getIsDelete, BYConstant.INT_FALSE)
+                    .last(BYConstant.SQL_LIMIT_1));
+            if (ObjectUtils.isNotEmpty(org)) {
+                throw new CommonBusinessException(ErrorCodeConstant.COMMON_ERROR, "机构ID已存在");
+            }
+        }
         Org org = new Org();
         BeanUtils.copyProperties(orgDto, org);
         if (ObjectUtils.isEmpty(orgDto.getId())) {

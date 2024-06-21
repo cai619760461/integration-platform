@@ -1,6 +1,7 @@
 package com.incaier.integration.platform.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.incaier.integration.platform.mapper.EhealthCardLogMapper;
 import com.incaier.integration.platform.request.EhealthCardDto;
 import com.incaier.integration.platform.response.Result;
 import com.incaier.integration.platform.response.health.EhealthCardRecordInfoVo;
@@ -8,10 +9,12 @@ import com.incaier.integration.platform.response.health.EhealthCardRecordVo;
 import com.incaier.integration.platform.response.health.EhealthCardStatisticsVo;
 import com.incaier.integration.platform.service.EhealthCardLogService;
 import com.incaier.integration.platform.service.EhealthCardService;
+import com.incaier.integration.platform.util.ExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
@@ -32,6 +35,9 @@ public class EhealthCardController {
 
     @Autowired
     private EhealthCardLogService ehealthCardLogService;
+
+    @Resource
+    private EhealthCardLogMapper ehealthCardLogMapper;
 
     /**
      * 首页统计
@@ -74,6 +80,9 @@ public class EhealthCardController {
      */
     @PostMapping("/export")
     public void export(@Validated @RequestBody EhealthCardDto ehealthCardDto, HttpServletResponse response) throws IOException {
-        ehealthCardLogService.export(ehealthCardDto, response);
+        ExcelUtil.export(ehealthCardDto, response,
+                x -> ehealthCardLogMapper.getCardRecordCount(x),
+                x -> ehealthCardLogMapper.getCardRecord(x),
+                EhealthCardRecordVo.class);
     }
 }

@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
@@ -82,6 +83,7 @@ public class DoctorInfoDto extends BaseDto implements Serializable {
      * 用户名（工号）
      */
     @NotEmpty(message = "用户名（工号）不可为空", groups = {AddGroup.class, UpdateGroup.class})
+    @Pattern(regexp = "^[A-Za-z0-9]+$", message = "用户名（工号）不合法", groups = {AddGroup.class, UpdateGroup.class})
     private String userName;
 
     /**

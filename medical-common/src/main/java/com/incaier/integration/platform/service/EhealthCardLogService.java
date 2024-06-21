@@ -8,8 +8,6 @@ import com.incaier.integration.platform.response.health.EhealthCardRecordInfoVo;
 import com.incaier.integration.platform.response.health.EhealthCardRecordVo;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -37,13 +35,4 @@ public interface EhealthCardLogService extends IService<EhealthCardLog> {
      * @return {@link Map}<{@link String}, {@link EhealthCardRecordInfoVo}>
      */
     Map<String, EhealthCardRecordInfoVo> getUpdateInfo(Integer id);
-
-    /**
-     * 申领记录数据导出
-     *
-     * @param ehealthCardDto 电子贺卡dto
-     * @param response       回答
-     * @throws IOException IOException
-     */
-    void export(EhealthCardDto ehealthCardDto, HttpServletResponse response) throws IOException;
 }

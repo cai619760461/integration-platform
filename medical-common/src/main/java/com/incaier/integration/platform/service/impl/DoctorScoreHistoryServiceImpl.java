@@ -68,7 +68,7 @@ public class DoctorScoreHistoryServiceImpl extends ServiceImpl<DoctorScoreHistor
     public List<DoctorScoreVo> buildDoctorScoreList(DoctorQueryDto dto) {
         List<DoctorScoreVo> doctorList = doctorInfoMapper.getDoctorScoreList(dto);
         doctorList.forEach(doctorInfo -> {
-            DoctorPracticepointVo doctorPracticepoint = doctorPracticepointMapper.getDoctorPracticepointById(doctorInfo.getId());
+            DoctorPracticepointVo doctorPracticepoint = doctorPracticepointMapper.getDoctorPraTypeLevelById(doctorInfo.getId());
             if (ObjectUtils.isNotEmpty(doctorPracticepoint)) {
                 doctorInfo.setPracticeLevel(doctorPracticepoint.getPracticeLevel());
                 doctorInfo.setPracticeType(doctorPracticepoint.getPracticeType());

@@ -62,7 +62,7 @@ public class MedicalEquipmentVo implements Serializable {
      * 设备类别
      */
     @ExcelIgnore
-    private Integer equipmentType;
+    private Integer equipmentTypeId;
 
     /**
      * 设备类别名称

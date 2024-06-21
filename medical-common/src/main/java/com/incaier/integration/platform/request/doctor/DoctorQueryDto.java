@@ -24,17 +24,17 @@ public class DoctorQueryDto extends PageDto {
     /**
      * 执业级别
      */
-    private String practiceLevel;
+    private Integer practiceLevelId;
 
     /**
      * 执业类型
      */
-    private String practiceType;
+    private Integer practiceTypeId;
 
     /**
      * 执业范围
      */
-    private String practiceItem;
+    private Integer practiceItemId;
 
     /**
      * 匹配关键字 支持【姓名】模糊搜， 【手机号】精准搜

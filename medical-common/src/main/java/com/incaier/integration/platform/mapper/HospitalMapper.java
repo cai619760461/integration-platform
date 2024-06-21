@@ -16,10 +16,10 @@ import java.util.List;
 public interface HospitalMapper extends BaseMapper<Hospital> {
 
     /**
-     * 下拉获取所有机构
+     * 下拉获取所有医院
      *
      * @return {@link List}<{@link HospitalVo}>
      */
-    List<HospitalVo> getAgencies();
+    List<HospitalVo> getHospitalList();
 
 }

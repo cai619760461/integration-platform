@@ -1,11 +1,11 @@
 package com.incaier.integration.platform.util;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.support.atomic.RedisAtomicLong;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
@@ -13,12 +13,15 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 缓存操作类
+ *
+ * @author caiweijie
+ * @date 2024/06/20
  */
 @Component
 public class RedisUtils {
 
-    @Autowired
-    private RedisTemplate<String, String> redisTemplate;
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
 
     // 维护一个本类的静态变量
     private static RedisUtils cacheUtils;
@@ -36,16 +39,6 @@ public class RedisUtils {
         } else {
             redisTemplate.opsForValue().set(key, "1");
         }
-    }
-
-    public boolean compareKey(String key, int i) {
-        if (Boolean.TRUE.equals(cacheUtils.redisTemplate.hasKey(key))) {
-            String value = cacheUtils.redisTemplate.opsForValue().get(key);
-            System.out.println("key当前值为：----------" + value);
-            int i1 = Integer.parseInt(value);
-            return i1 >= i;
-        }
-        return false;
     }
 
     /**
@@ -75,7 +68,7 @@ public class RedisUtils {
      * @param key 钥匙
      * @return {@link String}
      */
-    public static String get(String key) {
+    public static Object get(String key) {
         return cacheUtils.redisTemplate.opsForValue().get(key);
     }
 
@@ -116,7 +109,7 @@ public class RedisUtils {
      * @param key 钥匙
      * @return 返回值为redis中键值为key的value的Set集合
      */
-    public static Set<String> sGetMembers(String key) {
+    public static Set<Object> sGetMembers(String key) {
         return cacheUtils.redisTemplate.opsForSet().members(key);
     }
 

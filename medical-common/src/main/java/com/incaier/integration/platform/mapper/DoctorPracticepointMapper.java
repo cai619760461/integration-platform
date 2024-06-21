@@ -29,6 +29,14 @@ public interface DoctorPracticepointMapper extends BaseMapper<DoctorPracticepoin
     DoctorPracticepointVo getDoctorPracticepointById(@Param("doctorId") Integer doctorId);
 
     /**
+     * 获取医生执业级别、类别
+     *
+     * @param doctorId 医生id
+     * @return {@link DoctorPracticepointVo}
+     */
+    DoctorPracticepointVo getDoctorPraTypeLevelById(@Param("doctorId") Integer doctorId);
+
+    /**
      * 保存或更新
      *
      * @param doctorPracticepoint 医生执业信息
