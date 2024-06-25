@@ -8,6 +8,12 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
+/**
+ * 异步任务执行器配置
+ *
+ * @author caiweijie
+ * @date 2024/06/25
+ */
 @Slf4j
 @Configuration
 public class AsyncTaskExecutorConfig {
@@ -21,7 +27,6 @@ public class AsyncTaskExecutorConfig {
     private static final int CORE_POOL_SIZE = Math.max(2, Math.min(CPU_COUNT - 1, 4));
     //线程池最大容纳线程数
     private static final int MAX_POOL_SIZE = CPU_COUNT * 2 + 1;
-
 
     @Bean("asyncTaskExecutor")
     @Primary
