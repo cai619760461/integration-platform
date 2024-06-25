@@ -33,6 +33,11 @@ public class OrgDto extends PageDto {
     private String name;
 
     /**
+     * 统一信用代码
+     */
+    private String unifiedCreditIdentifier;
+
+    /**
      * 机构类型 字典id
      */
     private Integer typeId;

@@ -34,7 +34,7 @@ import java.util.List;
  * @date 2024-06-13
  */
 @Service
-@DS("testMedicalManage")
+@DS("byIntegrationPlatform")
 public class OrgServiceImpl extends ServiceImpl<OrgMapper, Org> implements OrgService {
 
     private final Logger logger = LoggerFactory.getLogger(OrgServiceImpl.class);

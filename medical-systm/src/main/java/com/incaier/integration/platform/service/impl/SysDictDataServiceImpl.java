@@ -30,7 +30,7 @@ import java.util.List;
  * @date 2024-06-04
  */
 @Service
-@DS("testMedicalManage")
+@DS("byIntegrationPlatform")
 public class SysDictDataServiceImpl extends ServiceImpl<SysDictDataMapper, SysDictData> implements SysDictDataService {
 
     private final Logger logger = LoggerFactory.getLogger(SysDictDataServiceImpl.class);

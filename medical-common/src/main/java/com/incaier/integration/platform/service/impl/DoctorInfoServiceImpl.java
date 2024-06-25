@@ -54,7 +54,7 @@ import java.util.stream.Collectors;
  * @since 2024-06-13
  */
 @Service
-@DS("testMedicalManage")
+@DS("byIntegrationPlatform")
 public class DoctorInfoServiceImpl extends ServiceImpl<DoctorInfoMapper, DoctorInfo> implements DoctorInfoService {
 
     private final Logger logger = LoggerFactory.getLogger(DoctorInfoServiceImpl.class);

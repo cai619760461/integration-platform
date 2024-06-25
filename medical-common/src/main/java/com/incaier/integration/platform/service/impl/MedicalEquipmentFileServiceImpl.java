@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
  * @since 2024-06-18
  */
 @Service
-@DS("testMedicalManage")
+@DS("byIntegrationPlatform")
 public class MedicalEquipmentFileServiceImpl extends ServiceImpl<MedicalEquipmentFileMapper, MedicalEquipmentFile> implements MedicalEquipmentFileService {
 
 }

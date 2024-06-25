@@ -18,7 +18,7 @@ import java.util.List;
  * @since 2024-06-18
  */
 @Mapper
-@DS("testMedicalManage")
+@DS("byIntegrationPlatform")
 public interface MedicalEquipmentMapper extends BaseMapper<MedicalEquipment> {
 
     /**

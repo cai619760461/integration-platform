@@ -7,7 +7,9 @@
         <id column="id" property="id" />
         <result column="name" property="name" />
         <result column="sex" property="sex" />
+        <result column="position_id" property="position_id" />
         <result column="identity_no" property="identityNo" />
+        <result column="identification_photo" property="identification_photo" />
         <result column="ethnicity" property="ethnicity" />
         <result column="phone_number" property="phoneNumber" />
         <result column="email" property="email" />
@@ -102,12 +104,14 @@
 
     <!-- 插入或者更新 -->
     <insert id="saveOrUpdate" keyProperty="id" useGeneratedKeys="true">
-        INSERT INTO doctor_info (id, name, sex, identity_no, birthday, ethnicity, phone_number, email, user_name, org_code, is_expert, create_by, update_by)
-        VALUES (#{id}, #{name}, #{sex}, #{identityNo}, #{birthday}, #{ethnicity}, #{phoneNumber}, #{email}, #{userName}, #{orgCode}, #{isExpert}, #{createBy}, #{updateBy})
+        INSERT INTO doctor_info (id, name, sex, position_id, identity_no, identification_photo, birthday, ethnicity, phone_number, email, user_name, org_code, is_expert, create_by, update_by)
+        VALUES (#{id}, #{name}, #{sex}, #{positionId}, #{identityNo}, #{identificationPhoto}, #{birthday}, #{ethnicity}, #{phoneNumber}, #{email}, #{userName}, #{orgCode}, #{isExpert}, #{createBy}, #{updateBy})
         ON DUPLICATE KEY UPDATE
         name = VALUES(name),
         sex = VALUES(sex),
+        position_id = VALUES(position_id),
         identity_no = VALUES(identity_no),
+        identification_photo = VALUES(identification_photo),
         birthday = VALUES(birthday),
         ethnicity = VALUES(ethnicity),
         phone_number = VALUES(phone_number),

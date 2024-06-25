@@ -1,5 +1,5 @@
 -- 新建数据库
-CREATE DATABASE IF NOT EXISTS test_medical_manage DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_general_ci;
+CREATE DATABASE IF NOT EXISTS by_integration_platform DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_general_ci;
 
 -- 数据字典类型
 DROP TABLE IF EXISTS `sys_dict_type`;
@@ -17,7 +17,7 @@ CREATE TABLE `sys_dict_type` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='字典类型表';
 
 -- 数据字典数据
-DROP TABLE IF EXISTS `sys_dict_type`;
+DROP TABLE IF EXISTS `sys_dict_data`;
 CREATE TABLE `sys_dict_data` (
     `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '字典主键',
     `dict_sort` int(11) DEFAULT '0' COMMENT '字典排序',
@@ -42,6 +42,7 @@ CREATE TABLE `org` (
     `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
     `code` varchar(128) NOT NULL COMMENT '机构id',
     `position` int(11) DEFAULT NULL COMMENT '机构序号',
+    `unified_credit_identifier` varchar(64) DEFAULT NULL COMMENT '统一信用代码',
     `type_id` int(11) DEFAULT NULL COMMENT '结构类型 字典id',
     `name` varchar(128) DEFAULT NULL COMMENT '机构名称',
     `contact_name` varchar(128) DEFAULT NULL COMMENT '机构联系人',
@@ -60,10 +61,21 @@ CREATE TABLE `org` (
     `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
     `is_delete` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否删除 0 未删除 1 已删除',
     PRIMARY KEY (`id`) USING BTREE,
-    KEY `org_code_IDX` (`code`) USING BTREE
+    KEY `ORG_CODE_IDX` (`code`) USING BTREE,
+    KEY `ORG_TYPE_ID_IDX` (`type_id`) USING BTREE,
+    KEY `ORG_DISTRICT_ID_IDX` (`district_dict_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='机构信息表';
 
 -- 字典数据
+-- 职务 医生/护士/技师/药师/监督员
+INSERT INTO sys_dict_type (dict_name, dict_type, status, create_by, update_by, remark) VALUES ('职务', 'sys_position', 0, 'system', 'system', '职务');
+INSERT INTO sys_dict_data (dict_sort, dict_label, dict_value, dict_type, css_class, list_class, is_default, status, create_by, update_by, remark) VALUES
+(1, '医生', '1', 'sys_position', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(2, '护士', '2', 'sys_position', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(3, '技师', '3', 'sys_position', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(4, '药师', '4', 'sys_position', NULL, NULL, 0, 0, 'system', 'system', NULL),
+(5, '监督员', '5', 'sys_position', NULL, NULL, 0, 0, 'system', 'system', NULL);
+
 -- 白银市区县
 INSERT INTO sys_dict_type (dict_name, dict_type, status, create_by, update_by, remark) VALUES ('区县', 'sys_base_area', 0, 'system', 'system', '区县');
 INSERT INTO sys_dict_data (dict_sort, dict_label, dict_value, dict_type, css_class, list_class, is_default, status, create_by, update_by, remark) VALUES
@@ -127,7 +139,7 @@ INSERT INTO sys_dict_data (dict_sort, dict_label, dict_value, dict_type, css_cla
 (0, '眼耳鼻咽喉科专业', '5', 'sys_practice_item', NULL, NULL, 0, 0, 'system', 'system', NULL),
 (0, '急救医学专业', '12', 'sys_practice_item', NULL, NULL, 0, 0, 'system', 'system', NULL),
 (0, '康复医学专业', '13', 'sys_practice_item', NULL, NULL, 0, 0, 'system', 'system', NULL),
-(0, '预防保健专业', '14', 'sys_practice_item', NULL, NULL, 0, 0, 'system', 'system', NULL)
+(0, '预防保健专业', '14', 'sys_practice_item', NULL, NULL, 0, 0, 'system', 'system', NULL),
 (0, '特种医学与军事医学专业', '15', 'sys_practice_item', NULL, NULL, 0, 0, 'system', 'system', NULL),
 (0, '内科', '1', 'sys_practice_item', NULL, NULL, 0, 0, 'system', 'system', NULL),
 (0, '外科', '2', 'sys_practice_item', NULL, NULL, 0, 0, 'system', 'system', NULL),
@@ -197,13 +209,15 @@ CREATE TABLE `doctor_info` (
     `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '医生id',
     `name` varchar(32) NOT NULL COMMENT '姓名',
     `sex` tinyint(4) NOT NULL COMMENT '性别 1 男 2 女 9 未知',
-    `identity_no` VARCHAR(32) NOT NULL COMMENT '身份证',
+    `position_id` int(11) DEFAULT NULL COMMENT '职务 字典id',
+    `identity_no` varchar(32) NOT NULL COMMENT '身份证',
+    `identification_photo` varchar(256) DEFAULT NULL COMMENT '证件照地址',
     `birthday` date NOT NULL COMMENT '出生日期',
     `ethnicity` varchar(10) DEFAULT NULL COMMENT '民族',
     `phone_number` varchar(32) DEFAULT NULL COMMENT '联系电话',
     `email` varchar(128) DEFAULT NULL COMMENT '邮箱',
     `user_name` varchar(32) NOT NULL COMMENT '用户名（工号）',
-    `district_code` varchar(128) NOT NULL COMMENT '机构id，org-code',
+    `org_code` varchar(128) NOT NULL COMMENT '机构id，org-code',
     `score` int(4) NOT NULL DEFAULT '10' COMMENT '当前分数',
     `is_expert` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否专家 0 不是 1 是',
     `create_by` varchar(64) DEFAULT NULL COMMENT '创建人',
@@ -212,7 +226,8 @@ CREATE TABLE `doctor_info` (
     `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
     `is_delete` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否删除 0 未删除 1 已删除',
     PRIMARY KEY (`id`) USING BTREE,
-    UNIQUE KEY `UK_USER_NAME_IDX` (`USER_NAME`) USING BTREE COMMENT '用户名(工号)'
+    UNIQUE KEY `UK_USER_NAME_IDX` (`USER_NAME`) USING BTREE COMMENT '用户名(工号)',
+    KEY `DOCTOR_ORG_CODE_IDX` (`org_code`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='医师基本信息';
 
 -- 医生教育经历
@@ -299,7 +314,11 @@ CREATE TABLE `doctor_practicepoint` (
     `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
     `is_delete` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否删除 0 未删除 1 已删除',
     PRIMARY KEY (`id`) USING BTREE,
-    KEY `DOCTOR_ID_IDX` (`doctor_id`) USING BTREE
+    KEY `DOCTOR_ID_IDX` (`doctor_id`) USING BTREE,
+    KEY `LEVEL_ID_IDX` (`practice_level_id`) USING BTREE,
+    KEY `TITLE_ID_IDX` (`practice_title_id`) USING BTREE,
+    KEY `ITME_ID_IDX` (`practice_item_id`) USING BTREE,
+    KEY `TYPE_ID_IDX` (`practice_type_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='医生执业信息表';
 
 -- 医生执业项信息 多机构备案

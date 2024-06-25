@@ -6,6 +6,7 @@
             o.id,
             o.code,
             o.position,
+            o.unified_credit_identifier,
             sdd1.id as typeId,
             sdd1.dict_label as typeName,
             o.name,
@@ -40,13 +41,14 @@
 
     <!-- 插入或者更新 -->
     <insert id="saveOrUpdate" keyProperty="id" useGeneratedKeys="true">
-        insert into org (id, code, position, type_id, name, contact_name, contact_title,
+        insert into org (id, code, position, unified_credit_identifier, type_id, name, contact_name, contact_title,
             contact_phone, district_dict_id, county, address, picturl, content_type, remark, enabled, create_by, update_by
-        ) values (#{id}, #{code}, #{position}, #{typeId}, #{name}, #{contactName}, #{contactTitle},
+        ) values (#{id}, #{code}, #{position}, #{unifiedCreditIdentifier}, #{typeId}, #{name}, #{contactName}, #{contactTitle},
             #{contactPhone}, #{districtDictId}, #{county}, #{address}, #{picturl}, #{contentType}, #{remark}, #{enabled}, #{createBy}, #{updateBy})
         on duplicate key update
         code = values(code),
         position = values(position),
+        unified_credit_identifier = values(unified_credit_identifier),
         type_id = values(type_id),
         name = values(name),
         contact_name = values(contact_name),

@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
  * @since 2024-06-13
  */
 @Service
-@DS("testMedicalManage")
+@DS("byIntegrationPlatform")
 public class DoctorEducationServiceImpl extends ServiceImpl<DoctorEducationMapper, DoctorEducation> implements DoctorEducationService {
 
 }

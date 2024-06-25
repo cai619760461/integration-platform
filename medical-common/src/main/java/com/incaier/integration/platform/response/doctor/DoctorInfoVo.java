@@ -40,9 +40,19 @@ public class DoctorInfoVo implements Serializable {
     private Integer sex;
 
     /**
+     * 职务 字典id
+     */
+    private Integer positionId;
+
+    /**
      * 身份证
      */
     private String identityNo;
+
+    /**
+     * 证件照地址
+     */
+    private String identificationPhoto;
 
     /**
      * 出生日期

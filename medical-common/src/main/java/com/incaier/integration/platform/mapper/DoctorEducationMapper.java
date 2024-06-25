@@ -17,7 +17,7 @@ import org.apache.ibatis.annotations.Param;
  * @since 2024-06-13
  */
 @Mapper
-@DS("testMedicalManage")
+@DS("byIntegrationPlatform")
 public interface DoctorEducationMapper extends BaseMapper<DoctorEducation> {
 
     /**

@@ -36,6 +36,11 @@ public class Org implements Serializable {
     private Integer position;
 
     /**
+     * 统一信用代码
+     */
+    private String unifiedCreditIdentifier;
+
+    /**
      * 机构类型 字典id
      */
     private Integer typeId;

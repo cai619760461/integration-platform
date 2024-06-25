@@ -35,7 +35,7 @@ import java.util.List;
  * @date 2024-06-04
  */
 @Service
-@DS("testMedicalManage")
+@DS("byIntegrationPlatform")
 public class SysDictTypeServiceImpl extends ServiceImpl<SysDictTypeMapper, SysDictType> implements SysDictTypeService {
 
     private final Logger logger = LoggerFactory.getLogger(SysDictTypeServiceImpl.class);

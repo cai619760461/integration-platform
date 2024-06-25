@@ -14,7 +14,7 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2024-06-18
  */
 @Mapper
-@DS("testMedicalManage")
+@DS("byIntegrationPlatform")
 public interface MedicalEquipmentFileMapper extends BaseMapper<MedicalEquipmentFile> {
 
 }

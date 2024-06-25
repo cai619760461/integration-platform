@@ -51,10 +51,20 @@ public class DoctorInfoDto extends BaseDto implements Serializable {
     private Integer sex;
 
     /**
+     * 职务 字典id
+     */
+    private Integer positionId;
+
+    /**
      * 身份证
      */
     @NotEmpty(message = "身份证不可为空", groups = {AddGroup.class, UpdateGroup.class})
     private String identityNo;
+
+    /**
+     * 证件照地址
+     */
+    private String identificationPhoto;
 
     /**
      * 出生日期

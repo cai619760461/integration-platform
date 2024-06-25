@@ -19,7 +19,7 @@ import java.util.List;
  * @since 2024-06-13
  */
 @Mapper
-@DS("testMedicalManage")
+@DS("byIntegrationPlatform")
 public interface DoctorPracticepointItemMapper extends BaseMapper<DoctorPracticepointItem> {
 
     /**

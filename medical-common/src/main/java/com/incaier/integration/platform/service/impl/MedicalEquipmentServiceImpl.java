@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
  * @since 2024-06-18
  */
 @Service
-@DS("testMedicalManage")
+@DS("byIntegrationPlatform")
 public class MedicalEquipmentServiceImpl extends ServiceImpl<MedicalEquipmentMapper, MedicalEquipment> implements MedicalEquipmentService {
 
     private final Logger logger = LoggerFactory.getLogger(MedicalEquipmentServiceImpl.class);

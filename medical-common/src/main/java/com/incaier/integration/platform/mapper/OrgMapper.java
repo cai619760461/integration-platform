@@ -18,7 +18,7 @@ import java.util.List;
  * @date 2024-06-13
  */
 @Mapper
-@DS("testMedicalManage")
+@DS("byIntegrationPlatform")
 public interface OrgMapper extends BaseMapper<Org> {
 
     /**

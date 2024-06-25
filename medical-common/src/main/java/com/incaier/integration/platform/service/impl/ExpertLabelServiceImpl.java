@@ -28,7 +28,7 @@ import java.util.List;
  * @since 2024-06-19
  */
 @Service
-@DS("testMedicalManage")
+@DS("byIntegrationPlatform")
 public class ExpertLabelServiceImpl extends ServiceImpl<ExpertLabelMapper, ExpertLabel> implements ExpertLabelService {
 
     @Autowired

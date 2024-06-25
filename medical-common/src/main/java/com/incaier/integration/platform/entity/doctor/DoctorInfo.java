@@ -49,10 +49,22 @@ public class DoctorInfo implements Serializable {
     private Integer sex;
 
     /**
+     * 职务 字典id
+     */
+    @TableField("position_id")
+    private Integer positionId;
+
+    /**
      * 身份证
      */
     @TableField("identity_no")
     private String identityNo;
+
+    /**
+     * 身份证
+     */
+    @TableField("identification_photo")
+    private String identificationPhoto;
 
     /**
      * 出生日期

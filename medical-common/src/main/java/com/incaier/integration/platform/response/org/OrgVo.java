@@ -40,6 +40,12 @@ public class OrgVo implements Serializable {
     private Integer position;
 
     /**
+     * 统一信用代码
+     */
+    @ExcelIgnore
+    private String unifiedCreditIdentifier;
+
+    /**
      * 机构类型 字典id
      */
     @ExcelIgnore

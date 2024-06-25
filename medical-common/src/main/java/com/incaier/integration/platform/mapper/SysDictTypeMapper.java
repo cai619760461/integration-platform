@@ -15,7 +15,7 @@ import java.util.List;
  * @date 2024-06-12
  */
 @Mapper
-@DS("testMedicalManage")
+@DS("byIntegrationPlatform")
 public interface SysDictTypeMapper extends BaseMapper<SysDictType> {
 
     /**

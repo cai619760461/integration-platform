@@ -40,7 +40,7 @@ import java.util.List;
  * @since 2024-06-19
  */
 @Service
-@DS("testMedicalManage")
+@DS("byIntegrationPlatform")
 public class DoctorScoreHistoryServiceImpl extends ServiceImpl<DoctorScoreHistoryMapper, DoctorScoreHistory> implements DoctorScoreHistoryService {
 
     @Autowired
