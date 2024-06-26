@@ -6,6 +6,9 @@ import com.incaier.integration.platform.entity.SysDictData;
 import com.incaier.integration.platform.request.SysDictDataDto;
 import com.incaier.integration.platform.response.dict.SysDictDataVo;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 /**
  * 字典数据表服务层
  *
@@ -31,4 +34,12 @@ public interface SysDictDataService extends IService<SysDictData> {
      * @return {@link Boolean}
      */
     Boolean dataSaveOrUpdate(SysDictDataDto sysDictDataDto);
+
+    /**
+     * 按类型获取所有数据
+     *
+     * @param dictType dict类型
+     * @return {@link List}<{@link SysDictData}>
+     */
+    List<SysDictData> getAllDataByType(String dictType);
 }

@@ -54,7 +54,7 @@ public class RedisCacheConfig {
         return template;
     }
 
-    @Bean("simpleKeyGenerator")
+    @Bean
     public KeyGenerator simpleKeyGenerator() {
         return (o, method, objects) -> o.getClass().getSimpleName() + "#" + method.getName() + "(" + JSON.toJSONString(objects) + ")";
     }
@@ -84,7 +84,6 @@ public class RedisCacheConfig {
         om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         om.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL);
         jackson2JsonRedisSerializer.setObjectMapper(om);
-
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig();
         redisCacheConfiguration = redisCacheConfiguration.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jackson2JsonRedisSerializer)).entryTtl(Duration.ofSeconds(seconds));
         return redisCacheConfiguration;

@@ -25,7 +25,10 @@ import com.incaier.integration.platform.request.doctor.DoctorInfoDto;
 import com.incaier.integration.platform.request.doctor.DoctorQueryDto;
 import com.incaier.integration.platform.request.excel.ExcelDoctorEntity;
 import com.incaier.integration.platform.response.RoleVO;
-import com.incaier.integration.platform.response.doctor.*;
+import com.incaier.integration.platform.response.doctor.DoctorDetailVo;
+import com.incaier.integration.platform.response.doctor.DoctorInfoVo;
+import com.incaier.integration.platform.response.doctor.DoctorPracticepointVo;
+import com.incaier.integration.platform.response.doctor.DoctorVo;
 import com.incaier.integration.platform.service.DoctorInfoService;
 import com.incaier.integration.platform.util.AesUtil;
 import org.apache.commons.collections4.CollectionUtils;
@@ -186,9 +189,11 @@ public class DoctorInfoServiceImpl extends ServiceImpl<DoctorInfoMapper, DoctorI
             }
         });
         // 删除多机构备案
-        doctorPracticepointItemMapper.update(null, Wrappers.<DoctorPracticepointItem>lambdaUpdate()
-                .in(CollectionUtils.isNotEmpty(dto.getDeleteIds()), DoctorPracticepointItem::getId, dto.getDeleteIds())
-                .set(DoctorPracticepointItem::getIsDelete, BYConstant.INT_TRUE));
+        if (CollectionUtils.isNotEmpty(dto.getDeleteIds())) {
+            doctorPracticepointItemMapper.update(null, Wrappers.<DoctorPracticepointItem>lambdaUpdate()
+                    .in(DoctorPracticepointItem::getId, dto.getDeleteIds())
+                    .set(DoctorPracticepointItem::getIsDelete, BYConstant.INT_TRUE));
+        }
         return true;
     }
 

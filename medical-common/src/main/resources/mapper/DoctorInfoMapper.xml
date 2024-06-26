@@ -193,7 +193,7 @@
 
     <sql id="Common_DoctorInfo">
             doctor_info di
-        left join doctor_practicepoint dp on di.id = dp.doctor_id
+        left join doctor_practicepoint dp on di.id = dp.doctor_id and dp.is_delete = 0
         left join sys_dict_data sdd1 on dp.practice_level_id = sdd1.id and sdd1.status = 0
         left join sys_dict_data sdd2 on dp.practice_title_id = sdd2.id and sdd2.status = 0
         left join sys_dict_data sdd3 on dp.practice_item_id = sdd3.id and sdd3.status = 0

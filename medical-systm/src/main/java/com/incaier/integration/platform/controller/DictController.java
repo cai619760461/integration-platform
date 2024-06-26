@@ -1,8 +1,6 @@
 package com.incaier.integration.platform.controller;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageInfo;
-import com.incaier.integration.platform.constant.BYConstant;
 import com.incaier.integration.platform.entity.SysDictData;
 import com.incaier.integration.platform.entity.valid.AddGroup;
 import com.incaier.integration.platform.entity.valid.QueryGroup;
@@ -18,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 /**
@@ -29,6 +28,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/dict")
+@Validated
 public class DictController {
 
     @Autowired
@@ -66,12 +66,8 @@ public class DictController {
      * @return {@link Result}<{@link List}<{@link SysDictData}>>
      */
     @GetMapping("/dataList")
-    public Result<List<SysDictData>> getAllDataList(@RequestParam("dictType") String dictType) {
-        return Result.success(sysDictDataService.list(Wrappers.<SysDictData>lambdaQuery()
-                .select(SysDictData::getId, SysDictData::getDictLabel, SysDictData::getDictValue, SysDictData::getDictType, SysDictData::getIsDefault)
-                .eq(SysDictData::getDictType, dictType)
-                .eq(SysDictData::getStatus, BYConstant.INT_FALSE)
-                .orderByAsc(SysDictData::getDictSort)));
+    public Result<List<SysDictData>> getAllDataList(@NotEmpty(message = "字典类型不可为空") @RequestParam("dictType") String dictType) {
+        return Result.success(sysDictDataService.getAllDataByType(dictType));
     }
 
     /**

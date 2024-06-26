@@ -1,11 +1,13 @@
 package com.incaier.integration.platform.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.incaier.integration.platform.config.UserHolder;
+import com.incaier.integration.platform.constant.BYConstant;
 import com.incaier.integration.platform.entity.SysDictData;
 import com.incaier.integration.platform.mapper.SysDictDataMapper;
 import com.incaier.integration.platform.request.SysDictDataDto;
@@ -58,5 +60,14 @@ public class SysDictDataServiceImpl extends ServiceImpl<SysDictDataMapper, SysDi
         }
         sysDictData.setUpdateBy(UserHolder.getUserName());
         return sysDictDataMapper.saveOrUpdate(sysDictData);
+    }
+
+    @Override
+    public List<SysDictData> getAllDataByType(String dictType) {
+        return sysDictDataMapper.selectList(Wrappers.<SysDictData>lambdaQuery()
+                .select(SysDictData::getId, SysDictData::getDictLabel, SysDictData::getDictValue, SysDictData::getDictType, SysDictData::getIsDefault)
+                .eq(SysDictData::getDictType, dictType)
+                .eq(SysDictData::getStatus, BYConstant.INT_FALSE)
+                .orderByAsc(SysDictData::getDictSort));
     }
 }

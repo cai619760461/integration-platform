@@ -5,12 +5,15 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.incaier.integration.platform.config.UserHolder;
+import com.incaier.integration.platform.constant.CommonConstant;
 import com.incaier.integration.platform.constant.ErrorCodeConstant;
 import com.incaier.integration.platform.entity.SysUser;
 import com.incaier.integration.platform.response.Result;
 import com.incaier.integration.platform.util.RedisUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
@@ -31,6 +34,8 @@ import java.util.Map;
 @Slf4j
 public class LoginFilter implements Filter {
 
+    private static final Logger logger = LoggerFactory.getLogger(LoginFilter.class);
+
     private static final String ACCESS_TOKEN = "saToken";
 
     @Override
@@ -39,7 +44,7 @@ public class LoginFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         String url = request.getServletPath();
-        String token = request.getHeader(ACCESS_TOKEN);
+        String token = request.getHeader(CommonConstant.ACCESS_TOKEN);
         if (StringUtils.isEmpty(token)) {
             response.setContentType("application/json;charset=utf-8");
             response.getWriter().println(JSONUtil.parse(Result.error(ErrorCodeConstant.TOKEN_NOT_FOUND, "请先登录！")));

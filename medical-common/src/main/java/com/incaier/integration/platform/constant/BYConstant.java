@@ -1,5 +1,11 @@
 package com.incaier.integration.platform.constant;
 
+/**
+ * byconstant
+ *
+ * @author caiweijie
+ * @date 2024/06/25
+ */
 public interface BYConstant {
 
     /**
