@@ -10,7 +10,6 @@ import com.incaier.integration.platform.constant.ErrorCodeConstant;
 import com.incaier.integration.platform.entity.SysUser;
 import com.incaier.integration.platform.response.Result;
 import com.incaier.integration.platform.util.RedisUtils;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,12 +30,9 @@ import java.util.Map;
  */
 @WebFilter(filterName = "msLoginFilter", urlPatterns = "/*")
 @Component
-@Slf4j
 public class LoginFilter implements Filter {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginFilter.class);
-
-    private static final String ACCESS_TOKEN = "saToken";
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -63,7 +59,6 @@ public class LoginFilter implements Filter {
             response.getWriter().println(JSONUtil.parse(Result.error(ErrorCodeConstant.TOKEN_INVALID, "未获取到有效token!")));
             return;
         }
-
         try {
             SaSession saSession = StpUtil.getSessionByLoginId(loginIdByToken);
             Map<String, Object> dataMap = saSession.getDataMap();
@@ -72,7 +67,7 @@ public class LoginFilter implements Filter {
             UserHolder.setUserInfo(userInfo);
         } catch (Exception e) {
             String message = e.getMessage();
-            log.error("请求:{},{}, token 为 {}", url, "token 验证失败，错误信息为：" + message, token);
+            logger.error("请求:{},{}, token 为 {}", url, "token 验证失败，错误信息为：" + message, token);
         }
         filterChain.doFilter(request, response);
     }

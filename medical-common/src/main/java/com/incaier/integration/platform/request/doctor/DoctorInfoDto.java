@@ -99,7 +99,7 @@ public class DoctorInfoDto extends BaseDto implements Serializable {
     /**
      * 角色
      */
-    List<RoleVO> roles;
+    private List<RoleVO> roles;
 
     /**
      * 机构id，org-code

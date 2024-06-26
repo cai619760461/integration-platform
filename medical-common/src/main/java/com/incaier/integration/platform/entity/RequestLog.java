@@ -1,5 +1,6 @@
 package com.incaier.integration.platform.entity;
 
+import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -50,5 +51,5 @@ public class RequestLog {
     /**
      * 查询参数
      */
-    private String queryBody;
+    private JsonObject queryBody;
 }

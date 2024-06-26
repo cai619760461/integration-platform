@@ -1,12 +1,14 @@
 package com.incaier.integration.platform.filter;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.incaier.integration.platform.constant.CommonConstant;
 import com.incaier.integration.platform.entity.RequestLog;
 import com.incaier.integration.platform.entity.ResponseLog;
 import com.incaier.integration.platform.exception.PayloadTooLargeException;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
@@ -39,6 +41,8 @@ public class AccessLogFilter extends HttpFilter {
 
 	private static final long serialVersionUID = 2350819720019396278L;
 
+    private static final Gson GSON = new GsonBuilder().disableHtmlEscaping().create();
+
 	@Override
 	protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
         // 限制30个字节
@@ -55,17 +59,26 @@ public class AccessLogFilter extends HttpFilter {
         String requestId = UUID.randomUUID().toString();
         // 生成唯一的请求ID
         cachingResponseWrapper.setHeader("x-request-id", requestId);
-        JsonObject jsonObject = JsonParser.parseString(new String(cachingRequestWrapper.getContentAsByteArray(), StandardCharsets.UTF_8)).getAsJsonObject();
+        String queryParam = req.getQueryString(), queryBody = new String(cachingRequestWrapper.getContentAsByteArray(), StandardCharsets.UTF_8);;
+        JsonObject jsonObject = new JsonObject();
+        if (StringUtils.isNotEmpty(queryBody)) {
+            jsonObject = JsonParser.parseString(queryBody).getAsJsonObject();
+        }
+        String contentType = req.getContentType();
+        if (StringUtils.isNotBlank(contentType) && contentType.contains("multipart/form-data")) {
+            queryParam = "文件上传";
+            jsonObject.addProperty("contentType", contentType);
+        }
         RequestLog request = RequestLog.builder()
                 .requestId(requestId)
                 .method(req.getMethod())
                 .uri(req.getRequestURI())
                 .ip(req.getRemoteAddr())
                 .token(req.getHeader(CommonConstant.ACCESS_TOKEN))
-                .queryParam(req.getQueryString())
-                .queryBody(new Gson().toJson(jsonObject))
+                .queryParam(queryParam)
+                .queryBody(jsonObject)
                 .build();
-        logger.info("request: {}", new Gson().toJson(request));
+        logger.info("request: {}", GSON.toJson(request));
 		long end = System.currentTimeMillis();
         ResponseLog response = ResponseLog.builder()
                 .requestId(requestId)
@@ -73,7 +86,7 @@ public class AccessLogFilter extends HttpFilter {
                 .ms(end - start)
 //                .responseBody(new String(cachingResponseWrapper.getContentAsByteArray(), StandardCharsets.UTF_8))
                 .build();
-        logger.info("response: {}", new Gson().toJson(response));
+        logger.info("response: {}", GSON.toJson(response));
         // 将缓存的响应内容，输出到客户端
 		cachingResponseWrapper.copyBodyToResponse();
 	}

@@ -325,7 +325,7 @@ public class DoctorInfoServiceImpl extends ServiceImpl<DoctorInfoMapper, DoctorI
                 .createTime(LocalDateTime.now())
                 .build();
         personnelMapper.insert(newPersonnel);
-        logger.info("新建personnel，id：{}", newPersonnel.getPk());
+        logger.info("新建 personnel，id：{}", newPersonnel.getPk());
         return newPersonnel.getPk().intValue();
     }
 
@@ -338,6 +338,9 @@ public class DoctorInfoServiceImpl extends ServiceImpl<DoctorInfoMapper, DoctorI
     public void saveRoles(List<RoleVO> roleVos, Integer pk) {
         // 删除已有角色数据
         sysRoleUserMapper.delete(Wrappers.<SysRoleUser>lambdaQuery().eq(SysRoleUser::getUserId, pk));
+        if (CollectionUtils.isEmpty(roleVos)) {
+            return;
+        }
         List<SysRoleUser> roles = roleVos.stream().map(roleVO -> SysRoleUser.builder()
                 .roleId(Integer.valueOf(roleVO.getRoleId()))
                 .userId(pk)
