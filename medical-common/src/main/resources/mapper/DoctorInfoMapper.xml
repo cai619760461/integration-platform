@@ -82,6 +82,7 @@
             </foreach>
         </if>
         group by di.id
+        order by di.id desc
     </select>
 
     <select id="getExpertCount" resultType="java.lang.Integer">
@@ -145,6 +146,7 @@
         </if>
         group by
             di.id
+        order by di.id desc
     </select>
 
     <select id="getScoreHistoryCount" resultType="java.lang.Integer">
@@ -216,5 +218,6 @@
         <if test="keyword != null and keyword != ''">
             and (di.name LIKE concat('%',#{keyword},'%') or di.phone_number = #{keyword})
         </if>
+        order by di.id desc
     </sql>
 </mapper>

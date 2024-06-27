@@ -89,6 +89,7 @@
         <if test="code != null and code != ''">
             and me.code = #{code}
         </if>
+        order by me.id desc
     </sql>
 
 </mapper>

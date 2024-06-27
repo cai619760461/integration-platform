@@ -4,6 +4,9 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.incaier.integration.platform.entity.equipment.MedicalEquipmentFile;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -17,4 +20,10 @@ import org.apache.ibatis.annotations.Mapper;
 @DS("byIntegrationPlatform")
 public interface MedicalEquipmentFileMapper extends BaseMapper<MedicalEquipmentFile> {
 
+    /**
+     * 保存或更新批
+     *
+     * @param files 文件夹
+     */
+    void saveOrUpdateBatch(@Param("files") List<MedicalEquipmentFile> files);
 }

@@ -16,7 +16,7 @@
             </if>
         </where>
         order by
-            dict_sort asc, id asc
+            id desc, dict_sort asc
     </select>
 
     <!-- 插入或者更新 -->

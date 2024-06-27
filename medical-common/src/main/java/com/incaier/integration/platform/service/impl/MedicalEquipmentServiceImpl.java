@@ -22,7 +22,6 @@ import com.incaier.integration.platform.response.MedicalEquipmentDetailVo;
 import com.incaier.integration.platform.response.MedicalEquipmentFileVo;
 import com.incaier.integration.platform.response.MedicalEquipmentVo;
 import com.incaier.integration.platform.service.MedicalEquipmentService;
-import com.incaier.integration.platform.service.MedicalEquipmentFileService;
 import com.incaier.integration.platform.util.MinioUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -51,9 +50,6 @@ import java.util.stream.Collectors;
 public class MedicalEquipmentServiceImpl extends ServiceImpl<MedicalEquipmentMapper, MedicalEquipment> implements MedicalEquipmentService {
 
     private final Logger logger = LoggerFactory.getLogger(MedicalEquipmentServiceImpl.class);
-
-    @Autowired
-    private MedicalEquipmentFileService medicalequipmentfileService;
 
     @Autowired
     private MedicalEquipmentMapper medicalEquipmentMapper;
@@ -90,8 +86,8 @@ public class MedicalEquipmentServiceImpl extends ServiceImpl<MedicalEquipmentMap
             throw new CommonBusinessException(ErrorCodeConstant.COMMON_ERROR, "saveOrUpdate failed");
         }
         // 新增附件
-        if (CollectionUtils.isNotEmpty(medicalEquipmentDto.getAddAnnex())) {
-            List<MedicalEquipmentFile> files = medicalEquipmentDto.getAddAnnex().stream().map(x -> {
+        if (CollectionUtils.isNotEmpty(medicalEquipmentDto.getAnnex())) {
+            List<MedicalEquipmentFile> files = medicalEquipmentDto.getAnnex().stream().map(x -> {
                 MedicalEquipmentFile medicalEquipmentFile = new MedicalEquipmentFile();
                 BeanUtils.copyProperties(x, medicalEquipmentFile);
                 medicalEquipmentFile.setEquipmentId(medicalEquipment.getId());
@@ -99,13 +95,18 @@ public class MedicalEquipmentServiceImpl extends ServiceImpl<MedicalEquipmentMap
                 medicalEquipmentFile.setUpdateBy(UserHolder.getUserName());
                 return medicalEquipmentFile;
             }).collect(Collectors.toList());
-            medicalequipmentfileService.saveBatch(files);
+            medicalEquipmentFileMapper.saveOrUpdateBatch(files);
         }
         // 删除附件信息
         deleteMedicalEquipmentFiles(medicalEquipmentDto.getDeleteIds());
         return true;
     }
 
+    /**
+     * 删除医疗设备附件
+     *
+     * @param deleteIds 删除ID
+     */
     private void deleteMedicalEquipmentFiles(List<Integer> deleteIds) {
         if (CollectionUtils.isEmpty(deleteIds)) {
             return;

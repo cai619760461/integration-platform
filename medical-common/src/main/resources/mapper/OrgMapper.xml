@@ -36,7 +36,7 @@
             <if test="districtDictId != null and districtDictId != ''">
                 and o.district_dict_id = #{districtDictId}
             </if>
-        order by o.id asc
+        order by o.id desc
     </select>
 
     <!-- 插入或者更新 -->

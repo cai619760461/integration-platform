@@ -15,6 +15,7 @@
                 and dict_type = #{dictType}
             </if>
         </where>
+        order by id desc
     </select>
 
     <!-- 插入或者更新 -->

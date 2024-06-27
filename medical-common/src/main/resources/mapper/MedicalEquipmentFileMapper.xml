@@ -4,20 +4,34 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.incaier.integration.platform.entity.equipment.MedicalEquipmentFile">
-        <id column="id" property="id" />
-        <result column="equipment_id" property="equipmentId" />
-        <result column="file_type" property="fileType" />
-        <result column="file_name" property="fileName" />
-        <result column="file_path" property="filePath" />
-        <result column="create_by" property="createBy" />
-        <result column="create_time" property="createTime" />
-        <result column="update_by" property="updateBy" />
-        <result column="update_time" property="updateTime" />
-        <result column="is_delete" property="isDelete" />
+        <id column="id" property="id"/>
+        <result column="equipment_id" property="equipmentId"/>
+        <result column="file_type" property="fileType"/>
+        <result column="file_name" property="fileName"/>
+        <result column="file_path" property="filePath"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_delete" property="isDelete"/>
     </resultMap>
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, equipment_id, file_type, file_name, file_path, create_by, create_time, update_by, update_time, is_delete
     </sql>
+
+    <insert id="saveOrUpdateBatch" keyProperty="pk" useGeneratedKeys="true">
+        INSERT INTO medical_equipment_file (id, equipment_id, file_type, file_name, file_path, create_by, update_by)
+        VALUES
+        <foreach collection="files" item="entity" separator=",">
+            (#{entity.id}, #{entity.equipmentId}, #{entity.fileType}, #{entity.fileName}, #{entity.filePath}, #{entity.createBy}, #{entity.updateBy})
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+        equipment_id = VALUES(equipment_id),
+        file_type = VALUES(file_type),
+        file_name = VALUES(file_name),
+        file_path = VALUES(file_path),
+        update_by = VALUES(update_by);
+    </insert>
 
 </mapper>

@@ -99,9 +99,9 @@ public class MedicalEquipmentDto extends PageDto {
     private List<Integer> deleteIds;
 
     /**
-     * 新增附件
+     * 附件
      */
-    private List<MedicalEquipmentFileDto> addAnnex;
+    private List<MedicalEquipmentFileDto> annex;
 
     /**
      * 折旧信息
