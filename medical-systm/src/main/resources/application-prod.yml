@@ -27,27 +27,27 @@ spring:
         byhealth:
           type: com.alibaba.druid.pool.DruidDataSource
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://10.84.138.254:23306/byhealth_db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&character_set_server=utf8mb4&zeroDateTimeBehavior=CONVERT_TO_NULL&character_set_connection=utf8mb4&character_set_results=utf8mb4&rewriteBatchedStatements=true&allowMultiQueries=true&autoReconnect=true
+          url: jdbc:mysql://10.84.138.254:23306/byhealth_db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&character_set_server=utf8mb4&zeroDateTimeBehavior=CONVERT_TO_NULL&character_set_connection=utf8mb4&character_set_results=utf8mb4&rewriteBatchedStatements=true&allowMultiQueries=true&autoReconnect=true&useSSL=false
           username: byhealth
           password: byhealth
         byIntegrationPlatform:
           type: com.alibaba.druid.pool.DruidDataSource
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://10.0.21.15:3307/by_integration_platform?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&character_set_server=utf8mb4&zeroDateTimeBehavior=CONVERT_TO_NULL&character_set_connection=utf8mb4&character_set_results=utf8mb4&rewriteBatchedStatements=true&allowMultiQueries=true&autoReconnect=true
+          url: jdbc:mysql://10.84.138.254:10001/by_integration_platform?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&character_set_server=utf8mb4&zeroDateTimeBehavior=CONVERT_TO_NULL&character_set_connection=utf8mb4&character_set_results=utf8mb4&rewriteBatchedStatements=true&allowMultiQueries=true&autoReconnect=true&useSSL=false
           username: root
-          password: TDYmysqlAdmin
+          password: Tdy@2023
         hipPortalCloud:
           type: com.alibaba.druid.pool.DruidDataSource
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://10.0.21.15:3307/hip-portal-cloud?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&character_set_server=utf8mb4&zeroDateTimeBehavior=CONVERT_TO_NULL&character_set_connection=utf8mb4&character_set_results=utf8mb4&rewriteBatchedStatements=true&allowMultiQueries=true&autoReconnect=true
+          url: jdbc:mysql://10.84.138.254:10001/hip-portal-cloud?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&character_set_server=utf8mb4&zeroDateTimeBehavior=CONVERT_TO_NULL&character_set_connection=utf8mb4&character_set_results=utf8mb4&rewriteBatchedStatements=true&allowMultiQueries=true&autoReconnect=true&useSSL=false
           username: root
-          password: TDYmysqlAdmin
+          password: Tdy@2023
         hipmaster:
           type: com.alibaba.druid.pool.DruidDataSource
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://10.0.21.15:3307/hip-master?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&character_set_server=utf8mb4&zeroDateTimeBehavior=CONVERT_TO_NULL&character_set_connection=utf8mb4&character_set_results=utf8mb4&rewriteBatchedStatements=true&allowMultiQueries=true&autoReconnect=true
+          url: jdbc:mysql://10.84.138.254:10001/hip-master?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&character_set_server=utf8mb4&zeroDateTimeBehavior=CONVERT_TO_NULL&character_set_connection=utf8mb4&character_set_results=utf8mb4&rewriteBatchedStatements=true&allowMultiQueries=true&autoReconnect=true&useSSL=false
           username: root
-          password: TDYmysqlAdmin
+          password: Tdy@2023
   redis:
     database: 8
     host: 10.0.21.17
