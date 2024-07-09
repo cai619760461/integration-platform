@@ -36,5 +36,5 @@ public interface ExpertLabelMapper extends BaseMapper<ExpertLabel> {
      * @param labelDto 标记dto
      * @return {@link Boolean}
      */
-    Boolean saveOrUpdate(@Param("labels") ExpertLabelDto labelDto);
+    Boolean saveOrUpdate(@Param("label") ExpertLabelDto labelDto);
 }
