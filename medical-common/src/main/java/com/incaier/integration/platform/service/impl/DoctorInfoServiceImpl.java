@@ -23,12 +23,10 @@ import com.incaier.integration.platform.request.BaseDto;
 import com.incaier.integration.platform.request.doctor.DoctorDetailDto;
 import com.incaier.integration.platform.request.doctor.DoctorInfoDto;
 import com.incaier.integration.platform.request.doctor.DoctorQueryDto;
+import com.incaier.integration.platform.request.doctor.ExpertLabelDto;
 import com.incaier.integration.platform.request.excel.ExcelDoctorEntity;
 import com.incaier.integration.platform.response.RoleVO;
-import com.incaier.integration.platform.response.doctor.DoctorDetailVo;
-import com.incaier.integration.platform.response.doctor.DoctorInfoVo;
-import com.incaier.integration.platform.response.doctor.DoctorPracticepointVo;
-import com.incaier.integration.platform.response.doctor.DoctorVo;
+import com.incaier.integration.platform.response.doctor.*;
 import com.incaier.integration.platform.service.DoctorInfoService;
 import com.incaier.integration.platform.util.AesUtil;
 import org.apache.commons.collections4.CollectionUtils;
@@ -43,8 +41,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -298,11 +295,63 @@ public class DoctorInfoServiceImpl extends ServiceImpl<DoctorInfoMapper, DoctorI
                     .eq(ExpertLabel::getDoctorId, doctorInfoDto.getId())
                     .set(ExpertLabel::getIsDelete, BYConstant.INT_TRUE));
         }else {
+            Set<Integer> removeDictIds;
+            Set<Integer> originDictIds = expertLabelMapper.getDoctorLabelDictIds(doctorInfoDto.getDoctorId());
             if (CollectionUtils.isNotEmpty(doctorInfoDto.getExpertLabels())) {
-                doctorInfoDto.getExpertLabels().forEach(labelDto -> saveOrUpdateDoctorRelation(doctorInfoDto.getId(), labelDto, x -> expertLabelMapper.saveOrUpdate(x)));
+                Set<Integer> newDictIds = doctorInfoDto.getExpertLabels().stream().map(ExpertLabelDto::getDictId).collect(Collectors.toSet());
+                removeDictIds = getDiffrent(originDictIds, newDictIds);
+                Set<Integer> addDictIds = getDiffrent(newDictIds, originDictIds);
+                logger.info("addDictIds:{}", addDictIds);
+                if (CollectionUtils.isNotEmpty(addDictIds)) {
+                    addDictIds.forEach(dictId -> saveOrUpdateDoctorRelation(doctorInfoDto.getId(), new ExpertLabelDto(dictId), x -> expertLabelMapper.saveOrUpdate(x)));
+                }
+            }else {
+                removeDictIds = originDictIds;
+            }
+            if (CollectionUtils.isNotEmpty(removeDictIds)){
+                logger.info("removeDictIds:{}", removeDictIds);
+                expertLabelMapper.update(null, Wrappers.<ExpertLabel>lambdaUpdate()
+                        .eq(ExpertLabel::getDoctorId, doctorInfoDto.getId())
+                        .in(ExpertLabel::getDictId, removeDictIds)
+                        .set(ExpertLabel::getIsDelete, BYConstant.INT_TRUE));
             }
         }
     }
+
+    private static Set<Integer> getDiffrent(Set<Integer> set1, Set<Integer> set2) {
+        Set<Integer> intersection = new HashSet<>(set1);
+        intersection.removeAll(set2);
+        return intersection;
+    }
+
+    public static void main(String[] args) {
+        // 示例列表
+        List<Integer> list1 = new ArrayList<>(Arrays.asList(1, 2, 2, 3, 4, 5));
+        List<Integer> list2 = new ArrayList<>(Arrays.asList(4, 5, 6, 7, 8));
+
+        // 将 List 转换为 Set
+        Set<Integer> set1 = new HashSet<>(list1);
+        Set<Integer> set2 = new HashSet<>(list2);
+
+        System.out.println("set1 = " + set1);
+        System.out.println("set2 = " + set2);
+
+        // 求交集
+//        List<Integer> intersection = new ArrayList<>(list1);
+//        intersection.retainAll(list2);
+//        System.out.println("Intersection: " + intersection);
+//
+//        // 求 list1 的差集
+//        List<Integer> difference1 = new ArrayList<>(list1);
+//        difference1.removeAll(list2);
+//        System.out.println("Difference (list1 - list2): " + difference1);
+//
+//        // 求 list2 的差集
+//        List<Integer> difference2 = new ArrayList<>(list2);
+//        difference2.removeAll(list1);
+//        System.out.println("Difference (list2 - list1): " + difference2);
+    }
+
 
     /**
      * 保存人员信息

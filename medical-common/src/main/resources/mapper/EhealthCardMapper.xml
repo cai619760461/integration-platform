@@ -27,10 +27,10 @@
     <select id="ageGroup" resultType="com.incaier.integration.platform.response.statistics.Metrics">
         SELECT
             CASE
-                WHEN TIMESTAMPDIFF(YEAR, birthday, CURDATE()) <![CDATA[<=]]> 17 THEN '0-17岁'
-                WHEN TIMESTAMPDIFF(YEAR, birthday, CURDATE()) BETWEEN 18 AND 39 THEN '18-39岁'
-                WHEN TIMESTAMPDIFF(YEAR, birthday, CURDATE()) BETWEEN 40 AND 59 THEN '40~59岁'
-                WHEN TIMESTAMPDIFF(YEAR, birthday, CURDATE()) <![CDATA[>=]]> 60 THEN '60岁以上'
+                WHEN TIMESTAMPDIFF(YEAR, ANY_VALUE(birthday), CURDATE()) <![CDATA[<=]]> 17 THEN '0-17岁'
+                WHEN TIMESTAMPDIFF(YEAR, ANY_VALUE(birthday), CURDATE()) BETWEEN 18 AND 39 THEN '18-39岁'
+                WHEN TIMESTAMPDIFF(YEAR, ANY_VALUE(birthday), CURDATE()) BETWEEN 40 AND 59 THEN '40~59岁'
+                WHEN TIMESTAMPDIFF(YEAR, ANY_VALUE(birthday), CURDATE()) <![CDATA[>=]]> 60 THEN '60岁以上'
             ELSE 'Unknown'
             END AS name,
             COUNT(*) AS count
@@ -42,7 +42,7 @@
 
     <select id="angeniesTopSix" resultType="java.util.Map">
         SELECT
-            hospital_name as name,
+            ANY_VALUE(hospital_name) as name,
             COUNT(*) AS count
         FROM
             ehealth_card

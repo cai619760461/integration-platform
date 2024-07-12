@@ -40,4 +40,13 @@
         dict_id = values(dict_id),
         update_by = values(update_by)
     </insert>
+
+    <select id="getDoctorLabelDictIds" resultType="java.lang.Integer">
+        select
+            dict_id
+        from
+            expert_label
+        where doctor_id = #{doctorId}
+          and is_delete = 0
+    </select>
 </mapper>

@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -37,4 +38,12 @@ public interface ExpertLabelMapper extends BaseMapper<ExpertLabel> {
      * @return {@link Boolean}
      */
     Boolean saveOrUpdate(@Param("label") ExpertLabelDto labelDto);
+
+    /**
+     * 获取医生标签字典ID
+     *
+     * @param doctorId 医生id
+     * @return {@link Set}<{@link Integer}>
+     */
+    Set<Integer> getDoctorLabelDictIds(@Param("doctorId") Integer doctorId);
 }
