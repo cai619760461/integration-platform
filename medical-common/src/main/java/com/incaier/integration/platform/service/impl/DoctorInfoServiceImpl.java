@@ -324,35 +324,6 @@ public class DoctorInfoServiceImpl extends ServiceImpl<DoctorInfoMapper, DoctorI
         return intersection;
     }
 
-    public static void main(String[] args) {
-        // 示例列表
-        List<Integer> list1 = new ArrayList<>(Arrays.asList(1, 2, 2, 3, 4, 5));
-        List<Integer> list2 = new ArrayList<>(Arrays.asList(4, 5, 6, 7, 8));
-
-        // 将 List 转换为 Set
-        Set<Integer> set1 = new HashSet<>(list1);
-        Set<Integer> set2 = new HashSet<>(list2);
-
-        System.out.println("set1 = " + set1);
-        System.out.println("set2 = " + set2);
-
-        // 求交集
-//        List<Integer> intersection = new ArrayList<>(list1);
-//        intersection.retainAll(list2);
-//        System.out.println("Intersection: " + intersection);
-//
-//        // 求 list1 的差集
-//        List<Integer> difference1 = new ArrayList<>(list1);
-//        difference1.removeAll(list2);
-//        System.out.println("Difference (list1 - list2): " + difference1);
-//
-//        // 求 list2 的差集
-//        List<Integer> difference2 = new ArrayList<>(list2);
-//        difference2.removeAll(list1);
-//        System.out.println("Difference (list2 - list1): " + difference2);
-    }
-
-
     /**
      * 保存人员信息
      *
