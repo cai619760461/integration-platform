@@ -18,7 +18,6 @@
     <description>medical</description>
 
     <modules>
-        <module>demo</module>
         <module>medical-common</module>
         <module>medical-systm</module>
     </modules>
