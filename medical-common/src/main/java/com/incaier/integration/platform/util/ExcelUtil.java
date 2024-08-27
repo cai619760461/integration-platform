@@ -25,6 +25,7 @@ import java.lang.reflect.Field;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Function;
@@ -84,19 +85,23 @@ public class ExcelUtil {
                 // 更新下一次分页查询用的id
                 if (CollectionUtils.isNotEmpty(records)) {
                     try {
+                        Object idValue;
                         T record = records.get(records.size() - 1);
                         Class<?> clazz = record.getClass();
-                        Field idField = clazz.getDeclaredField("id");
-                        idField.setAccessible(true);
-                        Object idValue = idField.get(record);
-                        if (idValue instanceof Integer) {
-                            lastId = ((Integer) idValue).longValue();
-                        } else if (idValue instanceof Long) {
-                            lastId = (Long) idValue;
-                        } else {
-                            throw new RuntimeException("Unsupported id field type");
+                        Field[] fields = clazz.getDeclaredFields();
+                        for (Field field : fields) {
+                            if(Arrays.asList("id", "pk").contains(field.getName())){
+                                field.setAccessible(true);
+                                idValue = field.get(record);
+                                if (idValue instanceof Number) {
+                                    lastId = ((Number) idValue).longValue();
+                                } else {
+                                    throw new RuntimeException("Unsupported id field type");
+                                }
+                                break;
+                            }
                         }
-                    } catch (NoSuchFieldException | IllegalAccessException e) {
+                    } catch (IllegalAccessException | RuntimeException e) {
                         logger.error(e.getMessage());
                     }
                 }

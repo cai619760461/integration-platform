@@ -6,7 +6,7 @@
         inner join hospital h on ec.hospital_id = h.hospital_id
         where ecl.operate_type = #{operateType}
         <if test="lastId != null and lastId != ''">
-            and ecl.id > #{lastId}
+            and ecl.id <![CDATA[<]]> #{lastId}
         </if>
         <if test="hosptialId != null and hosptialId != ''">
             AND ec.hospital_id = #{hosptialId}
