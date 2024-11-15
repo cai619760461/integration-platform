@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class RedisUtils {
 
-    @Resource
+    @Resource(name = "loginRedisTemplate")
     private RedisTemplate<String, Object> redisTemplate;
 
     // 维护一个本类的静态变量

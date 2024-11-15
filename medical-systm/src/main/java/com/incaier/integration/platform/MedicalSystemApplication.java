@@ -12,7 +12,7 @@ import org.springframework.cache.annotation.EnableCaching;
  * @author caiweijie
  * @date 2024/06/21
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.incaier.integration.platform", "com.platform.cloud"})
 @EnableCaching
 @MapperScan({"com.incaier.integration.platform.mapper"})
 public class MedicalSystemApplication {
