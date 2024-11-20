@@ -46,7 +46,7 @@ public class AccessLogFilter extends HttpFilter {
 	@Override
 	protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
         // 限制30个字节
-        ContentCachingRequestWrapper cachingRequestWrapper = new ContentCachingRequestWrapper(req, 2048) {
+        ContentCachingRequestWrapper cachingRequestWrapper = new ContentCachingRequestWrapper(req) {
             @Override
             protected void handleContentOverflow(int contentCacheLimit) {
                 throw new PayloadTooLargeException(contentCacheLimit);

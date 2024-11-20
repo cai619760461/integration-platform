@@ -1,9 +1,12 @@
 package com.incaier.integration.platform.request.doctor;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.incaier.integration.platform.entity.valid.AddGroup;
+import com.incaier.integration.platform.entity.valid.UpdateGroup;
 import com.incaier.integration.platform.request.BaseDto;
 import lombok.*;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -53,5 +56,6 @@ public class DoctorQualificationDto extends BaseDto implements Serializable {
      * 签发日期
      */
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+    @NotNull(message = "签发日期不可为空", groups = {AddGroup.class, UpdateGroup.class})
     private Date issueDate;
 }

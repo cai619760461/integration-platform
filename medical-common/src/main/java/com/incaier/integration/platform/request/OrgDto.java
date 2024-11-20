@@ -23,7 +23,7 @@ public class OrgDto extends PageDto {
     /**
      * 机构id
      */
-    @NotNull(message = "机构id不可为空", groups = {AddGroup.class, UpdateGroup.class})
+    @NotBlank(message = "机构id不可为空", groups = {AddGroup.class, UpdateGroup.class})
     private String code;
 
     /**
@@ -40,6 +40,7 @@ public class OrgDto extends PageDto {
     /**
      * 机构类型 字典id
      */
+    @NotNull(message = "机构类型不可为空", groups = {AddGroup.class, UpdateGroup.class})
     private Integer typeId;
 
     /**
@@ -60,6 +61,7 @@ public class OrgDto extends PageDto {
     /**
      * 区域 字典id
      */
+    @NotNull(message = "区域不可为空", groups = {AddGroup.class, UpdateGroup.class})
     private Integer districtDictId;
 
     /**

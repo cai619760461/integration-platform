@@ -3,7 +3,7 @@ package com.incaier.integration.platform.request.excel;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.annotation.write.style.ColumnWidth;
 import com.incaier.integration.platform.annotation.ExcelValid;
-import com.incaier.integration.platform.handler.ExcelConverter;
+import com.incaier.integration.platform.handler.excel.ExcelConverter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,6 +28,7 @@ public class ExcelDoctorEntity {
      */
     @ExcelProperty("域ID")
     @ExcelValid(message = "导入参数域ID必填")
+    @ColumnWidth(20)
     private String domainId;
 
     /**
@@ -35,6 +36,7 @@ public class ExcelDoctorEntity {
      */
     @ExcelProperty("用户名（工号）")
     @ExcelValid(message = "导入参数工号必填")
+    @ColumnWidth(20)
     private String userName;
 
     /**
@@ -50,13 +52,15 @@ public class ExcelDoctorEntity {
      */
     @ExcelProperty("身份证号")
     @ColumnWidth(25)
+    @ExcelValid(message = "身份证号必填")
     private String identityNo;
 
     /**
      * 出生日期 yyyy-mm-dd
      */
-    @ExcelProperty(value = "出生日期", converter = ExcelConverter.LocalDateStringConverter.class)
+    @ExcelProperty(value = "出生日期 yyyy-MM-dd", converter = ExcelConverter.LocalDateStringConverter.class)
     @ColumnWidth(15)
+    @ExcelValid(message = "出生日期必填")
     private LocalDate birthday;
 
     /**
@@ -72,6 +76,7 @@ public class ExcelDoctorEntity {
      */
     @ExcelProperty("性别代码 0 1 9")
     @ColumnWidth(12)
+    @ExcelValid(message = "性别代码必填")
     private Integer sex;
 
     /**
@@ -79,6 +84,7 @@ public class ExcelDoctorEntity {
      */
     @ExcelProperty("角色代码,多个\",\"分隔")
     @ColumnWidth(12)
+    @ExcelValid(message = "性别代码必填")
     private String roleIds;
 
     /**
@@ -86,7 +92,7 @@ public class ExcelDoctorEntity {
      */
     @ExcelProperty("机构 code")
     @ColumnWidth(15)
-    @ExcelValid(message = "机构 code必填")
+    @ExcelValid(message = "机构 code 必填")
     private String orgCode;
 
     /**

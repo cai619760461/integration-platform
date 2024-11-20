@@ -10,7 +10,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
@@ -41,7 +42,7 @@ public class DoctorInfoDto extends BaseDto implements Serializable {
     /**
      * 姓名
      */
-    @NotEmpty(message = "姓名不可为空", groups = {AddGroup.class, UpdateGroup.class})
+    @NotBlank(message = "姓名不可为空", groups = {AddGroup.class, UpdateGroup.class})
     private String name;
 
     /**
@@ -58,7 +59,7 @@ public class DoctorInfoDto extends BaseDto implements Serializable {
     /**
      * 身份证
      */
-    @NotEmpty(message = "身份证不可为空", groups = {AddGroup.class, UpdateGroup.class})
+    @NotBlank(message = "身份证不可为空", groups = {AddGroup.class, UpdateGroup.class})
     private String identityNo;
 
     /**
@@ -76,12 +77,13 @@ public class DoctorInfoDto extends BaseDto implements Serializable {
     /**
      * 民族
      */
+    @NotBlank(message = "民族不可为空", groups = {AddGroup.class, UpdateGroup.class})
     private String ethnicity;
 
     /**
      * 联系电话
      */
-    @NotEmpty(message = "联系电话不可为空", groups = {AddGroup.class, UpdateGroup.class})
+//    @NotBlank(message = "联系电话不可为空", groups = {AddGroup.class, UpdateGroup.class})
     private String phoneNumber;
 
     /**
@@ -92,19 +94,21 @@ public class DoctorInfoDto extends BaseDto implements Serializable {
     /**
      * 用户名（工号）
      */
-    @NotEmpty(message = "用户名（工号）不可为空", groups = {AddGroup.class, UpdateGroup.class})
+    @NotBlank(message = "用户名（工号）不可为空", groups = {AddGroup.class, UpdateGroup.class})
     @Pattern(regexp = "^[A-Za-z0-9]+$", message = "用户名（工号）不合法", groups = {AddGroup.class, UpdateGroup.class})
     private String userName;
 
     /**
      * 角色
      */
-    private List<RoleVO> roles;
+    @NotNull(message = "用户角色不可为空", groups = {AddGroup.class, UpdateGroup.class})
+    @Valid
+    private List<@NotNull(message = "用户角色项不可为空", groups = {AddGroup.class, UpdateGroup.class}) RoleVO> roles;
 
     /**
      * 机构id，org-code
      */
-    @NotNull(message = "机构编码不可为空", groups = {AddGroup.class, UpdateGroup.class})
+    @NotBlank(message = "机构编码不可为空", groups = {AddGroup.class, UpdateGroup.class})
     private String orgCode;
 
     /**

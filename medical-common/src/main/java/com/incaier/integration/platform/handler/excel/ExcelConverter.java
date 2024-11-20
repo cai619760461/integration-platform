@@ -1,4 +1,4 @@
-package com.incaier.integration.platform.handler;
+package com.incaier.integration.platform.handler.excel;
 
 import com.alibaba.excel.converters.Converter;
 import com.alibaba.excel.converters.WriteConverterContext;
@@ -95,8 +95,8 @@ public class ExcelConverter {
      */
     public static class LocalDateStringConverter implements Converter<LocalDate> {
         @Override
-        public Class<LocalDateTime> supportJavaTypeKey() {
-            return LocalDateTime.class;
+        public Class<LocalDate> supportJavaTypeKey() {
+            return LocalDate.class;
         }
 
         @Override
@@ -119,6 +119,35 @@ public class ExcelConverter {
         @Override
         public LocalDate convertToJavaData(ReadCellData<?> cellData, ExcelContentProperty contentProperty, GlobalConfiguration globalConfiguration) throws Exception {
             return LocalDate.parse(cellData.getStringValue(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        }
+    }
+
+    public static class LocalDateTimeStringConverter implements Converter<LocalDateTime> {
+        @Override
+        public Class<LocalDateTime> supportJavaTypeKey() {
+            return LocalDateTime.class;
+        }
+
+        @Override
+        public CellDataTypeEnum supportExcelTypeKey() {
+            return CellDataTypeEnum.STRING;
+        }
+
+        @Override
+        public WriteCellData<?> convertToExcelData(LocalDateTime localDateTime, ExcelContentProperty excelContentProperty, GlobalConfiguration globalConfiguration) throws Exception {
+            WriteCellData<String> cellData = new WriteCellData<>();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String cellValue;
+            cellValue=formatter.format(localDateTime);
+            cellData.setType(CellDataTypeEnum.STRING);
+            cellData.setStringValue(cellValue);
+            cellData.setData(cellValue);
+            return cellData;
+        }
+
+        @Override
+        public LocalDateTime convertToJavaData(ReadCellData<?> cellData, ExcelContentProperty contentProperty, GlobalConfiguration globalConfiguration) throws Exception {
+            return LocalDateTime.parse(cellData.getStringValue(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         }
     }
 

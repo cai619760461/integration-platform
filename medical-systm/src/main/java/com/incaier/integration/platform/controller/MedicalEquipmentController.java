@@ -1,12 +1,12 @@
 package com.incaier.integration.platform.controller;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.alibaba.excel.EasyExcel;
 import com.github.pagehelper.PageInfo;
-import com.incaier.integration.platform.constant.BYConstant;
-import com.incaier.integration.platform.entity.equipment.MedicalEquipment;
+import com.incaier.integration.platform.handler.excel.listener.ExcelMedicalEquipmentListener;
 import com.incaier.integration.platform.mapper.MedicalEquipmentMapper;
 import com.incaier.integration.platform.request.MedicalEquipmentDto;
 import com.incaier.integration.platform.request.MedicalEquipmentQueryDto;
+import com.incaier.integration.platform.request.excel.ExcelMedicalEquipmentEntity;
 import com.incaier.integration.platform.response.MedicalEquipmentDetailVo;
 import com.incaier.integration.platform.response.MedicalEquipmentVo;
 import com.incaier.integration.platform.response.Result;
@@ -15,8 +15,11 @@ import com.incaier.integration.platform.util.ExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Collections;
 
 /**
  * 医疗设备管理
@@ -76,6 +79,34 @@ public class MedicalEquipmentController {
     @DeleteMapping(value = "/delete")
     public Result<Boolean> delete(@RequestParam("id") Integer id) {
         return Result.success(medicalequipmentService.delete(id));
+    }
+
+    /**
+     * 导入模板下载
+     *
+     * @param response response
+     */
+    @PostMapping("/download/template")
+    public void updateDetail(HttpServletResponse response) throws Exception {
+        ExcelMedicalEquipmentEntity entity = ExcelMedicalEquipmentEntity.builder()
+                .code("S001")
+                .name("注射器")
+                .equipmentModel("")
+                .build();
+        ExcelUtil.download("医疗器械导入模板", response, ExcelMedicalEquipmentEntity.class, Collections.singletonList(entity));
+    }
+
+    /**
+     * 根据模板导入 excel
+     *
+     * @param file 文件
+     * @return {@link Result}<{@link Boolean}>
+     * @throws IOException IOException
+     */
+    @PostMapping("/importExcel")
+    public Result<Boolean> importExcel(@RequestParam(value = "file") MultipartFile file) throws IOException {
+        EasyExcel.read(file.getInputStream(), ExcelMedicalEquipmentEntity.class, new ExcelMedicalEquipmentListener()).sheet().doRead();
+        return Result.success(true);
     }
 
     /**

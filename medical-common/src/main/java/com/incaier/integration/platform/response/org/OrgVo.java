@@ -3,7 +3,7 @@ package com.incaier.integration.platform.response.org;
 import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.incaier.integration.platform.handler.ExcelConverter;
+import com.incaier.integration.platform.handler.excel.ExcelConverter;
 import lombok.Data;
 
 import java.io.Serializable;

@@ -1,7 +1,7 @@
 package com.incaier.integration.platform.response.doctor;
 
 import com.alibaba.excel.annotation.ExcelProperty;
-import com.incaier.integration.platform.handler.ExcelConverter;
+import com.incaier.integration.platform.handler.excel.ExcelConverter;
 import lombok.Data;
 
 import java.io.Serializable;

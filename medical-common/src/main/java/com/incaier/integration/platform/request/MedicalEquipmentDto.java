@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -28,22 +28,25 @@ public class MedicalEquipmentDto extends PageDto {
     /**
      * 设备名称
      */
-    @NotNull(message = "设备名称不可为空")
+    @NotBlank(message = "设备名称不可为空")
     private String name;
 
     /**
      * 设备编号
      */
+    @NotBlank(message = "设备编号不可为空")
     private String code;
 
     /**
      * 设备型号
      */
+    @NotBlank(message = "设备型号不可为空")
     private String equipmentModel;
 
     /**
      * 生产厂家
      */
+    @NotBlank(message = "生产厂家不可为空")
     private String manufacturer;
 
     /**
@@ -54,21 +57,25 @@ public class MedicalEquipmentDto extends PageDto {
     /**
      * 设备类别 id
      */
+    @NotBlank(message = "设备类别 id 不可为空")
     private Integer equipmentTypeId;
 
     /**
      * 采购价格
      */
+    @NotBlank(message = "采购价格不可为空")
     private BigDecimal purchasePrice;
 
     /**
      * 供应商
      */
+    @NotBlank(message = "供应商不可为空")
     private String supplier;
 
     /**
      * 合同编号
      */
+    @NotBlank(message = "合同编号不可为空")
     private String contractNumber;
 
     /**
@@ -76,16 +83,19 @@ public class MedicalEquipmentDto extends PageDto {
      */
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @NotBlank(message = "购置日期不可为空")
     private Date purchaseDate;
 
     /**
      * 使用状态 0 正常使用 1 维修中 2 闲置
      */
+    @NotBlank(message = "使用状态不可为空")
     private Integer status;
 
     /**
      * 资产归属部门
      */
+    @NotBlank(message = "资产归属部门不可为空")
     private String assetDepartment;
 
     /**

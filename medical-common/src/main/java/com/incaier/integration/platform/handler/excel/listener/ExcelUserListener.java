@@ -1,4 +1,4 @@
-package com.incaier.integration.platform.handler.excel;
+package com.incaier.integration.platform.handler.excel.listener;
 
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
@@ -32,9 +32,10 @@ public class ExcelUserListener extends AnalysisEventListener<ExcelDoctorEntity> 
 
     private final List<ExcelDoctorEntity> list = new ArrayList<>();
     /**
-     * 每隔5条存储数据库，实际使用中可以3000条，然后清理list ，方便内存回收
+     * 批量存储数据量，清理 list ，方便内存回收
      */
     private static final int BATCH_COUNT = 3000;
+
     /**
      * 医生信息服务
      */
@@ -56,17 +57,17 @@ public class ExcelUserListener extends AnalysisEventListener<ExcelDoctorEntity> 
      * 这个每一条数据解析都会来调用
      */
     @Override
-    public void invoke(ExcelDoctorEntity goods, AnalysisContext analysisContext) {
+    public void invoke(ExcelDoctorEntity entities, AnalysisContext analysisContext) {
         try {
             // 通用方法数据校验必填
-            ExcelImportValid.valid(goods);
+            ExcelImportValid.valid(entities);
         } catch (ExceptionCustom e) {
             logger.error(e.getMessage());
             // 在 easyExcel 监听器中抛出业务异常
             throw new ExcelAnalysisException(e.getMessage());
         }
         // 数据存储到 datas，供批量处理，或后续自己业务逻辑处理。
-        list.add(goods);
+        list.add(entities);
         // 达到 BATCH_COUNT，需要去存储一次数据库，防止数据几万条数据在内存，容易OOM
         if (list.size() >= BATCH_COUNT) {
             saveData();

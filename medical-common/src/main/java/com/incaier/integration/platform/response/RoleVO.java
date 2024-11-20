@@ -1,6 +1,10 @@
 package com.incaier.integration.platform.response;
 
+import com.incaier.integration.platform.entity.valid.AddGroup;
+import com.incaier.integration.platform.entity.valid.UpdateGroup;
 import lombok.Data;
+
+import javax.validation.constraints.NotNull;
 
 
 /**
@@ -15,6 +19,7 @@ public class RoleVO {
     /**
      * 角色id
      */
+    @NotNull(message = "角色ID 不能为空", groups = {AddGroup.class, UpdateGroup.class})
     private String roleId;
 
     /**

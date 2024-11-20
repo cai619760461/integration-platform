@@ -4,7 +4,7 @@ import com.alibaba.excel.EasyExcel;
 import com.github.pagehelper.PageInfo;
 import com.incaier.integration.platform.entity.valid.AddGroup;
 import com.incaier.integration.platform.entity.valid.UpdateGroup;
-import com.incaier.integration.platform.handler.excel.ExcelUserListener;
+import com.incaier.integration.platform.handler.excel.listener.ExcelUserListener;
 import com.incaier.integration.platform.mapper.DoctorInfoMapper;
 import com.incaier.integration.platform.request.doctor.DoctorDetailDto;
 import com.incaier.integration.platform.request.doctor.DoctorQueryDto;
@@ -101,7 +101,7 @@ public class DoctorController {
      */
     @PostMapping("/download/template")
     public void updateDetail(HttpServletResponse response) throws Exception {
-        ExcelUtil.download(response, ExcelDoctorEntity.class, doctorInfoService.getUserTemplate());
+        ExcelUtil.download("医生导入模板", response, ExcelDoctorEntity.class, doctorInfoService.getUserTemplate());
     }
 
     /**

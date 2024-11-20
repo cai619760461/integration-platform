@@ -1,13 +1,16 @@
 package com.incaier.integration.platform.controller;
 
+import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageInfo;
 import com.incaier.integration.platform.constant.BYConstant;
 import com.incaier.integration.platform.entity.Org;
 import com.incaier.integration.platform.entity.valid.AddGroup;
 import com.incaier.integration.platform.entity.valid.UpdateGroup;
+import com.incaier.integration.platform.handler.excel.listener.ExcelOrgListener;
 import com.incaier.integration.platform.mapper.OrgMapper;
 import com.incaier.integration.platform.request.OrgDto;
+import com.incaier.integration.platform.request.excel.ExcelOrgEntity;
 import com.incaier.integration.platform.response.Result;
 import com.incaier.integration.platform.response.org.OrgVo;
 import com.incaier.integration.platform.service.OrgService;
@@ -15,8 +18,11 @@ import com.incaier.integration.platform.util.ExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Collections;
 
 /**
  * 机构管理
@@ -68,6 +74,36 @@ public class OrgController {
         return Result.success(orgService.update(Wrappers.<Org>lambdaUpdate()
                 .eq(Org::getId, id)
                 .set(Org::getIsDelete, BYConstant.INT_TRUE)));
+    }
+
+    /**
+     * 导入模板下载
+     *
+     * @param response response
+     */
+    @PostMapping("/download/template")
+    public void updateDetail(HttpServletResponse response) throws Exception {
+        ExcelOrgEntity entity = ExcelOrgEntity.builder()
+                .code("医院代码 by_hosptial")
+                .name("医院名称")
+                .typeId(16)
+                .districtDictId(6)
+                .enabled(1)
+                .build();
+        ExcelUtil.download("机构导入模板", response, ExcelOrgEntity.class, Collections.singletonList(entity));
+    }
+
+    /**
+     * 根据模板导入 excel
+     *
+     * @param file 文件
+     * @return {@link Result}<{@link Boolean}>
+     * @throws IOException IOException
+     */
+    @PostMapping("/importExcel")
+    public Result<Boolean> importExcel(@RequestParam(value = "file") MultipartFile file) throws IOException {
+        EasyExcel.read(file.getInputStream(), ExcelOrgEntity.class, new ExcelOrgListener()).sheet().doRead();
+        return Result.success(true);
     }
 
     /**
