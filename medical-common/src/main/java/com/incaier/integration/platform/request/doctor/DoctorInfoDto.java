@@ -63,6 +63,11 @@ public class DoctorInfoDto extends BaseDto implements Serializable {
     private String identityNo;
 
     /**
+     * 更新身份证
+     */
+    private String updateIdentityNo;
+
+    /**
      * 证件照地址
      */
     private String identificationPhoto;
@@ -120,7 +125,7 @@ public class DoctorInfoDto extends BaseDto implements Serializable {
     /**
      * 专家标签信息
      */
-    private List<ExpertLabelDto> expertLabels;
+    private List<Integer> expertLabels;
 
     /**
      * 域id

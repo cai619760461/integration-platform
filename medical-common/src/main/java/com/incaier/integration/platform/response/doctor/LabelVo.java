@@ -1,6 +1,8 @@
 package com.incaier.integration.platform.response.doctor;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -12,6 +14,8 @@ import java.io.Serializable;
  * @date 2024-06-12
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class LabelVo implements Serializable {
 
     private static final long serialVersionUID = 7353385084499400121L;

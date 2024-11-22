@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -57,13 +58,13 @@ public class MedicalEquipmentDto extends PageDto {
     /**
      * 设备类别 id
      */
-    @NotBlank(message = "设备类别 id 不可为空")
+    @NotNull(message = "设备类别 id 不可为空")
     private Integer equipmentTypeId;
 
     /**
      * 采购价格
      */
-    @NotBlank(message = "采购价格不可为空")
+    @NotNull(message = "采购价格不可为空")
     private BigDecimal purchasePrice;
 
     /**
@@ -83,13 +84,13 @@ public class MedicalEquipmentDto extends PageDto {
      */
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @NotBlank(message = "购置日期不可为空")
+    @NotNull(message = "购置日期不可为空")
     private Date purchaseDate;
 
     /**
      * 使用状态 0 正常使用 1 维修中 2 闲置
      */
-    @NotBlank(message = "使用状态不可为空")
+    @NotNull(message = "使用状态不可为空")
     private Integer status;
 
     /**

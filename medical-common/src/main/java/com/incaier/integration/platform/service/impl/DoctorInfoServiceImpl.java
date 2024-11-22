@@ -163,6 +163,7 @@ public class DoctorInfoServiceImpl extends ServiceImpl<DoctorInfoMapper, DoctorI
         if (ObjectUtils.isEmpty(personnel)) {
             throw new CommonBusinessException(ErrorCodeConstant.COMMON_ERROR, "用户数据异常");
         }
+        doctorInfo.setIdentityNo(StringUtils.isNotBlank(doctorInfo.getUpdateIdentityNo()) ? doctorInfo.getUpdateIdentityNo() : personnel.getIdentityNo());
         // 更新角色
         saveRoles(dto.getDoctorInfo().getRoles(), personnel.getPk().intValue());
         // 更新医生数据
@@ -298,7 +299,7 @@ public class DoctorInfoServiceImpl extends ServiceImpl<DoctorInfoMapper, DoctorI
             Set<Integer> removeDictIds;
             Set<Integer> originDictIds = expertLabelMapper.getDoctorLabelDictIds(doctorInfoDto.getDoctorId());
             if (CollectionUtils.isNotEmpty(doctorInfoDto.getExpertLabels())) {
-                Set<Integer> newDictIds = doctorInfoDto.getExpertLabels().stream().map(ExpertLabelDto::getDictId).collect(Collectors.toSet());
+                Set<Integer> newDictIds = new HashSet<>(doctorInfoDto.getExpertLabels());
                 removeDictIds = getDiffrent(originDictIds, newDictIds);
                 Set<Integer> addDictIds = getDiffrent(newDictIds, originDictIds);
                 logger.info("addDictIds:{}", addDictIds);
@@ -394,7 +395,12 @@ public class DoctorInfoServiceImpl extends ServiceImpl<DoctorInfoMapper, DoctorI
         if (BYConstant.INT_FALSE.equals(doctorInfoVo.getIsExpert())) {
             return;
         }
-        doctorInfoVo.setExpertLabels(expertLabelMapper.getDoctorsLabels(doctorId));
+        List<LabelVo> labels = expertLabelMapper.getDoctorsLabels(doctorId);
+        if (CollectionUtils.isNotEmpty(labels)) {
+            Map<String, List<Integer>> result = labels.stream()
+                    .collect(Collectors.groupingBy(LabelVo::getDictType, Collectors.mapping(LabelVo::getDictId, Collectors.collectingAndThen(Collectors.toSet(), ArrayList::new))));
+            doctorInfoVo.setExpertLabels(result);
+        }
     }
 
     @Override
