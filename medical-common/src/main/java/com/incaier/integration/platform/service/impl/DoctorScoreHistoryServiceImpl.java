@@ -107,6 +107,7 @@ public class DoctorScoreHistoryServiceImpl extends ServiceImpl<DoctorScoreHistor
         DoctorScoreHistory doctorScoreHistory = new DoctorScoreHistory();
         BeanUtils.copyProperties(dto, doctorScoreHistory);
         doctorScoreHistory.setCreateBy(UserHolder.getUserName());
+        doctorScoreHistory.setUpdateBy(UserHolder.getUserName());
         doctorScoreHistoryMapper.insert(doctorScoreHistory);
         return true;
     }

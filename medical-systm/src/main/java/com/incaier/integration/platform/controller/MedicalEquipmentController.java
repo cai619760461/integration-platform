@@ -19,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Collections;
 
 /**
@@ -91,7 +93,15 @@ public class MedicalEquipmentController {
         ExcelMedicalEquipmentEntity entity = ExcelMedicalEquipmentEntity.builder()
                 .code("S001")
                 .name("注射器")
-                .equipmentModel("")
+                .equipmentModel("ISO-001-1")
+                .manufacturer("西门子")
+                .equipmentTypeId(86)
+                .purchasePrice(new BigDecimal("12.33"))
+                .supplier("无")
+                .contractNumber("123152913215")
+                .purchaseDate(LocalDate.now())
+                .status(0)
+                .assetDepartment("无")
                 .build();
         ExcelUtil.download("医疗器械导入模板", response, ExcelMedicalEquipmentEntity.class, Collections.singletonList(entity));
     }

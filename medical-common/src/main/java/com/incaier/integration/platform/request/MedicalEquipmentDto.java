@@ -8,7 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -85,7 +85,7 @@ public class MedicalEquipmentDto extends PageDto {
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @NotNull(message = "购置日期不可为空")
-    private Date purchaseDate;
+    private LocalDate purchaseDate;
 
     /**
      * 使用状态 0 正常使用 1 维修中 2 闲置

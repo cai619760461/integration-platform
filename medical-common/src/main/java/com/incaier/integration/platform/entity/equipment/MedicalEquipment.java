@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * <p>
@@ -95,7 +95,7 @@ public class MedicalEquipment implements Serializable {
      * 购置日期
      */
     @TableField("purchase_date")
-    private Date purchaseDate;
+    private LocalDate purchaseDate;
 
     /**
      * 使用状态 0 正常使用 1 维修中 2 闲置

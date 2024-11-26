@@ -5,7 +5,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -79,7 +79,7 @@ public class MedicalEquipmentDetailVo implements Serializable {
      * 购置日期
      */
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
-    private Date purchaseDate;
+    private LocalDate purchaseDate;
 
     /**
      * 使用状态 0 正常使用 1 维修中 2 闲置
