@@ -20,10 +20,12 @@ public class DoctorScoreVo implements Serializable {
     private static final long serialVersionUID = 6776303287550931769L;
 
     /**
-     * 医生id
+     * 评分历史 id
      */
-    @ExcelProperty("医生id")
     private Integer id;
+
+    @ExcelProperty("医生id")
+    private Integer doctorId;
 
     /**
      * 姓名

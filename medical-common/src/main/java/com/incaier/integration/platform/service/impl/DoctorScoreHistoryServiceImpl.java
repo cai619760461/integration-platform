@@ -68,7 +68,7 @@ public class DoctorScoreHistoryServiceImpl extends ServiceImpl<DoctorScoreHistor
     public List<DoctorScoreVo> buildDoctorScoreList(DoctorQueryDto dto) {
         List<DoctorScoreVo> doctorList = doctorInfoMapper.getDoctorScoreList(dto);
         doctorList.forEach(doctorInfo -> {
-            DoctorPracticepointVo doctorPracticepoint = doctorPracticepointMapper.getDoctorPraTypeLevelById(doctorInfo.getId());
+            DoctorPracticepointVo doctorPracticepoint = doctorPracticepointMapper.getDoctorPraTypeLevelById(doctorInfo.getDoctorId());
             if (ObjectUtils.isNotEmpty(doctorPracticepoint)) {
                 doctorInfo.setPracticeLevel(doctorPracticepoint.getPracticeLevel());
                 doctorInfo.setPracticeType(doctorPracticepoint.getPracticeType());
@@ -106,6 +106,7 @@ public class DoctorScoreHistoryServiceImpl extends ServiceImpl<DoctorScoreHistor
         // 插入历史
         DoctorScoreHistory doctorScoreHistory = new DoctorScoreHistory();
         BeanUtils.copyProperties(dto, doctorScoreHistory);
+        doctorScoreHistory.setCreateBy(UserHolder.getUserName());
         doctorScoreHistoryMapper.insert(doctorScoreHistory);
         return true;
     }
