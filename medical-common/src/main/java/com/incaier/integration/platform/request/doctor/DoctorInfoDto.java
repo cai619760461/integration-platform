@@ -60,11 +60,17 @@ public class DoctorInfoDto extends BaseDto implements Serializable {
      * 身份证
      */
     @NotBlank(message = "身份证不可为空", groups = {AddGroup.class, UpdateGroup.class})
+    @Pattern(regexp = "^\\d{17}[\\dXx]$",
+            message = "身份证格式不正确，必须为18位",
+            groups = {AddGroup.class})
     private String identityNo;
 
     /**
      * 更新身份证
      */
+    @Pattern(regexp = "^\\d{17}[\\dXx]$",
+            message = "身份证格式不正确，必须为18位",
+            groups = UpdateGroup.class)
     private String updateIdentityNo;
 
     /**
@@ -89,6 +95,9 @@ public class DoctorInfoDto extends BaseDto implements Serializable {
      * 联系电话
      */
 //    @NotBlank(message = "联系电话不可为空", groups = {AddGroup.class, UpdateGroup.class})
+    @Pattern(regexp = "^\\d{11}$",
+            message = "手机号格式不正确，必须为11位",
+            groups = {AddGroup.class, UpdateGroup.class})
     private String phoneNumber;
 
     /**
