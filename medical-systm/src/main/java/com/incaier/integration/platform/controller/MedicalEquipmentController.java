@@ -1,6 +1,7 @@
 package com.incaier.integration.platform.controller;
 
 import com.alibaba.excel.EasyExcel;
+import com.baomidou.dynamic.datasource.annotation.DSTransactional;
 import com.github.pagehelper.PageInfo;
 import com.incaier.integration.platform.handler.excel.listener.ExcelMedicalEquipmentListener;
 import com.incaier.integration.platform.mapper.MedicalEquipmentMapper;
@@ -114,6 +115,7 @@ public class MedicalEquipmentController {
      * @throws IOException IOException
      */
     @PostMapping("/importExcel")
+    @DSTransactional
     public Result<Boolean> importExcel(@RequestParam(value = "file") MultipartFile file) throws IOException {
         EasyExcel.read(file.getInputStream(), ExcelMedicalEquipmentEntity.class, new ExcelMedicalEquipmentListener()).sheet().doRead();
         return Result.success(true);

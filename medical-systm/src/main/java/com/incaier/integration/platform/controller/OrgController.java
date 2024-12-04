@@ -1,6 +1,7 @@
 package com.incaier.integration.platform.controller;
 
 import com.alibaba.excel.EasyExcel;
+import com.baomidou.dynamic.datasource.annotation.DSTransactional;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageInfo;
 import com.incaier.integration.platform.constant.BYConstant;
@@ -101,6 +102,7 @@ public class OrgController {
      * @throws IOException IOException
      */
     @PostMapping("/importExcel")
+    @DSTransactional
     public Result<Boolean> importExcel(@RequestParam(value = "file") MultipartFile file) throws IOException {
         EasyExcel.read(file.getInputStream(), ExcelOrgEntity.class, new ExcelOrgListener()).sheet().doRead();
         return Result.success(true);

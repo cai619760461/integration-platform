@@ -35,7 +35,7 @@ public abstract class ExcelListener<T> extends AnalysisEventListener<T> {
      * 如果使用了spring,请使用这个构造方法。每次创建Listener的时候需要把spring管理的类传进来
      */
     public ExcelListener() {
-//        doctorInfoService = SpringContextUtils.getBean(DoctorInfoService.class);
+
     }
 
     /**
@@ -69,10 +69,9 @@ public abstract class ExcelListener<T> extends AnalysisEventListener<T> {
      */
     @Override
     public void doAfterAllAnalysed(AnalysisContext analysisContext) {
-        // 确保所有数据都能入库
         saveData();
         if (ObjectUtils.isNotEmpty(errorInsert)) {
-            throw new ExcelAnalysisException("失败" + errorInsert.size() + "条，" + String.join(";", errorInsert));
+            throw new ExcelAnalysisException("错误数据" + errorInsert.size() + "条，" + String.join(";", errorInsert));
         }
     }
 

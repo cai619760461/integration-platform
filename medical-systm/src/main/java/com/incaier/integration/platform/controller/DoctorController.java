@@ -1,6 +1,7 @@
 package com.incaier.integration.platform.controller;
 
 import com.alibaba.excel.EasyExcel;
+import com.baomidou.dynamic.datasource.annotation.DSTransactional;
 import com.github.pagehelper.PageInfo;
 import com.incaier.integration.platform.entity.valid.AddGroup;
 import com.incaier.integration.platform.entity.valid.UpdateGroup;
@@ -112,6 +113,7 @@ public class DoctorController {
      * @throws IOException IOException
      */
     @PostMapping("/importExcel")
+    @DSTransactional
     public Result<Boolean> importExcel(@RequestParam(value = "file") MultipartFile file) throws IOException {
         EasyExcel.read(file.getInputStream(), ExcelDoctorEntity.class, new ExcelUserListener()).sheet().doRead();
         return Result.success(true);
