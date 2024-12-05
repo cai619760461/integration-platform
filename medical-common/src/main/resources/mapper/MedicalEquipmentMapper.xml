@@ -49,6 +49,7 @@
             sdd.dict_label as equipmentTypeName,
             me.manufacturer,
             me.purchase_date,
+            me.asset_department,
             me.status,
             me.update_time
         from
@@ -83,13 +84,24 @@
         left join sys_dict_data sdd on me.equipment_type_id = sdd.id and sdd.status = 0
         where
             me.is_delete = 0
-        <if test="name != null and name != ''">
-            and me.name LIKE concat('%',#{name},'%')
-        </if>
         <if test="code != null and code != ''">
             and me.code = #{code}
         </if>
+        <if test="equipmentTypeId != null and equipmentTypeId != ''">
+            and me.equipment_type_id = #{equipmentTypeId}
+        </if>
+        <if test="purchaseDate != null and purchaseDate != ''">
+            and me.purchase_date = #{purchaseDate}
+        </if>
+        <if test="status != null and status != ''">
+            and me.status = #{status}
+        </if>
+        <if test="name != null and name != ''">
+            and me.name LIKE concat('%',#{name},'%')
+        </if>
+        <if test="assetDepartment != null and assetDepartment != ''">
+            and me.asset_department LIKE concat('%',#{assetDepartment},'%')
+        </if>
         order by me.id desc
     </sql>
-
 </mapper>

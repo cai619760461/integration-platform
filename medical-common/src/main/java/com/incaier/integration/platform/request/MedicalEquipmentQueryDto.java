@@ -22,6 +22,26 @@ public class MedicalEquipmentQueryDto extends PageDto {
      * 设备编号
      */
     private String code;
+
+    /**
+     * 设备类别 id
+     */
+    private String equipmentTypeId;
+
+    /**
+     * 购置日期
+     */
+    private String purchaseDate;
+
+    /**
+     * 使用状态
+     */
+    private Integer status;
+
+    /**
+     * 资产归属
+     */
+    private String assetDepartment;
 }
 
 
