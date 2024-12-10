@@ -34,6 +34,16 @@ public class MedicalEquipmentQueryDto extends PageDto {
     private String purchaseDate;
 
     /**
+     * 购置开始日期
+     */
+    private String purchaseStartDate;
+
+    /**
+     * 购置结束日期
+     */
+    private String purchaseEndDate;
+
+    /**
      * 使用状态
      */
     private Integer status;
