@@ -94,10 +94,10 @@
             and me.purchase_date = #{purchaseDate}
         </if>
         <if test="purchaseStartDate != null and purchaseStartDate != ''">
-            and me.purchase_date <![CDATA[>=]]> #{purchaseDate}
+            and me.purchase_date <![CDATA[>=]]> #{purchaseStartDate}
         </if>
         <if test="purchaseEndDate != null and purchaseEndDate != ''">
-            and me.purchase_date <![CDATA[<=]]> #{purchaseDate}
+            and me.purchase_date <![CDATA[<=]]> #{purchaseEndDate}
         </if>
         <if test="status != null and status != ''">
             and me.status = #{status}
