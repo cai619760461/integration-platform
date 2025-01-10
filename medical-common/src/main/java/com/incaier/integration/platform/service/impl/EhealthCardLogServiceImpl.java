@@ -65,10 +65,10 @@ public class EhealthCardLogServiceImpl extends ServiceImpl<EhealthCardLogMapper,
                 .lt(EhealthCardLog::getId, id)
                 .orderByDesc(EhealthCardLog::getId)
                 .last(SQL_LIMIT_1));
-        if (ObjectUtils.isEmpty(before)) {
-            throw new CommonBusinessException(ErrorCodeConstant.COMMON_ERROR, "数据异常");
+        if (ObjectUtils.isNotEmpty(before)) {
+//            throw new CommonBusinessException(ErrorCodeConstant.COMMON_ERROR, "数据异常");
+            response.put("before", transferBean(before));
         }
-        response.put("before", transferBean(before));
         return response;
     }
 
