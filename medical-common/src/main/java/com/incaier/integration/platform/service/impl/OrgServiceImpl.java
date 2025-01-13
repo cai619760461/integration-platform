@@ -72,4 +72,9 @@ public class OrgServiceImpl extends ServiceImpl<OrgMapper, Org> implements OrgSe
         org.setUpdateBy(UserHolder.getUserName());
         return orgMapper.saveOrUpdate(org);
     }
+
+    @Override
+    public List<OrgVo> getAllList(OrgDto dto) {
+        return orgMapper.getOrgList(dto);
+    }
 }

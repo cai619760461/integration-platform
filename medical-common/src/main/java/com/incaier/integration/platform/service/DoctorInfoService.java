@@ -76,4 +76,13 @@ public interface DoctorInfoService extends IService<DoctorInfo> {
      * @return {@link List}<{@link ExcelDoctorEntity}>
      */
     List<ExcelDoctorEntity> getUserTemplate();
+
+    /**
+     * 通过医院代码和身份证号获取医生详细信息
+     *
+     * @param orgCode  医院代码
+     * @param identityNo 身份号
+     * @return {@link DoctorDetailVo }
+     */
+    DoctorDetailVo getDoctorDetailByCode(String orgCode, String identityNo);
 }

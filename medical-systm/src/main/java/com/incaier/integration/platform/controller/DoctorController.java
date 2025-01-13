@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 import java.io.IOException;
 
 /**
@@ -32,6 +34,7 @@ import java.io.IOException;
  */
 @RestController
 @RequestMapping("/doctor")
+@Validated
 public class DoctorController {
 
     @Autowired
@@ -131,5 +134,17 @@ public class DoctorController {
                 d -> doctorInfoMapper.getCount(d),
                 d -> doctorInfoMapper.getDoctorList(d),
                 DoctorVo.class);
+    }
+
+    /**
+     * 根据 身份证 和 机构代码 获取医生详情
+     *
+     * @param orgCode 机构代码
+     * @return {@link Result}<{@link PageInfo}<{@link DoctorVo}>>
+     */
+    @GetMapping("/query")
+    public Result<DoctorDetailVo> getDoctorDetail(@NotEmpty(message = "医院代码不可为空") @RequestParam(name = "orgCode") String orgCode,
+                                                  @NotEmpty(message = "身份证号不可为空") @Pattern(regexp = "^\\d{17}[\\dXx]$", message = "非18位身份证，格式不正确") @RequestParam(name = "identityNo") String identityNo) {
+        return Result.success(doctorInfoService.getDoctorDetailByCode(orgCode, identityNo));
     }
 }

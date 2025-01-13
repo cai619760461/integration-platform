@@ -8,6 +8,8 @@ import com.incaier.integration.platform.response.Result;
 import com.incaier.integration.platform.response.org.OrgVo;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * 机构信息表服务层
  *
@@ -33,4 +35,12 @@ public interface OrgService extends IService<Org> {
      * @return {@link Boolean}
      */
     Boolean saveOrUpdateOrg(OrgDto orgDto);
+
+    /**
+     * 获取所有列表
+     *
+     * @param orgDto org dto
+     * @return {@link List }<{@link OrgVo }>
+     */
+    List<OrgVo> getAllList(OrgDto orgDto);
 }

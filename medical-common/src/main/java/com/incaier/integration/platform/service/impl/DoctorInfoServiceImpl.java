@@ -276,6 +276,14 @@ public class DoctorInfoServiceImpl extends ServiceImpl<DoctorInfoMapper, DoctorI
         if (ObjectUtils.isEmpty(org)) {
             throw new CommonBusinessException(ErrorCodeConstant.COMMON_INVALID_PARAMETER, "机构数据异常");
         }
+        DoctorInfo info = doctorInfoMapper.selectOne(Wrappers.<DoctorInfo>lambdaQuery()
+                .eq(DoctorInfo::getOrgCode, doctorInfoDto.getOrgCode())
+                .eq(DoctorInfo::getIdentityNo, doctorInfoDto.getIdentityNo())
+                .eq(DoctorInfo::getIsDelete, BYConstant.INT_TRUE)
+                .last(BYConstant.SQL_LIMIT_1));
+        if (ObjectUtils.isNotEmpty(info)) {
+            throw new CommonBusinessException(ErrorCodeConstant.COMMON_INVALID_PARAMETER, "该机构身份证号已注册");
+        }
         saveOrUpdateDoctorRelation(0, doctorInfoDto, x -> doctorInfoMapper.saveOrUpdate(x));
         logger.info("新建医生，id：{}，工号：{}", doctorInfoDto.getId(), doctorInfoDto.getUserName());
         // 更新专家信息
@@ -335,6 +343,7 @@ public class DoctorInfoServiceImpl extends ServiceImpl<DoctorInfoMapper, DoctorI
         Personnel newPersonnel = Personnel.builder()
                 .domainId(StringUtils.isEmpty(doctorInfoDto.getDomainId()) ? domainId : doctorInfoDto.getDomainId())
                 .healthCareProviderId(doctorInfoDto.getUserName())
+                .globalId(UUID.randomUUID().toString())
                 .passWord(AesUtil.encrypt(doctorInfoDto.getUserName()))
                 .phone(doctorInfoDto.getPhoneNumber())
                 .identityNo(doctorInfoDto.getIdentityNo())
@@ -418,5 +427,18 @@ public class DoctorInfoServiceImpl extends ServiceImpl<DoctorInfoMapper, DoctorI
                 .email("wiggjxlt@qq.com")
                 .build();
         return Collections.singletonList(entity);
+    }
+
+    @Override
+    public DoctorDetailVo getDoctorDetailByCode(String orgCode, String identityNo) {
+        DoctorInfo doctorInfo = doctorInfoMapper.selectOne(Wrappers.<DoctorInfo>lambdaQuery()
+                .eq(DoctorInfo::getOrgCode, orgCode)
+                .eq(DoctorInfo::getIdentityNo, identityNo)
+                .eq(DoctorInfo::getIsDelete, BYConstant.INT_FALSE)
+                .last(BYConstant.SQL_LIMIT_1));
+        if (ObjectUtils.isEmpty(doctorInfo)) {
+            throw new CommonBusinessException(ErrorCodeConstant.COMMON_ERROR, "医生信息未录入");
+        }
+        return getDoctorDetail(doctorInfo.getId());
     }
 }

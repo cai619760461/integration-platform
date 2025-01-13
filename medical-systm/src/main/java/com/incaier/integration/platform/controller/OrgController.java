@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * 机构管理
@@ -51,6 +52,17 @@ public class OrgController {
     @PostMapping("/list")
     public Result<PageInfo<OrgVo>> orgList(@RequestBody OrgDto orgDto) {
         return Result.success(orgService.getOrgList(orgDto));
+    }
+
+    /**
+     * 获取所有机构
+     *
+     * @param orgDto org dto
+     * @return {@link Result}<{@link PageInfo}<{@link OrgVo}>>
+     */
+    @PostMapping("/all")
+    public Result<List<OrgVo>> getAllList(@RequestBody OrgDto orgDto) {
+        return Result.success(orgService.getAllList(orgDto));
     }
 
     /**
